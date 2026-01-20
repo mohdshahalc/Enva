@@ -1,0 +1,1511 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ENVA Admin — Dashboard</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="icon" type="image/png" href="../Images/favicon.png">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+    /* ==========================================
+   ROOT VARIABLES
+========================================== */
+:root{
+    --sidebar-width: 260px;
+    --brand: #0b0b0b;
+    --muted: #6c757d;
+    --card-bg: #ffffff;
+}
+
+
+/* ==========================================
+   GLOBAL / BODY
+========================================== */
+body {
+    font-family: "Inter", sans-serif;
+    background: #f6f7fb !important;
+}
+
+.muted { color: var(--muted); }
+
+
+/* ==========================================
+   LAYOUT GRID
+========================================== */
+.admin-wrap{
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    min-height: 100vh;
+}
+
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+.sidebar{
+    background: #0f1723;
+    color: #dfe7ef;
+    padding: 28px 18px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: auto;
+}
+
+.sidebar .brand{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom: 22px;
+}
+
+.brand .logo{
+    width:44px;height:44px;border-radius:50%;
+    background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--brand);font-weight:700;
+}
+
+.sidebar .nav-link{
+    color:#cbd6e1;
+    padding:10px 12px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:600;
+    margin-bottom:6px;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active{
+    background: rgba(255,255,255,0.06);
+    color:#fff;
+}
+
+.sidebar .section-title{
+    color: #9fb0c7;
+    font-size:12px;
+    margin-top:16px;
+    margin-bottom:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+
+/* ==========================================
+   MAIN CONTENT
+========================================== */
+.main { padding: 24px 28px; }
+
+
+/* ==========================================
+   TOPBAR
+========================================== */
+.topbar {
+    background: #fff;
+    padding: 14px 22px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+}
+
+.search-box {
+    background: #f1f3f5;
+    padding: 6px 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    max-width: 560px;
+    width: 100%;
+}
+
+.search-box input {
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+.search-box button {
+    background: none;
+    border: none;
+    color: #333;
+}
+
+.top-actions{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.chip {
+    width: 38px;
+    height: 38px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.chip:hover {
+    background: #000;
+    color: #fff;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    background: #111;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ==========================================
+   PREMIUM STAT CARDS
+========================================== */
+.modern-stat {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 22px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    border: 1px solid #eee;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+    transition: 0.35s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.modern-stat:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+.modern-stat::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 70%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: skewX(-20deg);
+    transition: 0.5s;
+}
+
+.modern-stat:hover::after {
+    left: 120%;
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #f3f4f7, #e8e9ec);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #000;
+    box-shadow: inset 2px 2px 4px rgba(255,255,255,0.7),
+                inset -2px -2px 4px rgba(0,0,0,0.05);
+    transition: 0.3s ease;
+}
+
+.modern-stat:hover .stat-icon {
+    background: #000;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 2px 0;
+}
+
+.stat-sub {
+    font-size: 13px;
+    color: #777;
+}
+
+.up { color: #28a745; font-weight: 600; }
+.down { color: #dc3545; font-weight: 600; }
+
+
+/* ==========================================
+   UNIVERSAL CARD
+========================================== */
+.card-ghost {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    padding: 20px 24px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    transition: .3s ease;
+}
+
+.card-ghost:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+
+
+/* ==========================================
+   TABLE STYLE
+========================================== */
+.table thead th { font-weight: 600 !important; border: none; }
+.table tbody tr { transition: .25s; }
+.table tbody tr:hover { background: #f8f9fb; }
+
+
+/* ==========================================
+   RIGHT SIDEBAR
+========================================== */
+.right-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    margin-bottom: 22px;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+    transition: .3s ease;
+}
+
+.right-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+
+.top-product-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 12px;
+    transition: .25s;
+    border: 1px solid transparent;
+    margin-bottom: 8px;
+}
+
+.top-product-item:hover {
+    background: #f9fafc;
+    border-color: #eee;
+}
+
+.tp-img {
+    width: 48px;
+    height: 48px;
+    background: #f0f0f0;
+    border-radius: 12px;
+    margin-right: 12px;
+}
+
+.stat-line { display:flex; justify-content:space-between; padding:6px 0; }
+.stat-value { font-size:18px; font-weight:700; }
+
+/* QUICK STATS — Attractive Version */
+.quick-stats-card .qs-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 10px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    transition: 0.25s ease;
+    background: #f9fafc;
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+
+.quick-stats-card .qs-item:hover {
+    background: #f1f5f9;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+}
+
+.qs-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+
+.bg-green { background: #10b981; }
+.bg-blue { background: #3b82f6; }
+.bg-red { background: #ef4444; }
+
+.qs-label {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.qs-value {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: -2px;
+}
+/* Modern Transactions Table */
+.modern-table thead th {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.modern-table tbody tr {
+    transition: 0.25s ease;
+    border-left: 4px solid transparent;
+}
+
+.modern-table tbody tr:hover {
+    background: #f9fafb;
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* Status colors */
+.row-paid { border-left-color: #10b981 !important; }
+.row-pending { border-left-color: #facc15 !important; }
+.row-cancel { border-left-color: #ef4444 !important; }
+
+/* Status Tags */
+.status-pill {
+    padding: 5px 10px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-pill i {
+    font-size: 13px;
+}
+
+.status-pill.paid {
+    background: rgba(16,185,129,0.12);
+    color: #059669;
+}
+
+.status-pill.pending {
+    background: rgba(250,204,21,0.18);
+    color: #ca8a04;
+}
+
+.status-pill.canceled {
+    background: rgba(239,68,68,0.15);
+    color: #dc2626;
+}.profile-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.profile-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+</style>
+</head>
+<body>
+
+  <div class="admin-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">EN</div>
+        <div>
+          <div style="font-weight:800;font-size:15px">ENVA</div>
+          <div style="font-size:12px;color:#9fb0c7">Admin Panel</div>
+        </div>
+      </div>
+
+      <div class="section-title">Main</div>
+      <a href="./dashbord.html" class="nav-link "><i class="fa-solid fa-chart-line"></i><span class="item-label">Dashboard</span></a>
+      <a href="./orders.html" class="nav-link "><i class="fa-solid fa-bag-shopping"></i><span class="item-label">Orders</span></a>
+      <a href="./products.html" class="nav-link active"><i class="fa-solid fa-box-open"></i><span class="item-label">Products</span></a>
+      <a href="./customers.html" class="nav-link"><i class="fa-solid fa-users"></i><span class="item-label">Customers</span></a>
+
+      <div class="section-title">Catalog</div>
+      <a href="./categories.html" class="nav-link"><i class="fa-solid fa-tags"></i><span class="item-label">Categories</span></a>
+      <a href="./coupons.html" class="nav-link"><i class="fa-solid fa-gift"></i><span class="item-label">Coupons</span></a>
+      <a href="./offers.html" class="nav-link "><i class="fa-solid fa-tags"></i><span class="item-label">Offers</span></a>
+       <a href="./transactions.html" class="nav-link "><i class="fa-solid fa-right-left"></i><span class="item-label">Transactions</span></a>
+
+      <div class="section-title">Settings</div>
+      <a href="./settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span class="item-label">Settings</span></a>
+
+      <div style="border-top:1px dashed rgba(255,255,255,0.03);padding-top:14px;">
+  <a href="settings.html" class="profile-link">
+    <div style="font-size:12px;color:#9fb0c7">Signed in as</div>
+
+    <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
+      <div class="avatar">A</div>
+      <div>
+        <div style="font-weight:700;font-size:13px;color:#ffffff;">Admin</div>
+        <div style="font-size:12px;color:#9fb0c7">owner@enva.com</div>
+      </div>
+    </div>
+  </a>
+</div>
+
+    </aside>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div style="display:flex;gap:14px;align-items:center;">
+          <button id="toggleSidebar" class="btn btn-light btn-sm d-lg-none"><i class="fa-solid fa-bars"></i></button>
+
+          <div class="search-box">
+            <input type="text" placeholder="Search data, orders, or reports...">
+            <button><i class="fa-solid fa-magnifying-glass"></i></button>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <div class="chip"><i class="fa-regular fa-bell"></i></div>
+          <div class="chip"><i class="fa-regular fa-envelope"></i></div>
+          <div class="avatar">EN</div>
+        </div>
+      </div>
+
+  
+<!-- PAGE HEADER -->
+   <div class="page-header-underline mb-4 p-3 bg-white shadow-sm rounded-4">
+
+    <div class="d-flex align-items-center gap-3">
+        <div class="page-icon-underline">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+
+        <div>
+            <h3 class="fw-bold mb-1 page-title-underline">Products Management</h3>
+            <div class="page-sub-underline">Manage inventory, pricing, stock levels & categories.</div>
+        </div>
+    </div>
+
+    <!-- underline accent -->
+    <div class="header-underline-bar"></div>
+</div>
+
+
+
+    <!-- KPI CARDS -->
+ <div class="row g-4 mb-4">
+
+  <!-- TOTAL PRODUCTS -->
+  <div class="col-md-3">
+    <div class="kpi-pro">
+      <div class="kpi-icon bg-blue">
+        <i class="fa-solid fa-boxes-stacked"></i>
+      </div>
+      <div class="kpi-content">
+        <div class="kpi-title">Total Products</div>
+        <div class="kpi-value" id="totalProducts">0</div>
+        <div class="kpi-growth text-success">↑ +3.2% this month</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOW STOCK -->
+  <div class="col-md-3">
+    <div class="kpi-pro">
+      <div class="kpi-icon bg-orange">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <div class="kpi-content">
+        <div class="kpi-title">Low Stock Items</div>
+        <div class="kpi-value" id="lowStockProducts">0</div>
+        <div class="kpi-growth text-danger">⚠ Needs attention</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUT OF STOCK -->
+  <div class="col-md-3">
+    <div class="kpi-pro">
+      <div class="kpi-icon bg-red">
+        <i class="fa-solid fa-ban"></i>
+      </div>
+      <div class="kpi-content">
+        <div class="kpi-title">Out Of Stock</div>
+        <div class="kpi-value" id="outOfStockProducts">0</div>
+        <div class="kpi-growth text-warning">Restock soon</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW THIS MONTH -->
+  <div class="col-md-3">
+    <div class="kpi-pro">
+      <div class="kpi-icon bg-purple">
+        <i class="fa-solid fa-star"></i>
+      </div>
+      <div class="kpi-content">
+        <div class="kpi-title">New This Month</div>
+        <div class="kpi-value" id="newProducts">0</div>
+        <div class="kpi-growth text-primary">↑ Trending</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="card-ghost p-4 mb-4 add-product-box enhanced-product-box">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">Add New Product</h4>
+        <span class="badge bg-dark px-3 py-2">Create Product</span>
+    </div>
+
+   <form id="productForm" enctype="multipart/form-data">
+  <div class="row g-3">
+
+    <!-- Product Name -->
+    <div class="col-md-6">
+      <label class="mini-label">Product Name</label>
+      <input
+        type="text"
+        id="productName"
+        name="name"
+        class="form-control mini-input shadow-sm"
+        placeholder="Enter product name"
+        required
+      >
+    </div>
+
+    <!-- Price -->
+    <div class="col-md-3">
+      <label class="mini-label">Price</label>
+      <input
+        type="number"
+        id="productPrice"
+        name="price"
+        class="form-control mini-input shadow-sm"
+        placeholder="₹ 0"
+        required
+      >
+    </div>
+
+    <!-- Stock -->
+   <div class="col-md-12">
+  <label class="mini-label">Size-wise Quantity</label>
+
+  <div class="row g-2 size-stock-group">
+
+    <div class="col-6 col-md-2">
+      <label class="size-label">S</label>
+      <input type="number" class="form-control mini-input size-qty"
+        data-size="S" placeholder="Qty">
+    </div>
+
+    <div class="col-6 col-md-2">
+      <label class="size-label">M</label>
+      <input type="number" class="form-control mini-input size-qty"
+        data-size="M" placeholder="Qty">
+    </div>
+
+    <div class="col-6 col-md-2">
+      <label class="size-label">L</label>
+      <input type="number" class="form-control mini-input size-qty"
+        data-size="L" placeholder="Qty">
+    </div>
+
+    <div class="col-6 col-md-2">
+      <label class="size-label">XL</label>
+      <input type="number" class="form-control mini-input size-qty"
+        data-size="XL" placeholder="Qty">
+    </div>
+
+    <div class="col-6 col-md-2">
+      <label class="size-label">XXL</label>
+      <input type="number" class="form-control mini-input size-qty"
+        data-size="XXL" placeholder="Qty">
+    </div>
+
+  </div>
+</div>
+
+
+    <!-- Category -->
+    <div class="col-md-4">
+      <label class="mini-label">Category</label>
+    <select
+  id="productCategory"
+  class="form-select productCategory"
+  required
+>
+  <option value="" disabled selected>Select Category</option>
+</select>
+
+    </div>
+
+    <!-- Description -->
+    <div class="col-md-8">
+      <label class="mini-label">Description</label>
+      <textarea
+        id="productDescription"
+        name="description"
+        class="form-control mini-textarea shadow-sm"
+        rows="2"
+        placeholder="Write a short description..."
+      ></textarea>
+    </div>
+
+    <!-- Photo Upload -->
+    <div class="col-md-12">
+      <label class="mini-label">Upload Photos (max 3)</label>
+
+      <div class="upload-mini enhanced-upload" id="uploadBox">
+        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+        <span>Click or Drag Images</span>
+        <input
+          type="file"
+          id="productImages"
+          name="images"
+          accept="image/*"
+          multiple
+          hidden
+        >
+      </div>
+
+      <div id="imagePreview" class="preview-wrap mt-3"></div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="col-12 text-end mt-2">
+      <button type="reset" class="btn btn-outline-secondary px-4 mini-btn rounded-pill">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-dark px-4 ms-2 mini-btn rounded-pill">
+        Save Product
+      </button>
+    </div>
+
+  </div>
+</form>
+
+</div>
+
+
+    <!-- SEARCH & FILTERS -->
+  <div class="card-ghost mb-4">
+  <div class="row g-3 align-items-end">
+
+    <div class="col-md-4">
+      <label class="small text-muted mb-1">Search Product</label>
+      <input
+        type="text"
+        id="searchInput"
+        class="form-control"
+        placeholder="Product name, SKU..."
+      />
+    </div>
+
+    <div class="col-md-3">
+      <label class="small text-muted mb-1">Category</label>
+      <select class="form-select productCategory" id="categoryFilter">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label class="small text-muted mb-1">Stock Status</label>
+      <select class="form-select" id="stockFilter">
+        <option value="">All</option>
+        <option value="in">In Stock</option>
+        <option value="low">Low Stock</option>
+        <option value="out">Out of Stock</option>
+      </select>
+    </div>
+
+    <div class="col-md-2 d-flex gap-2">
+      <button class="btn btn-dark w-50" id="searchBtn">Search</button>
+      <button class="btn btn-outline-secondary w-50" id="resetBtn">Reset</button>
+    </div>
+
+  </div>
+</div>
+
+
+
+    <!-- PRODUCTS TABLE -->
+    <div class="card-ghost">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">Products List</h5>
+           
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table modern-table align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+
+               <tbody id="productTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+<style>
+    /* ======================================
+   ENHANCED ADD PRODUCT BOX
+====================================== */
+.size-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 4px;
+  display: block;
+  text-align: center;
+}
+
+.enhanced-add-box {
+    border-radius: 22px !important;
+    padding: 28px !important;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    transition: .35s ease;
+}
+
+.enhanced-add-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.09);
+}
+
+/* Top Tag */
+.tag-create {
+    font-size: 12px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    padding: 6px 14px;
+    color: white;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* Inputs */
+.fancy-input {
+    border-radius: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    padding: 10px 14px !important;
+    transition: .25s ease;
+}
+
+.fancy-input:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
+}
+
+/* Upload Box */
+.enhanced-upload {
+    border: 2px dashed #cbd5e1;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    background: #f8fafc;
+    color: #475569;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: .3s ease;
+}
+
+.enhanced-upload:hover {
+    background: #eef2ff;
+    border-color: #6366f1;
+    color: #4f46e5;
+    transform: scale(1.02);
+}
+
+.enhanced-upload i {
+    font-size: 32px;
+}
+
+/* Image Preview Grid */
+.enhanced-preview {
+    margin-top: 15px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.enhanced-preview img {
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid #e5e7eb;
+    transition: .25s ease;
+}
+
+.enhanced-preview img:hover {
+    transform: scale(1.08);
+    border-color: #6366f1;
+}
+
+/* Save Button Highlight */
+.save-btn-enhanced {
+    background: linear-gradient(135deg, #111, #333);
+    padding: 8px 28px !important;
+    font-size: 15px;
+    border-radius: 32px;
+    transition: .3s ease;
+}
+
+.save-btn-enhanced:hover {
+    transform: translateY(-3px);
+    background: #000;
+}
+
+    /* ============================
+   UNDERLINE HEADER STYLE
+============================ */
+/* Reduce form element size */
+.mini-input {
+    height: 40px;
+    font-size: 14px;
+    border-radius: 10px;
+}
+
+.mini-textarea {
+    font-size: 14px;
+    border-radius: 10px;
+}
+
+/* Labels */
+.mini-label {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+/* Upload Box */
+.upload-mini {
+    border: 2px dashed #cfd4df;
+    padding: 20px;
+    border-radius: 14px;
+    background: #f9fafb;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #4f46e5;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.upload-mini i {
+    font-size: 22px;
+}
+
+.upload-mini:hover {
+    background: #eef2ff;
+    border-color: #6366f1;
+}
+
+/* Preview Section */
+.preview-wrap {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.preview-thumb {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    object-fit: cover;
+    transition: 0.2s;
+}
+
+.preview-thumb:hover {
+    transform: scale(1.05);
+}
+
+/* Buttons */
+.mini-btn {
+    padding: 6px 18px;
+    font-size: 14px;
+    border-radius: 10px;
+}
+
+.page-header-underline {
+    position: relative;
+    border: 1px solid #eee;
+}
+
+/* Underline colored bar */
+.header-underline-bar {
+    width: 110px;
+    height: 4px;
+    background: #6366f1;   /* violet-blue ENVA theme */
+    border-radius: 6px;
+    margin-top: 10px;
+    transition: .3s ease;
+}
+
+/* Icon box */
+.page-icon-underline {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    background: #eef2ff;
+    color: #4f46e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+/* Title */
+.page-title-underline {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1f2937;
+}
+
+/* Sub text */
+.page-sub-underline {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* Hover Animation: underline grows */
+.page-header-underline:hover .header-underline-bar {
+    width: 160px;
+    background: #4f46e5;
+}
+
+/* Page Header Icon */
+.page-icon-enhanced {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+/* Gradient background */
+.bg-gradient-product {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #2563eb !important;
+}
+
+/* Product Image */
+.product-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+
+
+/* ============================
+   KPI PRO CARDS
+============================ */
+
+.kpi-pro {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: .35s ease;
+}
+
+/* Hover animation */
+.kpi-pro:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+/* Shine effect */
+.kpi-pro::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 70%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-20deg);
+    transition: .6s;
+}
+
+.kpi-pro:hover::after {
+    left: 120%;
+}
+
+/* Icon box */
+.kpi-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: white;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* Icon colors */
+.bg-blue    { background: #3b82f6; }
+.bg-green   { background: #10b981; }
+.bg-purple  { background: #7c3aed; }
+.bg-orange  { background: #f97316; }
+.bg-red     { background: #ef4444; }
+
+/* KPI text */
+.kpi-title {
+    font-size: 14px;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.kpi-value {
+    font-size: 28px;
+    font-weight: 800;
+    margin-top: 2px;
+}
+
+.kpi-growth {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: -3px;
+}
+
+</style>
+
+  </div> <!-- /admin-wrap -->
+
+
+<style>
+/* ==========================================
+   SIDEBAR OVERLAY STYLES (Retained)
+========================================== */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* This color is the dark area the user clicks to close the sidebar */
+    background: rgba(0, 0, 0, 0.5); 
+    /* Below the sidebar (z-index: 1000) but above the main content */
+    z-index: 999; 
+    /* Hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s;
+}
+
+/* Activated by JavaScript when the sidebar is open */
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* ==========================================
+ * RESPONSIVE LAYOUT & SIDEBAR FIXES
+ * (Max-width 1200px block has been removed)
+ * ========================================== 
+ */
+
+/* -------------------------------------------
+ * 1. DESKTOP/LAPTOP RESET FIX (CRUCIAL ADDITION)
+ * (Ensures sidebar is permanently visible on screens > 992px, fixing the laptop view bug)
+ * ------------------------------------------- */
+@media (min-width: 993px) {
+    /* Force the main layout grid to show sidebar and content side-by-side */
+    .admin-wrap {
+        grid-template-columns: var(--sidebar-width) 1fr !important;
+    }
+    
+    /* Ensure the sidebar is visible and in its fixed desktop position */
+    .sidebar {
+        transform: translateX(0) !important; /* Force it to appear */
+        position: sticky !important;        /* Revert to sticky/desktop positioning */
+        height: 100vh !important;
+        box-shadow: none !important;
+    }
+    
+    /* Hide the mobile overlay if it was accidentally activated */
+    .sidebar-overlay {
+        display: none !important;
+    }
+    
+    /* Reset topbar elements that were rearranged for mobile */
+    .topbar > div:first-child {
+        width: auto !important;
+        margin-bottom: 0 !important;
+        order: 0 !important; 
+    }
+    .top-actions {
+        width: auto !important;
+    }
+}
+
+/* -------------------------------------------
+ * 2. TABLET / SMALL DESKTOP (max-width: 992px)
+ * ------------------------------------------- */
+@media (max-width: 992px) {
+    
+    /* 1. LAYOUT GRID & SIDEBAR BEHAVIOR */
+    .admin-wrap {
+        /* Force main content to full width */
+        grid-template-columns: 1fr; 
+    }
+
+    .sidebar {
+        /* Full height and fixed to cover the screen */
+        width: var(--sidebar-width); 
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        
+        /* Hidden off-screen by default */
+        transform: translateX(-100%);
+        z-index: 1000;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar.toggled {
+        /* Slides into view when JS toggles the class */
+        transform: translateX(0);
+        box-shadow: 4px 0 10px rgba(0,0,0,0.3);
+    }
+    
+    /* 2. MAIN CONTENT & TOPBAR ADJUSTMENTS */
+    .main {
+        padding: 18px 20px;
+    }
+    
+    .topbar {
+        /* Allows search and actions to stack/wrap */
+        flex-wrap: wrap; 
+        padding: 12px 16px;
+    }
+    
+    /* Reposition Topbar elements to stack better */
+    .topbar > div:first-child {
+        width: 100%; 
+        margin-bottom: 10px;
+        order: 2; /* Search box/Toggle button moves below actions */
+    }
+    .top-actions {
+        order: 1; 
+        width: 100%;
+        justify-content: flex-end; /* Align actions right */
+    }
+    .search-box {
+        max-width: 100%; 
+    }
+
+
+    /* 3. CARD AND FORM LAYOUTS (Tablet) */
+    .row.g-4.mb-4 > .col-md-3 {
+        width: 50%; /* KPI Cards: 2 cards per row */
+    }
+
+    .card-ghost .row.g-3 > .col-md-4,
+    .card-ghost .row.g-3 > .col-md-3 {
+        width: 50%; /* Filter Fields: 2 fields per row */
+    }
+    
+    .card-ghost .row.g-3 > .col-md-2 {
+        width: 100%; /* Filter Action Buttons: Full width stack */
+    }
+}
+
+
+/* -------------------------------------------
+ * 3. MEDIUM MOBILE (max-width: 768px)
+ * ------------------------------------------- */
+@media (max-width: 768px) {
+    /* Page Header: Slightly smaller text/icons for mid-size phones */
+    .page-title-underline {
+        font-size: 22px;
+    }
+    .page-icon-underline {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+    }
+}
+
+
+/* -------------------------------------------
+ * 4. SMALL MOBILE (max-width: 576px)
+ * ------------------------------------------- */
+@media (max-width: 576px) {
+    
+    /* 1. PAGE HEADER MINIMIZATION */
+    .page-header-underline {
+        padding: 18px !important;
+    }
+    .page-icon-underline {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+    .page-title-underline {
+        font-size: 20px;
+    }
+    .page-sub-underline {
+        font-size: 13px;
+    }
+    .header-underline-bar {
+        width: 80px;
+    }
+    .page-header-underline:hover .header-underline-bar {
+        width: 120px;
+    }
+
+    /* 2. FULL STACKING OF CONTENT */
+    .row.g-4.mb-4 > .col-md-3 {
+        width: 100%; /* KPI Cards: 1 card per row */
+    }
+
+    .card-ghost .row.g-3 > .col-md-4,
+    .card-ghost .row.g-3 > .col-md-3 {
+        width: 100%; /* Filter Fields: 1 field per row */
+    }
+
+    /* 3. TRANSACTION LIST HEADER STACKING */
+    .card-ghost .d-flex.justify-content-between.align-items-center.mb-3 {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+    .card-ghost .d-flex.justify-content-between.align-items-center.mb-3 .btn-primary {
+        width: 100%; /* Export button becomes full width */
+    }
+    
+    /* 4. TRANSACTION TABLE STYLING */
+    .status-pill {
+        padding: 4px 8px; /* Compact padding for status pills */
+    }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the relevant HTML elements
+        const toggleButton = document.getElementById('toggleSidebar');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const adminWrap = document.querySelector('.admin-wrap');
+
+        // Function to hide the sidebar and all related active classes
+        function hideSidebar() {
+            sidebar.classList.remove('toggled');
+            sidebarOverlay.classList.remove('active');
+            adminWrap.classList.remove('sidebar-open'); // Assuming this class prevents main body scrolling/interaction
+        }
+
+        // --- 1. Toggle Button Handler (Opens/Closes Sidebar) ---
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function () {
+                sidebar.classList.toggle('toggled');
+                sidebarOverlay.classList.toggle('active');
+                adminWrap.classList.toggle('sidebar-open');
+            });
+        }
+
+        // --- 2. Overlay Click Handler (Closes Sidebar by touching the right side) ---
+        // This implements the functionality to close the sidebar when the dark overlay is clicked.
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function() {
+                hideSidebar();
+            });
+        }
+
+        // --- 3. Optional: Close sidebar when a navigation item is clicked ---
+        const navLinks = document.querySelectorAll('.sidebar .nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                // Only execute on smaller screens
+                if (window.innerWidth <= 992) {
+                    // Using setTimeout to allow the navigation to start before the transition runs
+                    setTimeout(hideSidebar, 100); 
+                }
+            });
+        });
+    }); // <-- Closing brace for document.addEventListener
+</script>
+
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    #toastBox {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Toast base */
+.custom-toast {
+  width: 320px;          /* ✅ Fixed width */
+  min-height: 64px;      /* ✅ Consistent height */
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.8s;
+}
+
+/* Icon */
+.custom-toast i {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Message */
+.custom-toast span {
+  line-height: 1.4;
+}
+
+/* Types */
+.custom-toast.success {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.custom-toast.error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.custom-toast.warning {
+  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+  color: #000;
+}
+
+.custom-toast.info {
+  background: linear-gradient(135deg, #3498db, #2c80b4);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+/* 📱 Mobile responsive */
+@media (max-width: 480px) {
+  #toastBox {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .custom-toast {
+    width: 92vw;        /* responsive on mobile */
+    min-height: 60px;
+  }
+}
+
+</style>
+
+<div id="toastBox"></div>
+<script src="admin-products.js" defer></script>
+
+</body>
+</html>

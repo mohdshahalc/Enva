@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enva cloth & co - Cancellation</title>
+    <link rel="icon" type="image/png" href="../Images/favicon.png">
+    
+    
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* Custom styles for matching original layout proportions and colors */
+    .top-navbar {
+      height: 48px; /* Approx h-12 */
+      font-size: 0.875rem; /* text-sm */
+    }
+    .main-navbar {
+      height: 80px; /* Approx h-20 */
+    }
+    .search-container {
+      max-width: 430px; /* lg:w-[430px] */
+    }
+    .register-bar {
+      height: 48px; /* h-12 */
+    }
+    .footer-bg {
+        background-color: #f2f2f2;
+    }
+    .social-icon-box {
+        width: 32px;
+        height: 32px;
+        background-color: #e9ecef; /* bg-gray-300 */
+        color: #6c757d; /* text-gray-700 */
+        transition: color 0.3s;
+    }
+    .social-icon-box:hover {
+        color: #000;
+    }
+    /* Custom container width to mimic max-w-7xl (approx 1400px) */
+    .custom-container-lg {
+        max-width: 1400px; 
+    }
+    .hover-black:hover {
+        color: #000 !important;
+    }
+    .register-bar-fixed {
+    position: fixed;
+    top: 80px;              /* BELOW the 80px navbar */
+    left: 0;
+    width: 100%;
+    height: 48px;           /* same as your product sub-navbar */
+    background: #000;
+    color: #fff;
+    z-index: 1040;          /* under navbar-main */
+    display: flex;
+    align-items: center;
+}nav {
+    /* Check this height and make sure it matches the actual rendered height of your two nav bars */
+    height: 80px !important; 
+    display: flex !important;
+    align-items: center !important;
+    z-index: 1;
+}.navbar-main { 
+    position: sticky; /* or fixed */
+    top: 0;
+    width: 100%;
+    background-color: #000; /* Ensure background is solid */
+    z-index: 10; /* Set a high z-index to always be on top */
+}
+  </style>
+</head>
+
+<body class="bg-white text-dark">
+
+
+<!-- ========================= MAIN NAVBAR ========================= -->
+<nav class="w-100 bg-white border-bottom position-fixed top-0 start-0 z-3 shadow-sm">
+    <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between gap-4">
+
+        <a href="#" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
+            <img src="../Images/Envalogo.jpeg" class="rounded-circle bg-light" style="width: 50px; height: 50px;">
+            <div>
+                <div class="fw-semibold">Enva cloth & co</div>
+                <div class="small text-secondary" style="margin-top:-3px;">Wear Your Confidence</div>
+            </div>
+        </a>
+
+        <ul class="nav gap-4 d-none d-lg-flex small fw-medium">
+            <li><a href="./home.html" class="nav-link text-secondary p-0 hover-black">Home</a></li>
+            <li><a href="./products.html" class="nav-link text-secondary p-0 hover-black">Products</a></li>
+            <li><a href="./blog.html" class="nav-link text-secondary p-0 hover-black">Blog</a></li>
+        </ul>
+
+        <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center">
+            <div class="input-group shadow-sm bg-white rounded-2" style="max-width: 380px;">
+                <input type="text" class="form-control border-0 py-2 small fw-medium text-secondary" placeholder="Search For Items...">
+                <button class="btn btn-dark">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3 small fw-medium text-secondary">
+            <a href="./profile.html" class="d-flex align-items-center gap-1 text-decoration-none text-secondary hover-black">
+                <i class="fa-regular fa-user" style="font-size: 18px;"></i> Account
+            </a>
+
+            <a href="./wishlist.html" class="d-flex align-items-center gap-1 text-decoration-none text-secondary hover-black">
+                <i class="fa-regular fa-heart" style="font-size: 18px;"></i> Wishlist
+            </a>
+
+            <a href="./cart.html" class="d-flex align-items-center gap-1 text-decoration-none text-secondary hover-black">
+                <i class="fa-solid fa-cart-shopping" style="font-size: 18px;"></i> Cart
+            </a>
+        </div>
+
+    </div>
+</nav>
+
+
+
+<!-- TOP BLACK BAR -->
+<div class="register-bar-fixed w-100 bg-black text-white">
+    <div class="container-fluid px-4 custom-container-lg mx-auto" style="height:48px;">
+        <div class="d-flex align-items-center justify-content-between h-100 small">
+            <div class="fw-medium">Account</div>
+            <div class="text-light" style="color:#adb5bd !important;">Home - Account</div>
+        </div>
+    </div>
+</div>
+<div style="height:80px;"></div>
+
+
+<div class="container custom-container-lg mx-auto py-5" style="background-color: #fcfcfc;">
+
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 small">
+                <li class="breadcrumb-item"><a href="#" class="text-secondary text-decoration-none"></a></li>
+                <li class="breadcrumb-item active fw-bold" aria-current="page">My Account</li>
+            </ol>
+        </nav>
+        <div class="small fw-semibold">
+            Welcome! <span class="text-danger">Md Rimel</span>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="d-flex flex-column small">
+                
+                <h6 class="fw-bold text-dark text-uppercase mt-2 border-bottom pb-1 mb-3">Manage  Account</h6>
+                <div class="d-flex flex-column gap-2 mb-4">
+                    <a href="./profile.html" class="text-secondary text-decoration-none py-1 ps-2"> Profile</a>
+                    <a href="./address.html" class="text-secondary text-decoration-none py-1 ps-2">Address Book</a>
+                    <a href="./paymentOptions.html" class="text-secondary text-decoration-none py-1 ps-2"> Payment Options</a>
+                </div>
+                
+                <h6 class="fw-bold text-dark text-uppercase border-bottom pb-1 mb-3">My Orders</h6>
+                <div class="d-flex flex-column gap-2 mb-4">
+                     <a href="./orders.html" class="text-secondary text-decoration-none py-1 ps-2"> Orders</a>
+                    <a href="./return.html" class="text-secondary text-decoration-none py-1 ps-2"> Returns</a>
+                    <a href="#" class="text-danger fw-bold text-decoration-none py-1 ps-2 border-start border-danger border-3"> Cancellations</a>
+                </div>
+
+                <h6 class="fw-bold text-dark text-uppercase border-bottom pb-1 mb-3"> WishList</h6>
+            </div>
+        </div>
+
+      <div class="col-md-9 border-start ps-5">
+
+    <!-- PAGE TITLE -->
+    <h3 class="fw-bold text-dark mb-4">My Cancellations</h3>
+
+    <!-- EMPTY STATE (Show if no cancellations exist) -->
+    <!--
+    <div class="text-center py-5">
+        <img src="https://cdn-icons-png.flaticon.com/512/4076/4076503.png" width="120">
+        <h5 class="fw-bold mt-3">No Cancellations Yet</h5>
+        <p class="text-secondary small">You haven’t cancelled any orders.</p>
+        <a href="#" class="btn btn-dark mt-2 px-4 py-2">Shop Now</a>
+    </div>
+    -->
+
+    <!-- CANCELLED ORDER 1 -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                <div>
+                    <h6 class="fw-bold mb-1">Order #CN-982421</h6>
+                    <p class="small text-secondary mb-0">Cancelled on: 12 Feb 2025</p>
+                </div>
+
+                <span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2 rounded-pill">
+                    Cancelled
+                </span>
+            </div>
+
+            <hr>
+
+            <!-- Product -->
+            <div class="d-flex gap-3 mb-3">
+                <img src="https://via.placeholder.com/90" class="rounded" alt="product">
+                <div class="small">
+                    <h6 class="fw-semibold mb-1">Women Checked Midi Dress</h6>
+                    <p class="text-secondary mb-1">Qty: 1</p>
+                    <p class="fw-semibold mb-0">₹1,499</p>
+                </div>
+            </div>
+
+            <!-- Reason -->
+            <p class="small text-secondary mb-3">
+                <strong class="text-dark">Reason:</strong> Ordered by mistake
+            </p>
+
+            <hr>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-end gap-3 flex-wrap">
+                <button class="btn btn-outline-secondary fw-semibold px-4 py-2">
+                    <i class="fa-solid fa-circle-info me-1"></i> View Details
+                </button>
+                <button class="btn btn-outline-dark fw-semibold px-4 py-2">
+                    <i class="fa-solid fa-file-invoice me-1"></i> Invoice
+                </button>
+                <button class="btn btn-dark fw-bold px-4 py-2">
+                    <i class="fa-solid fa-rotate-right me-1"></i> Reorder
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CANCELLED ORDER 2 -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                <div>
+                    <h6 class="fw-bold mb-1">Order #CN-874512</h6>
+                    <p class="small text-secondary mb-0">Cancelled on: 03 Feb 2025</p>
+                </div>
+
+                <span class="badge bg-warning-subtle text-warning fw-semibold px-3 py-2 rounded-pill">
+                    Refund Initiated
+                </span>
+            </div>
+
+            <hr>
+
+            <div class="d-flex gap-3 mb-3">
+                <img src="https://via.placeholder.com/90" class="rounded" alt="product">
+                <div class="small">
+                    <h6 class="fw-semibold mb-1">Navy Blue Cotton Kurti</h6>
+                    <p class="text-secondary mb-1">Qty: 1</p>
+                    <p class="fw-semibold mb-0">₹899</p>
+                </div>
+            </div>
+
+            <p class="small text-secondary mb-3">
+                <strong class="text-dark">Reason:</strong> Delivery was delayed
+            </p>
+
+            <hr>
+
+            <div class="d-flex justify-content-end gap-3 flex-wrap">
+                <button class="btn btn-outline-dark fw-semibold px-4 py-2">Invoice</button>
+                <button class="btn btn-dark fw-bold px-4 py-2">View Details</button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+    </div>
+</div>
+
+  
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

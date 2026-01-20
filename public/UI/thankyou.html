@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enva cloth & co - Product</title>
+    <link rel="icon" type="image/png" href="../Images/favicon.png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+ <style>
+  /* ============================================
+   1. CORE LAYOUT & NAVIGATION (FIXED)
+   ============================================ */
+
+/* MAIN WHITE NAVBAR (Top) */
+nav.navbar-main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px); /* Modern Glass Effect */
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    z-index: 1050;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 !important;
+    transition: all 0.3s ease;
+}
+
+/* BLACK SECONDARY NAVBAR (Below Main) */
+.navbar-sub {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    height: 48px;
+    background: #000000 !important;
+    color: #ffffff;
+    z-index: 1040;
+    display: flex;
+    align-items: center;
+    padding: 0 !important;
+}
+
+/* CONTENT SPACER (Ensures body content starts below navs) */
+.body-spacer {
+    height: 128px; /* 80px + 48px */
+}
+
+/* ============================================
+   2. BRANDING & TYPOGRAPHY
+   ============================================ */
+
+.brand-name {
+    letter-spacing: 0.5px;
+    color: #111;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif; /* Matching your hero style */
+}
+
+.brand-tagline {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #6c757d;
+}
+
+.hero-heading {
+    font-family: 'Playfair Display', serif;
+    font-weight: 300;
+    font-size: 3.5rem; /* Set base size */
+    line-height: 1.15;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.heading-accent {
+    width: 80px;
+    height: 4px;
+    background-color: #dc3545;
+    border-radius: 2px;
+}
+
+/* ============================================
+   3. DESKTOP INTERACTION (NAV LINKS)
+   ============================================ */
+
+.nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+    font-weight: 500;
+    color: #333 !important;
+}
+
+.nav-link:hover {
+    color: #000 !important;
+}
+
+/* Animated Underline Effect */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: #000;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* ============================================
+   4. SEARCH BAR & ACTION ICONS
+   ============================================ */
+
+.input-group {
+    background: #f8f8f8 !important;
+    border-radius: 50px !important; /* Premium Pill Shape */
+    padding: 2px 5px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.input-group:focus-within {
+    background: #fff !important;
+    border-color: #000;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05) !important;
+}
+
+.input-group .form-control {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.nav-icon {
+    transition: all 0.2s ease;
+    padding: 8px;
+    border-radius: 8px;
+    color: #333 !important;
+    text-decoration: none;
+}
+
+.nav-icon:hover {
+    background-color: #f8f8f8;
+    transform: translateY(-2px);
+    color: #000 !important;
+}
+
+/* ============================================
+   5. FOOTER & SOCIALS
+   ============================================ */
+
+.footer-bg {
+    background-color: #f2f2f2;
+}
+
+.social-icon-box {
+    width: 36px;
+    height: 36px;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.social-icon-box:hover {
+    background-color: #000;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* ============================================
+   6. RESPONSIVE LOGIC
+   ============================================ */
+
+   /* Create a clear gap between Branding and Menu */
+@media (min-width: 992px) {
+    .nav.d-lg-flex {
+        margin-left: 60px !important; /* Increase this number for more distance */
+        padding-left: 20px;
+        /* Optional: Add a subtle divider line */
+        border-left: 1px solid rgba(0,0,0,0.05); 
+    }
+}
+
+/* Ensure the search bar takes up the remaining middle space */
+.flex-grow-1 {
+    flex-grow: 1 !important;
+}
+
+/* MOBILE ONLY Styles (0px to 768px) */
+@media (max-width: 768px) {
+    .nav, .d-lg-flex {
+        display: none !important; /* Hide Desktop menu & search */
+    }
+
+    .nav-text {
+        display: none; /* Icons only for Cart/Wishlist/Account */
+    }
+
+    .nav-icon i {
+        font-size: 20px;
+    }
+
+    .brand-name {
+        font-size: 14px;
+    }
+
+    .mobile-only {
+        display: flex !important;
+    }
+
+    .gap-3 {
+        gap: 0.75rem !important;
+    }
+}
+
+/* DESKTOP ONLY Styles (769px and up) */
+@media (min-width: 769px) {
+    .mobile-only {
+        display: none !important;
+    }
+}
+
+/* UTILITIES */
+.custom-container-lg {
+    max-width: 1400px;
+}
+ </style>
+</head>
+
+<body class="bg-white text-dark">
+
+<!-- ========================= MAIN NAVBAR ========================= -->
+<nav class="navbar-main w-100 position-fixed top-0 start-0 z-3 shadow-sm">
+    <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between">
+
+        <a href="./home.html" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
+    <img src="../Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
+    <div class="brand-text">
+        <div class="brand-name fw-bold">Enva cloth & co</div>
+        <div class="brand-tagline">Wear Your Confidence</div>
+    </div>
+</a>
+
+<ul class="nav gap-4 d-none d-lg-flex small fw-bold ms-5">
+    <li><a href="./home.html" class="nav-link text-dark p-0">Home</a></li>
+    <li><a href="./products.html" class="nav-link text-dark p-0">Products</a></li>
+    <li><a href="./blog.html" class="nav-link text-dark p-0">Blog</a></li>
+</ul>
+
+        <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center px-4">
+            <div class="input-group shadow-none" style="max-width: 350px;">
+                <input type="text" class="form-control border-0 py-2 small fw-medium" placeholder="Search trends...">
+                <button class="btn border-0 text-dark">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 gap-md-3 small fw-medium text-secondary">
+
+            <a href="./home.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
+                <i class="fa-solid fa-house"></i>
+            </a>
+
+            <a href="./products.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </a>
+
+            <a href="./profile.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+                <i class="fa-regular fa-user"></i>
+                <span class="nav-text d-none d-xl-inline">Account</span>
+            </a>
+
+            <a href="./wishlist.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+                <i class="fa-regular fa-heart"></i>
+                <span class="nav-text d-none d-xl-inline">Wishlist</span>
+            </a>
+
+            <a href="./cart.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="nav-text d-none d-xl-inline">Cart</span>
+            </a>
+
+        </div>
+    </div>
+</nav>
+
+
+<div class="navbar-sub w-100 bg-black text-white">
+
+    <div class="container-fluid px-4 custom-container-lg mx-auto">
+        <div class="d-flex align-items-center justify-content-between py-2" style="height: 48px; font-size: 0.85rem;">
+            <span class="fw-semibold">Thankyou</span>
+            <span class="text-light"></span>
+        </div>
+    </div>
+</div>
+<div class="body-spacer"></div>
+
+
+ <section class="success-page-wrapper py-5">
+  <div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="success-card">
+      
+      <div class="text-center mb-4">
+        <div class="check-animation-wrapper">
+          <div class="check-circle"></div>
+          <i class="fa-solid fa-check check-icon"></i>
+        </div>
+        <h1 class="brand-name fw-bold h2 mb-2">Order Confirmed</h1>
+        <p class="text-muted small px-3">We’ve received your order! Our team is already preparing your style upgrade for shipment.</p>
+      </div>
+
+      <div class="order-stepper mb-5">
+        <div class="step active">
+          <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+          <span class="step-text">Placed</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step">
+          <div class="step-circle">2</div>
+          <span class="step-text">Processing</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step">
+          <div class="step-circle">3</div>
+          <span class="step-text">Shipped</span>
+        </div>
+      </div>
+
+      <div class="receipt-card mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-secondary small fw-medium">Order Reference</span>
+          <span class="fw-bold text-dark">
+  <span id="orderRef">#ENVA</span>
+  <i
+    class="fa-regular fa-copy ms-1 text-muted"
+    style="cursor:pointer; font-size:12px;"
+    onclick="copyOrderId()"
+  ></i>
+</span>
+
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="text-secondary small fw-medium">Estimated Delivery</span>
+          <span class="fw-bold text-dark">Jan 20 — Jan 22</span>
+        </div>
+        <hr class="my-3 opacity-10">
+        <div class="d-flex gap-2 align-items-start">
+          <i class="fa-solid fa-circle-info text-dark mt-1" style="font-size: 12px;"></i>
+          <p class="small text-muted mb-0" style="font-size: 12px; line-height: 1.5;">
+            A confirmation email with tracking details will be sent once your package leaves our warehouse.
+          </p>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <button id="viewOrdersBtn" class="btn btn-dark w-100 py-3 rounded-pill fw-bold action-btn">
+            Track Order
+          </button>
+        </div>
+        <div class="col-12 col-md-6">
+          <button id="continueShoppingBtn" class="btn btn-outline-dark w-100 py-3 rounded-pill fw-bold action-btn">
+            Back to Shop
+          </button>
+        </div>
+      </div>
+
+      <p class="mt-4 small text-muted">Need help? <a href="#" class="text-dark fw-bold text-decoration-none border-bottom border-dark">Contact Support</a></p>
+
+    </div>
+  </div>
+</section>
+
+ <style>
+    /* WRAPPER */
+.success-page-wrapper {
+    background-color: #fafafa;
+}
+
+.success-card {
+    background: #ffffff;
+    max-width: 560px;
+    width: 100%;
+    padding: 3.5rem 2.5rem;
+    border-radius: 2.5rem;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.02);
+}
+
+/* CELEBRATION ICON */
+.check-animation-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+}
+.check-circle {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.check-icon {
+    position: relative;
+    color: #fff;
+    font-size: 32px;
+    line-height: 80px;
+    opacity: 0;
+    animation: fadeIn 0.3s 0.4s forwards;
+}
+
+/* PREMIUM STEPPER */
+.order-stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+}
+.step-circle {
+    width: 32px;
+    height: 32px;
+    background: #f1f1f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #999;
+    transition: 0.3s;
+}
+.step.active .step-circle {
+    background: #000;
+    color: #fff;
+    box-shadow: 0 0 0 5px rgba(0,0,0,0.05);
+}
+.step-text {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #999;
+}
+.step.active .step-text { color: #000; }
+.step-divider {
+    flex: 1;
+    height: 2px;
+    background: #f1f1f1;
+    margin-bottom: 22px;
+}
+
+/* RECEIPT DESIGN */
+.receipt-card {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    text-align: left;
+    border: 1px dashed #e0e0e0;
+}
+
+/* BUTTONS */
+.action-btn {
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* ANIMATIONS */
+@keyframes popIn { to { transform: scale(1); } }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 576px) {
+    .success-card { padding: 2.5rem 1.5rem; border-radius: 0; box-shadow: none; min-height: 100vh; }
+    .success-page-wrapper { background: #fff; }
+}
+ </style>
+  <footer class="footer-bg py-5 mt-4">
+    <div class="container-fluid px-4 custom-container-lg mx-auto">
+      <div class="row row-cols-1 row-cols-md-4 g-5">
+
+        <div class="col">
+          <div class="small">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <img src="../Images/Envalogo.jpeg" class="rounded-circle bg-light" style="width: 56px; height: 56px;">
+              <div>
+                <div class="fw-semibold fs-5">Enva</div>
+                <div class="small text-secondary" style="margin-top: -4px;">Designer for Every Woman</div>
+              </div>
+            </div>
+
+            <p class="text-secondary" style="font-size: 0.75rem; line-height: 1.4;">
+              Discover the latest trends in women's fashion. Shop stylish outfits, accessories, and essentials curated just for you.
+            </p>
+
+            <div class="mt-4 text-secondary" style="font-size: 0.75rem;">
+              <div class="mb-1">📍 51 Green St Huntington ohio beach ontario, NY 11746 NY 6783, USA</div>
+              <div class="mb-1">✉ example@email.com</div>
+              <div class="mb-1">📞 +91 123 4567890</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="small">
+            <h3 class="fw-semibold mb-3">Company</h3>
+            <ul class="list-unstyled text-secondary" style="font-size: 0.75rem; line-height: 2;">
+              <li><a href="#" class="text-decoration-none text-secondary">About Us</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Delivery Information</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Privacy Policy</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Terms & Conditions</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Contact Us</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Support Center</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="small">
+            <h3 class="fw-semibold mb-3">Category</h3>
+            <ul class="list-unstyled text-secondary" style="font-size: 0.75rem; line-height: 2;">
+              <li><a href="#" class="text-decoration-none text-secondary">Dresses</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Tops & Tees</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Ethnic Wear</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Kurtis & Kurtas</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Western Wear</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Casual Wear</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="small">
+            <h3 class="fw-semibold mb-3">Subscribe Our Newsletter</h3>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control form-control-sm" placeholder="Search here..." aria-label="Search here...">
+              <button class="btn btn-dark" type="button">
+                &gt;
+              </button>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-twitter"></i>
+              </a>
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+
+            </div>
+
+
+            <div class="d-flex gap-2 mt-4">
+              <img src="../Images/about1.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 1">
+              <img src="../Images/about2.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 2">
+              <img src="../Images/about3.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 3">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+ <style>
+    /* ============================================
+   ORDER SUCCESS PAGE STYLING
+   ============================================ */
+
+.success-section {
+    background: #fdfdfd;
+    min-height: 100vh;
+}
+
+.success-card {
+    max-width: 500px;
+    width: 100%;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 32px;
+    /* Soft shadow to feel like the card is floating */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+}
+
+/* ANIMATED SUCCESS ICON */
+.success-icon-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.success-icon-bg {
+    position: absolute;
+    inset: 0;
+    background: #f0fdf4; /* Light Green */
+    border-radius: 50%;
+    animation: scaleIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.check-mark {
+    font-size: 40px;
+    color: #16a34a; /* Professional Green */
+    z-index: 2;
+    animation: checkAppear 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+/* ORDER INFO BOX */
+.order-info-card {
+    background: #f8f9fa;
+    border-radius: 20px;
+    padding: 24px;
+    margin-top: 30px;
+    text-align: left;
+    border: 1px solid #f1f1f1;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.badge-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 2px 10px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* BUTTON ENHANCEMENTS */
+.btn-lg {
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* ANIMATIONS */
+@keyframes scaleIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes checkAppear {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 576px) {
+    .success-card {
+        padding: 30px 20px;
+        box-shadow: none;
+        background: transparent;
+    }
+}
+ </style>
+
+<style>
+   #toastBox {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 99999;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none; /* prevents blocking clicks */
+}
+
+
+/* Toast base */
+.custom-toast {
+  width: 320px;          /* ✅ Fixed width */
+  min-height: 64px;      /* ✅ Consistent height */
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.8s;
+}
+
+/* Icon */
+.custom-toast i {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Message */
+.custom-toast span {
+  line-height: 1.4;
+}
+
+/* Types */
+.custom-toast.success {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.custom-toast.error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.custom-toast.warning {
+  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+  color: #000;
+}
+
+.custom-toast.info {
+  background: linear-gradient(135deg, #3498db, #2c80b4);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+/* 📱 Mobile responsive */
+@media (max-width: 480px) {
+  #toastBox {
+    top: 50px;
+    bottom: 50px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .custom-toast {
+    width: 92vw;        /* responsive on mobile */
+    min-height: 60px;
+  }
+}
+
+</style>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get("order");
+
+  if (orderId) {
+    document.getElementById("orderRef").innerText =
+      "#ENVA-" + orderId.slice(-6).toUpperCase();
+  }
+
+  function copyOrderId() {
+    if (!orderId) return;
+    navigator.clipboard.writeText(orderId);
+    alert("Order ID copied!");
+  }
+</script>
+<script>
+  document.getElementById("viewOrdersBtn")?.addEventListener("click", () => {
+    window.location.href = "./orders.html";
+  });
+
+  document.getElementById("continueShoppingBtn")?.addEventListener("click", () => {
+    window.location.href = "./products.html";
+  });
+</script>
+
+<script>
+  if (performance.navigation.type === 2) {
+    window.location.href = "./orders.html";
+  }
+</script>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+

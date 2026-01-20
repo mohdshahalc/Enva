@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enva cloth & co - Checkout</title>
+    <link rel="icon" type="image/png" href="../Images/favicon.png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ======================== BASE STYLES (Retained & Cleaned) ======================== */
+        .top-navbar { height: 48px; font-size: 0.875rem; }
+        .main-navbar { height: 80px; }
+        .register-bar { height: 48px; }
+        .footer-bg { background-color: #f2f2f2; }
+        .social-icon-box { width: 32px; height: 32px; background-color: #e9ecef; color: #6c757d; transition: color 0.3s; }
+        .social-icon-box:hover { color: #000; }
+        .custom-container-lg { max-width: 1400px; }
+        .register-bar-fixed {
+            position: fixed; top: 80px; left: 0; width: 100%; height: 48px;
+            background: #000; color: #fff; z-index: 1040; display: flex; align-items: center;
+        }
+        nav { height: 80px !important; display: flex !important; align-items: center !important; z-index: 1; }
+        .navbar-main { position: sticky; top: 0; width: 100%; background-color: #000; z-index: 10; }
+        
+        /* ======================== UI IMPROVEMENTS ======================== */
+        :root {
+            --brand-color: #c9404d; /* Enva Accent Color */
+            --brand-shadow: rgba(201, 64, 77, 0.25);
+        }
+
+        .checkout-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex; 
+            gap: 30px;
+             grid-template-columns: 1.6fr 1fr; 
+            margin-top: 180px;
+            margin-bottom: 50px;
+        }
+
+        /* --- Main Content Panel Style --- */
+        .checkout-form {
+            background: #fff;
+            padding: 30px 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            border: 1px solid #f0f0f0; 
+        }
+        .checkout-form { flex-grow: 1; }
+       
+        
+
+        /* --- Titles and Separators --- */
+        .checkout-form h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+            border-bottom: 2px solid var(--brand-color); 
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-section-title {
+            font-size: 18px; 
+            font-weight: 600;
+            color: #333;
+            margin-top: 25px; 
+            margin-bottom: 15px; 
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #ddd; 
+        }
+        
+        /* --- Input and Select Focus --- */
+        .form-control, .form-select {
+            padding: 0.5rem 0.75rem; 
+            border-color: #ddd;
+            transition: all 0.2s ease-in-out;
+            font-size: 0.875rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--brand-color); 
+            box-shadow: 0 0 0 0.25rem var(--brand-shadow);
+        }
+        
+        .form-label {
+            font-size: 0.8rem; 
+            font-weight: 600;
+            margin-bottom: 0.35rem; 
+        }
+
+        /* --- Radio/Checkbox Styling (Using Brand Color) --- */
+        .form-check-input:checked {
+            background-color: var(--brand-color);
+            border-color: var(--brand-color);
+        }
+        
+        /* --- Shipping/Payment Option Boxes --- */
+        .option-box {
+            padding: 10px 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .option-box:hover {
+            border-color: var(--brand-color);
+            background-color: #fcfcfc;
+        }
+        .option-box input:checked + label {
+            color: var(--brand-color);
+            font-weight: 600;
+        }
+        
+        /* --- Order Summary Styling --- */
+        .order-summary h3 {
+            font-size: 22px;
+            font-weight: 600;
+             min-width: 420px; 
+            margin-bottom: 25px;
+        }
+        
+        /* FIX: Product Item Alignment */
+        .summary-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f2f2f2;
+            display: flex; /* Ensures image and text are on one line */
+            align-items: center;
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-item-image {
+            width: 50px; /* Fixed width for better alignment */
+            height: 65px; 
+            object-fit: cover;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            flex-shrink: 0; /* Prevents image from shrinking */
+        }
+        .summary-item-info {
+            flex-grow: 1; /* Allows info block to take up remaining space */
+            margin-left: 10px;
+        }
+        .summary-item-price {
+            margin-left: auto; /* Pushes the price to the far right */
+            font-weight: 700;
+            color: var(--brand-color);
+            flex-shrink: 0; /* Prevents price from shrinking */
+        }
+        /* END FIX */
+        
+        .summary-line {
+            padding: 8px 0;
+            font-size: 1rem;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .summary-total {
+            padding: 15px 0;
+            margin-top: 10px;
+            border-top: 2px solid #333; 
+            font-size: 22px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .total-value {
+            color: var(--brand-color);
+            font-weight: 700;
+        }
+
+        .place-order-btn {
+          width: 100%;
+    padding: 15px;
+    background-color: #c9404d; /* Brand color: a deep reddish-pink */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+            box-shadow: 0 4px 8px var(--brand-shadow);
+        }
+
+        .place-order-btn:hover {
+           background-color: #a83541;
+            box-shadow: 0 2px 4px var(--brand-shadow);
+        }/* Style for the base button */
+        /* Place Order Button Loading State */
+.place-order-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Spinner */
+.place-order-btn.loading::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Disabled state */
+.place-order-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Success state */
+.place-order-btn.success {
+  background-color: #2e7d32;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.apply-btn {
+    background-color: #555; /* The original dark gray background */
+    color: #fff;
+    transition: background-color 0.2s, opacity 0.2s; /* Added smooth transition */
+    border: none; /* Ensure no border interferes */
+}
+
+/* Hover effect: Change to the main brand red color (#c9404d) */
+.apply-btn:hover {
+    background-color: #c9404d !important; /* Use brand red */
+    color: #fff;
+    opacity: 0.9; /* Slight opacity change for feedback */
+}
+/* Coupon Section */
+.coupon-section {
+  margin: 14px 0;
+}
+
+.coupon-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.coupon-input {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 13px;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.coupon-input:focus {
+  border-color: #c9404d;
+}
+
+.coupon-apply-btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.coupon-apply-btn:hover {
+  opacity: 0.9;
+}
+
+/* Feedback text */
+.coupon-feedback {
+  font-size: 12px;
+  margin-top: 6px;
+  min-height: 14px;
+}
+
+.coupon-feedback.success {
+  color: #2e7d32;
+}
+
+.coupon-feedback.error {
+  color: #c62828;
+}
+.coupon-group {
+  margin-bottom: 20px;
+}
+
+.coupon-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.coupon-card {
+  border: 1px dashed #ddd;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+.coupon-card.disabled {
+  opacity: 0.6;
+}
+
+.coupon-code {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.coupon-desc {
+  font-size: 12px;
+  color: #666;
+}
+
+.coupon-reason {
+  font-size: 12px;
+  color: #999;
+  margin-top: 6px;
+}
+/* MAIN ORDER SUMMARY CARD */
+.order-summary {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  width: 100%;
+}
+
+/* TWO COLUMN LAYOUT INSIDE CARD */
+.order-summary-wrapper {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr; /* left | right */
+  gap: 28px;
+  align-items: start;
+}
+
+/* LEFT SIDE */
+.summary-left {
+  min-width: 0; /* prevents overflow */
+}
+
+/* RIGHT SIDE (COUPONS) */
+.summary-right {
+  border-left: 1px solid #eee;
+  padding-left: 18px;
+}
+
+/* COUPON GROUP */
+.coupon-group {
+  margin-bottom: 20px;
+}
+
+/* COUPON CARD */
+.coupon-card {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+  border: 1px dashed #ddd;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+/* COUPON TEXT */
+.coupon-code {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.coupon-desc {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* APPLY BUTTON */
+.apply-mini-btn {
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.apply-mini-btn:hover {
+  opacity: 0.85;
+}
+
+/* EMPTY STATE */
+.coupon-empty {
+  font-size: 13px;
+  color: #9ca3af;
+  text-align: center;
+  padding: 10px 0;
+}.coupon-feedback {
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.coupon-feedback.success {
+  color: #2e7d32;
+}
+
+.coupon-feedback.error {
+  color: #c62828;
+}
+
+.applied-coupon {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 6px 10px;
+  border-radius: 6px;
+}.coupon-success {
+  margin-top: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 6px;
+}
+#removeCouponBtn {
+  background: #c9404d;
+}
+
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .order-summary-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-right {
+    border-left: none;
+    border-top: 1px solid #eee;
+    padding-left: 0;
+    padding-top: 18px;
+  }
+}
+
+    </style>
+</head>
+
+<body class="bg-light text-dark">
+    
+<nav class="w-100 bg-white border-bottom position-fixed top-0 start-0 z-3 shadow-sm">
+    <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between gap-4">
+
+        <a href="#" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
+            <img src="../Images/Envalogo.jpeg" class="rounded-circle bg-light" style="width: 50px; height: 50px;">
+            <div>
+                <div class="fw-semibold">Enva cloth & co</div>
+                <div class="small text-secondary" style="margin-top:-3px;">Wear Your Confidence</div>
+            </div>
+        </a>
+
+        <ul class="nav gap-4 d-none d-lg-flex small fw-medium">
+            <li><a href="./home.html" class="nav-link text-secondary p-0 hover-black">Home</a></li>
+            <li><a href="./products.html" class="nav-link text-secondary p-0 hover-black">Products</a></li>
+            <li><a href="./blog.html" class="nav-link text-secondary p-0 hover-black">Blog</a></li>
+        </ul>
+
+        <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center">
+            <div class="input-group shadow-sm bg-white rounded-2" style="max-width: 380px;">
+                <input type="text" class="form-control border-0 py-2 small fw-medium text-secondary" placeholder="Search For Items...">
+                <button class="btn btn-dark">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3 small fw-medium text-secondary">
+            <a href="./profile.html" class="d-flex align-items-center gap-1 text-decoration-none text-secondary hover-black">
+                <i class="fa-regular fa-user" style="font-size: 18px;"></i> Account
+            </a>
+
+            <a href="./wishlist.html" class="d-flex align-items-center gap-1 text-decoration-none text-secondary hover-black">
+                <i class="fa-regular fa-heart" style="font-size: 18px;"></i> Wishlist
+            </a>
+
+            <a href="./cart.html" class="d-flex align-items-center gap-1 text-decoration-none text-secondary hover-black">
+                <i class="fa-solid fa-cart-shopping" style="font-size: 18px;"></i> Cart
+            </a>
+        </div>
+
+    </div>
+</nav>
+
+
+<div class="register-bar-fixed w-100 bg-black text-white">
+
+    <div class="container-fluid px-4 register-bar custom-container-lg mx-auto">
+      <div class="d-flex align-items-center justify-content-between small h-100">
+        <div>Checkout</div>
+      
+      </div>
+    </div>
+</div>
+<section class="checkout-section m-5">
+    <div class="checkout-container">
+        
+        <div class="checkout-form">
+            <h2><i class="fas fa-truck-fast me-2"></i> Shipping & Payment</h2>
+
+            <form>
+                <div class="mb-3">
+                    <label for="existingAddress" class="form-label text-secondary">
+                        <i class="fas fa-map-marker-alt me-1"></i> Ship to Existing Address
+                    </label>
+                  <select id="existingAddress" class="form-select" onchange="loadAddress(this.value)">
+      <option value="" selected disabled>
+       Select or Enter a New Address...
+      </option>
+        </select>
+
+                </div>
+
+                <h3 class="form-section-title">Manual Address Entry</h3>
+                <div class="row g-3"> 
+                    <div class="col-12">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" placeholder="Street Address, Apt, Suite" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="state" class="form-label">State</label>
+                      <select id="state" class="form-select" required>
+  <option value="">Select...</option>
+  <option value="Tamil Nadu">Tamil Nadu</option>
+  <option value="Kerala">Kerala</option>
+  <option value="Karnataka">Karnataka</option>
+ </select>
+
+                    </div>
+                    <div class="col-md-4">
+                        <label for="zip" class="form-label">PIN</label>
+                        <input type="text" class="form-control" id="zip" required>
+                    </div>
+                </div>
+                
+                <hr class="mt-4 mb-3">
+
+                <h3 class="form-section-title">Shipping Method</h3>
+<div class="my-3">
+  <div class="form-check option-box">
+    <input
+      class="form-check-input"
+      type="radio"
+      name="shippingMethod"
+      id="standardShipping"
+      value="15"
+      checked
+    >
+    <label class="form-check-label small fw-medium w-100 d-flex justify-content-between" for="standardShipping">
+      <span>Standard Shipping (5–7 days)</span>
+      <span class="fw-bold">$15.00</span>
+    </label>
+  </div>
+
+  <div class="form-check option-box">
+    <input
+      class="form-check-input"
+      type="radio"
+      name="shippingMethod"
+      id="expressShipping"
+      value="35"
+    >
+    <label class="form-check-label small fw-medium w-100 d-flex justify-content-between" for="expressShipping">
+      <span>Express Shipping (1–2 days)</span>
+      <span class="fw-bold">$35.00</span>
+    </label>
+  </div>
+</div>
+
+
+              <h3 class="form-section-title">Payment Method</h3>
+
+<div class="my-3">
+
+  <!-- STRIPE -->
+ <!-- STRIPE -->
+<div class="form-check option-box">
+  <input
+    id="stripe"
+    name="paymentMethod"
+    type="radio"
+    class="form-check-input"
+    value="stripe"
+  >
+  <label class="form-check-label small fw-medium" for="stripe">
+    <i class="fas fa-credit-card me-2"></i>
+    Card / UPI (Stripe)
+  </label>
+</div>
+
+
+  <!-- WALLET -->
+<div class="form-check option-box">
+  <input
+    id="wallet"
+    name="paymentMethod"
+    type="radio"
+    class="form-check-input"
+    value="wallet"
+  >
+  <label class="form-check-label small fw-medium" for="wallet">
+    <i class="fas fa-wallet me-2"></i>
+    Wallet
+    (<span id="walletBalance">₹0</span>
+    <span id="walletPayable"></span>)
+  </label>
+</div>
+
+
+
+
+  <!-- COD -->
+  <div class="form-check option-box">
+    <input
+  id="cod"
+  name="paymentMethod"
+  type="radio"
+  class="form-check-input"
+  value="cod"
+  checked
+>
+    <label class="form-check-label small fw-medium" for="cod">
+      <i class="fas fa-money-bill-wave me-2"></i>
+      Cash on Delivery (COD)
+    </label>
+  </div>
+
+</div>
+
+                
+                <hr class="my-4">
+                
+               <button class="place-order-btn" type="submit" id="placeOrderBtn">Place Order - $717.70</button>
+            </form>
+        </div>
+
+        <div class="order-summary order-summary-wrapper">
+
+  <!-- LEFT : ORDER DETAILS -->
+  <div class="summary-left">
+
+    <h3 class="order-summary-title">
+      <i class="fas fa-clipboard-list me-2"></i> Order Summary
+    </h3>
+
+    <div id="summaryItems"></div>
+
+    <hr>
+
+    <div class="summary-line">
+      <span>Subtotal</span>
+      <span id="subtotal">$0.00</span>
+    </div>
+
+   <div class="coupon-section">
+  <div class="coupon-input-group">
+    <input
+      type="text"
+      id="couponInput"
+      placeholder="Enter coupon code"
+      class="coupon-input"
+    />
+    <button id="applyCouponBtn" class="coupon-apply-btn">Apply</button>
+  </div>
+
+  <div id="couponFeedback" class="coupon-feedback"></div>
+</div>
+
+
+    
+
+    <div class="summary-line d-none" id="couponRow">
+      <span id="couponLabel">Coupon</span>
+      <span id="couponDiscount">-$0.00</span>
+    </div>
+
+    <div class="summary-line">
+      <span id="shippingLabel">Shipping (Standard)</span>
+      <span id="shipping">$0.00</span>
+    </div>
+
+    <div class="summary-line">
+      <span>Tax (7%)</span>
+      <span id="tax">$0.00</span>
+    </div>
+
+    <div class="summary-total">
+      <p>Order Total</p>
+      <p class="total-value" id="total">$0.00</p>
+    </div>
+
+  </div>
+
+  <!-- RIGHT : COUPONS -->
+  <div class="summary-right">
+
+    <div class="coupon-group">
+      <h6 class="coupon-title text-success">Available Coupons</h6>
+      <div id="availableCouponList"></div>
+    </div>
+
+    <div class="coupon-group">
+      <h6 class="coupon-title text-warning">Upcoming Coupons</h6>
+      <div id="upcomingCouponList"></div>
+    </div>
+
+    <div class="coupon-group">
+      <h6 class="coupon-title text-muted">Not Eligible</h6>
+      <div id="invalidCouponList"></div>
+    </div>
+
+    <div class="coupon-group">
+  <h6 class="coupon-title text-danger">Used Coupons</h6>
+  <div id="usedCouponList"></div>
+</div>
+
+
+  </div>
+
+</div> 
+
+      
+</section>
+
+
+ 
+<footer class="footer-bg py-5 mt-0">
+    <div class="container-fluid px-4 custom-container-lg mx-auto">
+      <div class="row row-cols-1 row-cols-md-4 g-5">
+
+        <div class="col">
+          <div class="small">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <img src="../Images/Envalogo.jpeg" class="rounded-circle bg-light" style="width: 56px; height: 56px;">
+              <div>
+                <div class="fw-semibold fs-5">Enva</div>
+                <div class="small text-secondary" style="margin-top: -4px;">Designer for Every Woman</div>
+              </div>
+            </div>
+
+            <p class="text-secondary" style="font-size: 0.75rem; line-height: 1.4;">
+              Discover the latest trends in women's fashion. Shop stylish outfits, accessories, and essentials curated just for you.
+            </p>
+
+            <div class="mt-4 text-secondary" style="font-size: 0.75rem;">
+              <div class="mb-1">📍 51 Green St Huntington ohio beach ontario, NY 11746 NY 6783, USA</div>
+              <div class="mb-1">✉ example@email.com</div>
+              <div class="mb-1">📞 +91 123 4567890</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="small">
+            <h3 class="fw-semibold mb-3">Company</h3>
+            <ul class="list-unstyled text-secondary space-y-2" style="font-size: 0.75rem;">
+              <li><a href="#" class="text-decoration-none text-secondary">About Us</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Delivery Information</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Privacy Policy</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Terms & Conditions</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Contact Us</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Support Center</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="small">
+            <h3 class="fw-semibold mb-3">Category</h3>
+            <ul class="list-unstyled text-secondary space-y-2" style="font-size: 0.75rem;">
+              <li><a href="#" class="text-decoration-none text-secondary">Dresses</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Tops & Tees</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Ethnic Wear</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Kurtis & Kurtas</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Western Wear</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Casual Wear</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="small">
+            <h3 class="fw-semibold mb-3">Subscribe Our Newsletter</h3>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control form-control-sm" placeholder="Search here..." aria-label="Search here...">
+              <button class="btn btn-dark" type="button">
+                &gt;
+              </button>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-twitter"></i>
+              </a>
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+
+            </div>
+
+
+            <div class="d-flex gap-2 mt-4">
+              <img src="../Images/about1.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 1">
+              <img src="../Images/about2.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 2">
+              <img src="../Images/about3.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 3">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</footer>
+
+     
+<style>
+  /* WALLET BALANCE BADGE STYLE */
+#walletBalance {
+    display: inline-block;
+    background-color: #f0fdf4; /* Very light success green */
+    color: #166534;           /* Deep professional green */
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif; /* Clean font for numbers */
+    margin-left: 2px;
+    border: 1px solid #dcfce7;
+    transition: all 0.3s ease;
+}
+
+/* Change color to red if balance is zero (Optional enhancement) */
+#walletBalance:empty, 
+#walletBalance:contains('₹0') {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-color: #fee2e2;
+}
+
+/* Animation when the balance updates */
+@keyframes balancePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); background-color: #dcfce7; }
+    100% { transform: scale(1); }
+}
+
+.balance-update {
+    animation: balancePulse 0.4s ease-out;
+}
+    #toastBox {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Toast base */
+.custom-toast {
+  width: 320px;          /* ✅ Fixed width */
+  min-height: 64px;      /* ✅ Consistent height */
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.8s;
+}
+
+/* Icon */
+.custom-toast i {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Message */
+.custom-toast span {
+  line-height: 1.4;
+}
+
+/* Types */
+.custom-toast.success {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.custom-toast.error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.custom-toast.warning {
+  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+  color: #000;
+}
+
+.custom-toast.info {
+  background: linear-gradient(135deg, #3498db, #2c80b4);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+/* 📱 Mobile responsive */
+@media (max-width: 480px) {
+  #toastBox {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .custom-toast {
+    width: 92vw;        /* responsive on mobile */
+    min-height: 60px;
+  }
+}
+
+</style>
+
+<div id="toastBox"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+ <script  src="checkout.js"></script>
+<!-- Order Success Modal -->
+
+<style>
+    /* Overlay */
+.order-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Modal */
+.order-modal {
+  background: #fff;
+  width: 420px;
+  padding: 30px 26px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: fadeUp 0.35s ease;
+}
+
+/* Success Icon */
+.order-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #fff;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Text */
+.order-modal h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.order-text {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Actions */
+.order-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.btn-primary {
+  flex: 1;
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  flex: 1;
+  padding: 10px;
+  background: #f3f3f3;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}.available-coupons {
+  background: #f9fafb;
+  border: 1px dashed #ddd;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.coupon-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border: 1px solid #eee;
+}
+
+.coupon-code {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.coupon-desc {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.apply-mini-btn {
+  border: none;
+  background: #000;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* Animation */
+@keyframes fadeUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .order-modal {
+    width: 90%;
+  }
+}
+/* --- FULL SCREEN OVERLAY --- */
+.payment-loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+/* --- THE MODAL CARD --- */
+.loader-window {
+  background: #ffffff;
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  border-radius: 28px;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: modalEnter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* --- ICON & PULSE ANIMATION --- */
+.shield-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.security-icon {
+  font-size: 32px;
+  color: #111;
+  z-index: 2;
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #f0f0f0;
+  animation: pulse 2s infinite;
+}
+
+/* --- PROGRESS BAR --- */
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 30%; /* Starting width */
+  background: #000;
+  border-radius: 10px;
+  animation: progressMove 2.5s ease-in-out infinite;
+}
+
+/* --- TYPOGRAPHY --- */
+.loader-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.loader-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.loader-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- KEYFRAMES --- */
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  70% { transform: scale(1.3); opacity: 0; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+@keyframes progressMove {
+  0% { width: 0%; margin-left: 0%; }
+  50% { width: 40%; margin-left: 30%; }
+  100% { width: 0%; margin-left: 100%; }
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; transform: translateY(30px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.wallet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.25s ease;
+}
+
+.wallet-modal {
+  background: #fff;
+  width: 360px;
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+  animation: scaleIn 0.35s ease;
+}
+
+.wallet-icon {
+  font-size: 40px;
+  color: #dc3545;
+  margin-bottom: 12px;
+}
+
+.wallet-modal h5 {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.wallet-modal p {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.wallet-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.wallet-actions button {
+  flex: 1;
+  border-radius: 10px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+</style>
+<div id="paymentLoader" class="payment-loader d-none">
+  <div class="loader-window">
+    <div class="shield-container">
+      <div class="pulse-ring"></div>
+      <i class="fa-solid fa-shield-check security-icon"></i>
+    </div>
+
+    <div class="loader-text">
+      <h2 class="loader-title">Secure Checkout</h2>
+      <p class="loader-subtitle">Processing your payment information...</p>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill"></div>
+    </div>
+
+    <div class="loader-footer">
+      <i class="fa-solid fa-lock"></i>
+      <span>PCI-DSS Compliant • 256-bit Encryption</span>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<!-- Wallet Insufficient Overlay -->
+<div id="walletOverlay" class="wallet-overlay d-none">
+  <div class="wallet-modal">
+    <i class="fas fa-wallet wallet-icon"></i>
+
+    <h5>Insufficient Wallet Balance</h5>
+    <p id="walletOverlayMsg"></p>
+
+    <div class="wallet-actions">
+      <button id="rechargeWalletBtn" class="btn btn-dark">
+        Recharge Wallet
+      </button>
+      <button id="changePaymentBtn" class="btn btn-outline-dark">
+        Try Another Method
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="statusOverlay" class="status-overlay d-none">
+  <div class="status-card">
+    <div class="icon-wrapper">
+      <div id="loaderIcon" class="spinner"></div>
+      <div id="successIcon" class="success-checkmark d-none">
+        <div class="check-icon">
+          <span class="icon-line line-tip"></span>
+          <span class="icon-line line-long"></span>
+          <div class="icon-circle"></div>
+          <div class="icon-fix"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-wrapper">
+      <h3 id="statusHeading">Processing Order</h3>
+      <p id="statusSubtext">Verifying your payment details...</p>
+    </div>
+  </div>
+</div>
+
+<style>
+ :root {
+  --primary-color: #000000;
+  --success-color: #22c55e;
+  --text-muted: #64748b;
+}
+
+.status-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px); /* Premium frosted glass effect */
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.status-card {
+  text-align: center;
+  padding: 2rem;
+  max-width: 400px;
+}
+
+/* Minimalist Spinner */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 2px solid #e2e8f0;
+  border-top: 2px solid var(--primary-color);
+  border-radius: 50%;
+  margin: 0 auto 24px;
+  animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Success Checkmark Drawing Animation */
+.success-checkmark {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  position: relative;
+}
+
+.check-icon {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  border-radius: 50%;
+  box-sizing: content-box;
+  border: 4px solid var(--success-color);
+}
+
+.check-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--success-color);
+  opacity: 0.1;
+  animation: pulse 2s infinite;
+}
+
+.icon-line {
+  height: 5px;
+  background-color: var(--success-color);
+  display: block;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 10;
+}
+
+.line-tip { width: 25px; left: 14px; top: 46px; transform: rotate(45deg); animation: icon-tip 0.5s; }
+.line-long { width: 47px; right: 8px; top: 38px; transform: rotate(-45deg); animation: icon-long 0.5s; }
+
+/* Typography */
+h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; color: #1e293b; }
+p { color: var(--text-muted); font-size: 1rem; }
+
+/* Animations */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+@keyframes icon-tip {
+  0% { width: 0; left: 1px; top: 19px; }
+  100% { width: 25px; left: 14px; top: 46px; }
+}
+
+@keyframes icon-long {
+  0% { width: 0; right: 46px; top: 54px; }
+  100% { width: 47px; right: 8px; top: 38px; }
+}
+
+.page-fade-out {
+  opacity: 0;
+  transition: opacity 0.8s ease-out;
+}
+</style>
+
+
+<style>
+    #toastBox {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Toast base */
+.custom-toast {
+  width: 320px;          /* ✅ Fixed width */
+  min-height: 64px;      /* ✅ Consistent height */
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.8s;
+}
+
+/* Icon */
+.custom-toast i {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Message */
+.custom-toast span {
+  line-height: 1.4;
+}
+
+/* Types */
+.custom-toast.success {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.custom-toast.error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.custom-toast.warning {
+  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+  color: #000;
+}
+
+.custom-toast.info {
+  background: linear-gradient(135deg, #3498db, #2c80b4);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+/* 📱 Mobile responsive */
+@media (max-width: 480px) {
+  #toastBox {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .custom-toast {
+    width: 92vw;        /* responsive on mobile */
+    min-height: 60px;
+  }
+}
+
+</style>
+
+<div id="toastBox"></div>
+ <script src="apiFetch.js"></script>
+</body>
+</html>

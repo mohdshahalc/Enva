@@ -1,0 +1,321 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="../Images/favicon.png">
+  <title>Enva cloth & co - Register</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* Custom styles for matching original layout proportions and colors */
+    .top-navbar {
+      height: 48px; /* Approx h-12 */
+      font-size: 0.875rem; /* text-sm */
+    }
+    .main-navbar {
+      height: 80px; /* Approx h-20 */
+    }
+    .search-container {
+      max-width: 430px; /* lg:w-[430px] */
+    }
+    .register-bar {
+      height: 48px; /* h-12 */
+    }
+    .footer-bg {
+        background-color: #f2f2f2;
+    }
+    .social-icon-box {
+        width: 32px;
+        height: 32px;
+        background-color: #e9ecef; /* bg-gray-300 */
+        color: #6c757d; /* text-gray-700 */
+        transition: color 0.3s;
+    }
+    .social-icon-box:hover {
+        color: #000;
+    }
+    /* Custom container width to mimic max-w-7xl */
+    .custom-container-lg {
+        max-width: 1400px; 
+    }
+    /* Base message style */
+.signup-message {
+  display: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.2px;
+  transition: all 0.3s ease;
+}
+
+/* Success */
+.signup-message.success {
+  display: block;
+  background: #e8f7ef;
+  color: #0f5132;
+  border: 1px solid #b7e4c7;
+}
+
+/* Error */
+.signup-message.error {
+  display: block;
+  background: #fdeaea;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+}
+
+/* Optional info message */
+.signup-message.info {
+  display: block;
+  background: #eef5ff;
+  color: #084298;
+  border: 1px solid #b6d4fe;
+}
+
+  </style>
+  <script src="login.js"></script>
+</head>
+
+<body class="bg-white text-dark">
+  
+
+<nav class="w-100 bg-white border-bottom mt-3">  <!-- Added mt-3 here -->
+    <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between gap-4">
+
+        <a href="#" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
+            <img src="../Images/Envalogo.jpeg" class="rounded-circle bg-light" style="width: 50px; height: 50px;">
+            <div>
+                <div class="fw-semibold">Enva cloth & co</div>
+                <div class="small text-secondary" style="margin-top:-3px;">Wear Your Confidence</div>
+            </div>
+        </a>
+
+        <ul class="nav gap-4 d-none d-lg-flex small fw-medium">
+            <li><a href="home.html" class="nav-link text-secondary p-0 hover-black">Home</a></li>
+            <li><a href="products.html" class="nav-link text-secondary p-0 hover-black">Products</a></li>
+            <li><a href="blog.html" class="nav-link text-secondary p-0 hover-black">Blog</a></li>
+        </ul>
+
+        <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center">
+            <div class="input-group shadow-sm bg-white rounded-2" style="max-width: 380px;">
+                <input type="text" class="form-control border-0 py-2 small fw-medium text-secondary" placeholder="Search For Items...">
+                <button class="btn btn-dark">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3 small fw-medium text-secondary">
+            <a href="./profile.html" class="d-flex align-items-center gap-1 text-decoration-none text-secondary hover-black">
+                <i class="fa-regular fa-user" style="font-size: 18px;"></i> Account
+            </a>
+
+            <a href="wishlist.html" class="d-flex align-items-center gap-1 text-decoration-none text-secondary hover-black">
+                <i class="fa-regular fa-heart" style="font-size: 18px;"></i> Wishlist
+            </a>
+
+            <a href="cart.html" class="d-flex align-items-center gap-1 text-decoration-none text-secondary hover-black">
+                <i class="fa-solid fa-cart-shopping" style="font-size: 18px;"></i> Cart
+            </a>
+        </div>
+
+    </div>
+</nav>
+
+
+  <div class="w-100 bg-black text-white">
+    <div class="container-fluid px-4 register-bar custom-container-lg mx-auto">
+      <div class="d-flex align-items-center justify-content-between small h-100">
+        <div>Login</div>
+       
+      </div>
+    </div>
+  </div>
+  
+  <div class="container-fluid d-flex justify-content-center py-5" style="background-color: #f8f9fa;">
+    <div class="card border border-light-subtle rounded-3 bg-white shadow-lg p-4 p-md-5" style="max-width: 450px; width: 100%;">
+
+        <h2 class="text-center fs-4 fw-bold mb-4 mb-md-5">Welcome to Envacloth&co</h2>
+
+        <form id="loginForm">
+
+  <!-- Email -->
+  <div class="mb-4">
+    <label class="form-label small fw-medium text-secondary">Email Address*</label>
+    <div class="input-group">
+      <span class="input-group-text bg-light border-end-0">
+        <i class="fa-solid fa-envelope"></i>
+      </span>
+      <input 
+        type="email"
+        id="emailInput"
+        placeholder="Enter Your Email"
+        class="form-control p-3 small text-dark border-start-0"
+        required
+      >
+    </div>
+  </div>
+
+  <!-- Password -->
+  <div class="mb-3">
+    <label class="form-label small fw-medium text-secondary">Password*</label>
+    <div class="input-group">
+      <span class="input-group-text bg-light border-end-0">
+        <i class="fa-solid fa-lock"></i>
+      </span>
+      <input 
+        type="password"
+        id="passwordInput"
+        placeholder="Enter Your password"
+        class="form-control p-3 small text-dark border-start-0"
+        required
+      >
+    </div>
+  </div>
+
+  <!-- Remember + Forgot -->
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="rememberMeCheck">
+      <label class="form-check-label small text-secondary">
+        Remember Me
+      </label>
+    </div>
+
+    <a href="../UI/resetPass.html" class="small text-dark fw-medium text-decoration-none hover-black">
+      Forgot Password?
+    </a>
+  </div>
+
+  <!-- Login Button -->
+  <div class="d-grid gap-2 mb-3">
+    <button type="submit" class="btn btn-dark btn-lg fw-bold text-uppercase">
+      Login
+    </button>
+  </div>
+
+  <!-- Message -->
+  <p id="loginMessage" class="signup-message small mt-3"></p>
+
+  <!-- Sign Up -->
+  <div class="text-center">
+    <p class="small text-secondary mb-0">
+      Don't have an account?
+      <a href="../UI/signup.html" class="text-dark fw-medium text-decoration-none hover-black">Sign Up</a>
+    </p>
+  </div>
+
+</form>
+<p id="signupMessage" class="signup-message small mt-3"></p>
+
+
+    </div>
+</div>
+
+
+  
+  <footer class="footer-bg py-5 mt-4">
+    <div class="container-fluid px-4 custom-container-lg mx-auto">
+      <div class="row row-cols-1 row-cols-md-4 g-5">
+
+        <div class="col">
+          <div class="small">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <img src="../Images/Envalogo.jpeg" class="rounded-circle bg-light" style="width: 56px; height: 56px;">
+              <div>
+                <div class="fw-semibold fs-5">Enva</div>
+                <div class="small text-secondary" style="margin-top: -4px;">Designer for Every Woman</div>
+              </div>
+            </div>
+
+            <p class="text-secondary" style="font-size: 0.75rem; line-height: 1.4;">
+              Discover the latest trends in women's fashion. Shop stylish outfits, accessories, and essentials curated just for you.
+            </p>
+
+            <div class="mt-4 text-secondary" style="font-size: 0.75rem;">
+              <div class="mb-1">📍 51 Green St Huntington ohio beach ontario, NY 11746 NY 6783, USA</div>
+              <div class="mb-1">✉ example@email.com</div>
+              <div class="mb-1">📞 +91 123 4567890</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="small">
+            <h3 class="fw-semibold mb-3">Company</h3>
+            <ul class="list-unstyled text-secondary space-y-2" style="font-size: 0.75rem;">
+              <li><a href="#" class="text-decoration-none text-secondary">About Us</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Delivery Information</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Privacy Policy</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Terms & Conditions</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Contact Us</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Support Center</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="small">
+            <h3 class="fw-semibold mb-3">Category</h3>
+            <ul class="list-unstyled text-secondary space-y-2" style="font-size: 0.75rem;">
+              <li><a href="#" class="text-decoration-none text-secondary">Dresses</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Tops & Tees</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Ethnic Wear</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Kurtis & Kurtas</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Western Wear</a></li>
+              <li><a href="#" class="text-decoration-none text-secondary">Casual Wear</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="small">
+            <h3 class="fw-semibold mb-3">Subscribe Our Newsletter</h3>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control form-control-sm" placeholder="Search here..." aria-label="Search here...">
+              <button class="btn btn-dark" type="button">
+                &gt;
+              </button>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-twitter"></i>
+              </a>
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+
+              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+
+            </div>
+
+
+            <div class="d-flex gap-2 mt-4">
+              <img src="../Images/about1.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 1">
+              <img src="../Images/about2.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 2">
+              <img src="../Images/about3.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 3">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+<script src="apiFetch.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
