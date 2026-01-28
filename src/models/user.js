@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   name: {
-    type: String,
-    required: true
+    type: String
   },
 
   email: {
@@ -13,13 +12,20 @@ const userSchema = new mongoose.Schema({
   },
 
   password: {
-    type: String,
-    required: true
+    type: String
   },
 
   phone: {
     type: String
-  },isBlocked: {
+  },
+
+  isBlocked: {
+    type: Boolean,
+    default: false
+  },
+
+  // ✅ EMAIL VERIFIED (FOR OTP SIGNUP)
+  isVerified: {
     type: Boolean,
     default: false
   },
@@ -27,20 +33,30 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ["user", "admin"],
-    default: "user"   // 👈 IMPORTANT
-  },otp: {
-  type: String
-},
-otpExpires: {
-  type: Date
-}
-,
-  // models/user.js
-refreshToken: {
-  type: String,
-  default: null
-}
+    default: "user"
+  },
 
+  // 🔐 OTP
+  otp: String,
+  otpExpires: Date,
+
+  // 🧠 TEMP SIGNUP STORAGE
+  tempSignup: {
+    name: String,
+    email: String,
+    phone: String,
+    password: String
+  },
+
+  refreshToken: {
+    type: String,
+    default: null
+  },
+
+  refreshTokenRole: {
+    type: String,
+    enum: ["admin", "user"]
+  }
 
 }, { timestamps: true });
 

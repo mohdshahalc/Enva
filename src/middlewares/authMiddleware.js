@@ -4,62 +4,107 @@ const { generateAccessToken } = require("../utils/token");
 
 module.exports = async (req, res, next) => {
   try {
-    // 1️⃣ ACCESS TOKEN
+    // ======================
+    // ROUTE TYPE
+    // ======================
+    const isAdminRoute = req.originalUrl.startsWith("/api/admin");
+
+    // ======================
+    // ACCESS TOKEN
+    // ======================
     const authHeader = req.headers.authorization;
     const accessToken = authHeader?.startsWith("Bearer ")
       ? authHeader.split(" ")[1]
       : null;
 
-    // 2️⃣ REFRESH TOKEN (from cookie)
-    const refreshToken = req.cookies?.refreshToken;
+    // ======================
+    // REFRESH TOKEN (ROLE SAFE)
+    // ======================
+    const refreshToken = isAdminRoute
+      ? req.cookies?.adminRefreshToken
+      : req.cookies?.userRefreshToken;
 
-    // ❌ NO TOKENS AT ALL
+    // ❌ NO TOKENS
     if (!accessToken && !refreshToken) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // ✅ TRY ACCESS TOKEN
+    // ======================
+    // TRY ACCESS TOKEN
+    // ======================
     if (accessToken) {
       try {
         const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+
+        // 🔐 HARD ROLE CHECK
+        if (isAdminRoute && decoded.role !== "admin") {
+          return res.status(403).json({ message: "Forbidden" });
+        }
+
         req.user = decoded;
         return next();
       } catch (err) {
-        // access token expired → try refresh
+        if (err.name !== "TokenExpiredError") {
+          return res.status(401).json({ message: "Invalid token" });
+        }
       }
     }
 
-    // ❌ ACCESS EXPIRED & NO REFRESH
+    // ======================
+    // REFRESH TOKEN REQUIRED
+    // ======================
     if (!refreshToken) {
       return res.status(401).json({
         message: "Session expired. Please login again."
       });
     }
 
-    // 🔄 VERIFY REFRESH TOKEN
-    const decodedRefresh = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_SECRET
-    );
+    // ======================
+    // VERIFY REFRESH TOKEN
+    // ======================
+    let decodedRefresh;
+    try {
+      decodedRefresh = jwt.verify(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET
+      );
+    } catch {
+      return res.status(401).json({
+        message: "Session expired. Please login again."
+      });
+    }
 
-    // 🔍 CHECK USER + TOKEN MATCH
+    // ======================
+    // USER VALIDATION
+    // ======================
     const user = await User.findById(decodedRefresh.id);
-    if (!user || user.refreshToken !== refreshToken) {
+
+    if (
+      !user ||
+      user.refreshToken !== refreshToken ||
+      user.role !== decodedRefresh.role
+    ) {
       return res.status(401).json({
         message: "Invalid session. Please login again."
       });
     }
 
-    // 🔑 CREATE NEW ACCESS TOKEN
-    const newAccessToken = generateAccessToken(user._id);
+    // 🔐 BLOCK ROLE ESCALATION
+    if (isAdminRoute && user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
 
-    // 🔁 SEND TOKEN BACK
+    // ======================
+    // ISSUE NEW ACCESS TOKEN
+    // ======================
+    const newAccessToken = generateAccessToken(user._id, user.role);
+
     res.setHeader("x-access-token", newAccessToken);
-    req.user = { id: user._id };
+    req.user = { id: user._id, role: user.role };
 
     next();
 
-  } catch (err) {
+  } catch {
     return res.status(401).json({
       message: "Invalid or expired session"
     });

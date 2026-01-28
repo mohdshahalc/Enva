@@ -28,7 +28,7 @@ function showToast(message, type = "success") {
 // ======================
 async function loadCategories() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/categories", {
+    const res = await apiFetch("http://localhost:5000/api/admin/categories", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -74,15 +74,18 @@ async function loadCategories() {
         </td>
 
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-dark">
-            Edit
-          </button>
+          
 
-          <button
-            class="btn btn-sm btn-outline-danger ms-2"
-            onclick="deleteCategory('${cat._id}')">
-            Delete
-          </button>
+        <button
+  class="btn btn-sm ${
+    cat.status === "active"
+      ? "btn-outline-danger"
+      : "btn-outline-success"
+  } ms-2"
+  onclick="toggleCategoryStatus('${cat._id}', '${cat.status}')">
+  ${cat.status === "active" ? "Disable" : "Enable"}
+</button>
+
         </td>
       </tr>
     `).join("");
@@ -92,6 +95,43 @@ async function loadCategories() {
     showToast("Failed to load categories", "error");
   }
 }
+async function toggleCategoryStatus(categoryId, currentStatus) {
+  const action =
+    currentStatus === "active" ? "disable" : "enable";
+
+  const confirmMsg =
+    currentStatus === "active"
+      ? "Are you sure you want to disable this category?"
+      : "Are you sure you want to enable this category?";
+
+  if (!confirm(confirmMsg)) return;
+
+  try {
+    const res = await apiFetch(
+      `/api/admin/categories/${categoryId}/${action}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showToast(data.message || "Action failed", "error");
+      return;
+    }
+
+    showToast(data.message, "success");
+    loadCategories(); // 🔄 reload list
+
+  } catch (err) {
+    showToast("Server error", "error");
+  }
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("categoryForm");
@@ -101,114 +141,78 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!form) return;
 
   form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    let name = document.getElementById("categoryName").value.trim();
-    let slug = document.getElementById("categorySlug").value.trim();
-    const status = document.getElementById("categoryStatus").value;
+  let name = document.getElementById("categoryName").value.trim();
+  let slug = document.getElementById("categorySlug").value.trim();
 
-    // ======================
-    // NAME VALIDATION
-    // ======================
-    if (!name) {
-      showToast("Category name is required", "error");
-      return;
-    }
+  // ======================
+  // NAME VALIDATION
+  // ======================
+  if (!name) {
+    showToast("Category name is required", "error");
+    return;
+  }
 
-    if (name.length < 3) {
-      showToast("Category name must be at least 3 characters", "error");
-      return;
-    }
+  if (name.length < 3) {
+    showToast("Category name must be at least 3 characters", "error");
+    return;
+  }
 
-    // ❌ Numbers or special characters
-    if (!/^[A-Za-z\s]+$/.test(name)) {
-      showToast(
-        "Category name can contain only letters and spaces",
-        "error"
-      );
-      return;
-    }
+  if (!/^[A-Za-z\s]+$/.test(name)) {
+    showToast("Category name can contain only letters and spaces", "error");
+    return;
+  }
 
-    // ======================
-    // SLUG VALIDATION
-    // ======================
+  // ======================
+  // SLUG VALIDATION
+  // ======================
+  if (!slug) {
+    slug = name
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+  }
 
-    // 🔄 Auto-generate slug if empty
-    if (!slug) {
-      slug = name
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, "-")       // spaces → hyphen
-        .replace(/[^a-z0-9-]/g, ""); // remove invalid chars
-    }
+  if (!/^[a-z0-9-]+$/.test(slug)) {
+    showToast(
+      "Slug must contain only lowercase letters, numbers, and hyphens",
+      "error"
+    );
+    return;
+  }
 
-    // ❌ Invalid slug format
-    if (!/^[a-z0-9-]+$/.test(slug)) {
-      showToast(
-        "Slug must contain only lowercase letters, numbers, and hyphens",
-        "error"
-      );
-      return;
-    }
-
-    try {
-      const res = await fetch("http://localhost:5000/api/admin/categories", {
+  try {
+    const res = await apiFetch(
+      "http://localhost:5000/api/admin/categories",
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("adminToken")}`
         },
-        body: JSON.stringify({
-          name,
-          slug,
-          status
-        })
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        showToast(data.message || "Category added successfully", "success");
-        form.reset();
-        loadCategories();
-      } else {
-        showToast(data.message || "Failed to add category", "error");
-      }
-
-    } catch (err) {
-      showToast("Server error", "error");
-    }
-  });
-});
-
-
-// ======================
-// DELETE CATEGORY
-// ======================
-async function deleteCategory(id) {
-  if (!confirm("Delete this category?")) return;
-
-  try {
-    const res = await fetch(
-      `http://localhost:5000/api/admin/categories/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("adminToken")}`
-        }
+        body: JSON.stringify({ name, slug })
       }
     );
 
     const data = await res.json();
 
-    if (res.ok) {
-      showToast("Category deleted", "success");
-      loadCategories(); // 🔥 refresh KPI + table
-    } else {
-      showToast(data.message || "Delete failed", "error");
+    if (!res.ok) {
+      showToast(data.message || "Failed to add category", "error");
+      return;
     }
+
+    showToast("Category added successfully", "success");
+    form.reset();
+    loadCategories();
 
   } catch (err) {
     showToast("Server error", "error");
   }
-}
+});
+
+});
+
+
+

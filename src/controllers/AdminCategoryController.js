@@ -1,15 +1,26 @@
+const mongoose = require("mongoose"); // 🔥 FIX 1
 const Category = require("../models/category");
 const Product = require("../models/product");
 
+/* ======================
+   CREATE CATEGORY
+====================== */
 exports.createCategory = async (req, res) => {
   try {
-    const { name, status, slug } = req.body;
+    const { name, slug } = req.body;
 
-    if (!name) {
+    if (!name || !name.trim()) {
       return res.status(400).json({ message: "Category name is required" });
     }
 
-    const finalSlug = slug || name.toLowerCase().replace(/\s+/g, "-");
+    // 🔐 Safe slug generation
+    const finalSlug =
+      slug?.toLowerCase().trim() ||
+      name
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-");
 
     const exists = await Category.findOne({ slug: finalSlug });
     if (exists) {
@@ -17,9 +28,9 @@ exports.createCategory = async (req, res) => {
     }
 
     const category = await Category.create({
-      name,
+      name: name.trim(),
       slug: finalSlug,
-      status
+      status: "active" // 🔥 backend-controlled
     });
 
     res.status(201).json({
@@ -28,10 +39,14 @@ exports.createCategory = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("CREATE CATEGORY ERROR:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
+/* ======================
+   GET ALL CATEGORIES (ADMIN)
+====================== */
 exports.getCategories = async (req, res) => {
   try {
     const categories = await Category.find().sort({ createdAt: -1 });
@@ -39,7 +54,8 @@ exports.getCategories = async (req, res) => {
     const categoriesWithCount = await Promise.all(
       categories.map(async (cat) => {
         const count = await Product.countDocuments({
-          category: cat.name
+          category: cat.name,
+          isDeleted: false // 🔥 FIX 4
         });
 
         return {
@@ -52,36 +68,53 @@ exports.getCategories = async (req, res) => {
     res.status(200).json(categoriesWithCount);
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("GET CATEGORIES ERROR:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
+exports.disableCategory = async (req, res) => {
+  const { id } = req.params;
 
-
-exports.deleteCategory = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    // 1️⃣ Find category first
-    const category = await Category.findById(id);
-    if (!category) {
-      return res.status(404).json({ message: "Category not found" });
-    }
-
-    // 2️⃣ Delete products under this category
-    const productResult = await Product.deleteMany({
-      category: category.name  
-          });
-
-    // 3️⃣ Delete category
-    await Category.findByIdAndDelete(id);
-
-    res.status(200).json({
-      message: "Category and related products deleted successfully",
-      deletedProducts: productResult.deletedCount
-    });
-
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  const category = await Category.findById(id);
+  if (!category) {
+    return res.status(404).json({ message: "Category not found" });
   }
+
+  category.status = "inactive";
+  await category.save();
+
+  // 🔥 Disable products
+  await Product.updateMany(
+    { category: category.name },
+    { $set: { isActive: false } }
+  );
+
+  res.json({ message: "Category disabled successfully" });
+};
+
+
+exports.enableCategory = async (req, res) => {
+  const { id } = req.params;
+
+  const category = await Category.findById(id);
+  if (!category) {
+    return res.status(404).json({ message: "Category not found" });
+  }
+
+  category.status = "active";
+  await category.save();
+
+  // 🔥 RE-ENABLE PRODUCTS
+  await Product.updateMany(
+    {
+      category: category.name,
+      isDeleted: { $ne: true } // ⚠️ keep permanently deleted items hidden
+    },
+    {
+      $set: { isActive: true }
+    }
+  );
+
+  res.json({ message: "Category enabled successfully" });
 };

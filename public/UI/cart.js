@@ -3,9 +3,11 @@ document.addEventListener("DOMContentLoaded", loadCart);
 async function loadCart() {
   const token = localStorage.getItem("userToken");
 
-  // 🔒 Login required
-  if (!token) {
-    window.location.href = "login.html";
+     if (!token) {
+    const modal = new bootstrap.Modal(
+      document.getElementById("loginRequiredModal")
+    );
+    modal.show();
     return;
   }
 
@@ -159,10 +161,10 @@ function updateSummary(subtotal) {
   const tax = subtotal === 0 ? 0 : subtotal * 0.07;
   const total = subtotal + shipping + tax;
 
-  document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
-  document.getElementById("shipping").textContent = `$${shipping.toFixed(2)}`;
-  document.getElementById("tax").textContent = `$${tax.toFixed(2)}`;
-  document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+  document.getElementById("subtotal").textContent = `₹${subtotal.toFixed(2)}`;
+  document.getElementById("shipping").textContent = `₹${shipping.toFixed(2)}`;
+  document.getElementById("tax").textContent = `₹${tax.toFixed(2)}`;
+  document.getElementById("total").textContent = `₹${total.toFixed(2)}`;
 }
 
 let isUpdatingQty = false;
@@ -251,3 +253,12 @@ function showToast(message, type = "success") {
   setTimeout(() => toast.remove(), 3200);
 }
 
+
+
+function redirectToLogin() {
+  window.location.href = "login.html";
+}
+
+function redirectToProducts() {
+  window.location.href = "home.html";
+}

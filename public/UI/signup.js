@@ -33,71 +33,105 @@ const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
     message.innerText = msg;
   };
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+let signupPayload = null;
 
-    const firstName = document.getElementById("firstName").value.trim();
-    const lastName = document.getElementById("lastName").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("conformPassword").value;
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    // ======================
-    // VALIDATIONS
-    // ======================
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("conformPassword").value;
 
-    if (!firstName || !lastName) {
-      return showError("First and last name are required");
-    }
+  if (!firstName || !lastName) return showError("First and last name required");
+  if (!nameRegex.test(firstName) || !nameRegex.test(lastName))
+    return showError("Name must contain only letters");
 
-    if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
-      return showError("Name must contain only letters and spaces");
-    }
+  if (!emailRegex.test(email))
+    return showError("Only Gmail addresses allowed");
 
-    if (!emailRegex.test(email)) {
-  return showError("Only Gmail addresses are allowed (example: user@gmail.com)");
-}
+  if (!phoneRegex.test(phone))
+    return showError("Invalid phone number");
 
+  if (!passwordRegex.test(password))
+    return showError("Password must contain letters & numbers");
 
+  if (password !== confirmPassword)
+    return showError("Passwords do not match");
 
-if (!phoneRegex.test(phone)) {
-  return showError("Please enter a valid 10-digit mobile number");
-}
+  signupPayload = {
+    name: `${firstName} ${lastName}`,
+    email,
+    phone,
+    password
+  };
 
-if (!passwordRegex.test(password)) {
-  return showError(
-    "Password must be at least 6 characters and include letters & numbers"
-  );
-}
-
-if (password !== confirmPassword) {
-  return showError("Passwords do not match");
-}
-
-
-    const name = `${firstName} ${lastName}`;
-
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/user/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, password })
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        showSuccess("Account created successfully");
-
-        setTimeout(() => {
-          window.location.href = "login.html";
-        }, 1500);
-      } else {
-        showError(data.message || "Signup failed");
-      }
-    } catch (err) {
-      showError("Server error. Please try again later.");
-    }
-  });
+  try {
+    // 🔐 SEND OTP
+   const res = await fetch("http://localhost:5000/api/auth/user/send-signup-otp", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(signupPayload)
 });
+
+
+    const data = await res.json();
+
+    if (!res.ok) return showError(data.message || "Failed to send OTP");
+
+    showSuccess("OTP sent to your email");
+
+    const modal = new bootstrap.Modal(document.getElementById("otpModal"));
+    modal.show();
+
+  } catch {
+    showError("Server error");
+  }
+});
+
+  // ======================
+  // VERIFY OTP BUTTON
+  // ======================
+  const verifyBtn = document.getElementById("verifyOtpBtn");
+
+  if (verifyBtn) {
+    verifyBtn.addEventListener("click", async () => {
+      const otp = document.getElementById("otpInput").value.trim();
+
+      if (!otp || otp.length !== 4) {
+        return showError("Enter valid 4-digit OTP");
+      }
+
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/user/verify-signup-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: signupPayload.email,
+            otp
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          showSuccess("Email verified. Account created!");
+
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1200);
+        } else {
+          showError(data.message || "Invalid OTP");
+        }
+
+      } catch {
+        showError("Server error");
+      }
+    });
+  }
+
+});
+
+

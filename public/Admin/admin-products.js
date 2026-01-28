@@ -3,7 +3,7 @@ let editingProductId = null;
 
 
 async function loadCategoriesForProduct() {
-  const res = await fetch("http://localhost:5000/api/admin/categories", {
+  const res = await apiFetch("http://localhost:5000/api/admin/categories", {
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("adminToken")}`
     }
@@ -27,7 +27,7 @@ selects.forEach(select => {
 
 async function loadProducts() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/products", {
+    const res = await apiFetch("http://localhost:5000/api/admin/products", {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -355,11 +355,7 @@ if (images.length > 3) {
 }
 
 // ✅ Append images ONLY if selected (important for edit)
-if (images.length > 0) {
-  Array.from(images).slice(0, 3).forEach(img => {
-    formData.append("images", img);
-  });
-}
+
 
 
   // =========================
@@ -384,7 +380,7 @@ if (images.length > 0) {
 
 const method = editingProductId ? "PUT" : "POST";
 
-const res = await fetch(url, {
+const res = await apiFetch(url, {
   method,
   headers: {
     Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -429,7 +425,7 @@ async function openDeleteModal(id) {
   if (!confirm("Delete this product?")) return;
 
   try {
-    const res = await fetch(
+    const res = await apiFetch(
       `http://localhost:5000/api/admin/products/${id}`,
       {
         method: "DELETE",

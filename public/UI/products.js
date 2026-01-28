@@ -9,8 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadUserProducts() {
   try {
-    const res = await fetch("http://localhost:5000/api/user/products");
+    const res = await fetch("http://localhost:5000/api/user/products/shop");
     const products = await res.json();
+console.log(products);
 
    allProducts = products;
 filteredProducts = [...products];

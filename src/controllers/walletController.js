@@ -23,14 +23,15 @@ exports.getWallet = async (req, res) => {
     }
 
     const wallet = await getOrCreateWallet(req.user.id);
-   
-     const sortedTransactions = [...(wallet.transactions || [])].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+
+    // ✅ OLDEST FIRST, LATEST LAST
+    const sortedTransactions = [...(wallet.transactions || [])].sort(
+      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
     );
 
     res.json({
       balance: wallet.balance || 0,
-      transactions: wallet.transactions || []
+      transactions: sortedTransactions
     });
 
   } catch (error) {
@@ -38,7 +39,6 @@ exports.getWallet = async (req, res) => {
     res.status(500).json({ message: "Failed to load wallet" });
   }
 };
-
 
 /* =========================
    DEBIT WALLET

@@ -86,7 +86,7 @@ nav.navbar-main {
 }
 
 /* SEARCH */
-.input-group {
+.srch-btn {
     background: #f8f8f8;
     border-radius: 50px;
     padding: 2px 5px;
@@ -152,99 +152,6 @@ nav.navbar-main {
 }
 
 
-/* =====================================================
-   GLOBAL FOOTER STYLES (RESPONSIVE)
-===================================================== */
-
-.footer-bg {
-    background-color: #f2f2f2;
-}
-
-/* FOOTER TEXT */
-.footer-bg p,
-.footer-bg li,
-.footer-bg a {
-    font-size: 0.75rem;
-    line-height: 1.6;
-    color: #6c757d;
-}
-
-.footer-bg a {
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.footer-bg a:hover {
-    color: #000;
-}
-
-/* FOOTER HEADINGS */
-.footer-bg h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #111;
-}
-
-/* BRAND BLOCK */
-.footer-bg .fw-semibold.fs-5 {
-    font-size: 1.2rem;
-}
-
-.footer-bg img.rounded-circle {
-    object-fit: cover;
-}
-
-/* SOCIAL ICONS */
-.social-icon-box {
-    width: 36px;
-    height: 36px;
-    background-color: #e9ecef;
-    color: #6c757d;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.social-icon-box:hover {
-    background-color: #000;
-    color: #fff;
-    transform: scale(1.1);
-}
-
-/* NEWSLETTER INPUT */
-.footer-bg .input-group input {
-    font-size: 0.75rem;
-}
-
-.footer-bg .input-group button {
-    font-size: 0.75rem;
-}
-
-/* GALLERY IMAGES */
-.footer-bg img.rounded.bg-light {
-    object-fit: cover;
-}
-
-/* =====================================================
-   RESPONSIVE FOOTER
-===================================================== */
-
-/* TABLET */
-@media (max-width: 992px) {
-    .footer-bg {
-        padding-top: 40px;
-        padding-bottom: 40px;
-    }
-
-    .footer-bg .row {
-        row-gap: 32px;
-    }
-}
-
 /* MOBILE */
 @media (max-width: 576px) {
     .footer-bg {
@@ -267,4 +174,174 @@ nav.navbar-main {
     .footer-bg ul {
         padding-left: 0;
     }
+} */
+/* =====================================================
+   PROFESSIONAL FOOTER STYLES
+===================================================== */
+.footer-bg {
+  background-color: #f8f9fa; /* Lighter, cleaner professional gray */
+  border-top: 1px solid #eaeaea;
+}
+
+.footer-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+/* Link Hover Effects */
+.footer-link {
+  transition: all 0.2s ease;
+  display: inline-block;
+  padding: 2px 0;
+}
+
+.footer-link:hover {
+  color: #000 !important;
+  transform: translateX(4px);
+}
+
+/* Newsletter Input Polish */
+.newsletter-input {
+  border-radius: 8px 0 0 8px !important;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+}
+
+.newsletter-btn {
+  border-radius: 0 8px 8px 0 !important;
+  padding: 10px 20px;
+}
+
+/* Social Icons Polish */
+.social-icon-box {
+  width: 36px;
+  height: 36px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  color: #555;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.social-icon-box:hover {
+  background-color: #000;
+  color: #fff !important;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* About/Gallery Images */
+.footer-gallery-img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+
+.footer-gallery-img:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .footer-title {
+    margin-top: 10px;
+  }
+}/* =====================================================
+   FOOTER — MOBILE OPTIMIZATION ONLY
+===================================================== */
+
+@media (max-width: 576px) {
+
+  /* Overall spacing */
+  .footer-bg {
+    padding-top: 32px;
+    padding-bottom: 32px;
+    text-align: center;
+  }
+
+  /* Section titles */
+  .footer-title {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Links stack nicely */
+  .footer-link {
+    display: block;
+    padding: 6px 0;
+    transform: none !important;
+  }
+
+  .footer-link:hover {
+    transform: none !important;
+  }
+
+  /* Newsletter centered */
+  .newsletter-input {
+    border-radius: 8px !important;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .newsletter-btn {
+    border-radius: 8px !important;
+    width: 100%;
+  }
+
+  .footer-bg .input-group {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  /* Social icons centered */
+  .footer-bg .d-flex.gap-2 {
+    justify-content: center;
+  }
+
+  .social-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  /* Gallery images */
+  .footer-gallery-img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .footer-bg .d-flex.gap-2.mt-4 {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Brand block alignment */
+  .footer-bg .d-flex.align-items-center.gap-3 {
+    justify-content: center;
+  }
+
+  /* Text sizing */
+  .footer-bg p,
+  .footer-bg li,
+  .footer-bg a {
+    font-size: 0.72rem;
+    line-height: 1.6;
+  }
+}
+/* =====================================================
+   FOOTER BORDER — GLOBAL FIX
+===================================================== */
+
+footer.footer-bg {
+  border-top: 1px solid #e5e7eb !important;
+  margin-top: 60px;
+  position: relative;
+  z-index: 1;
 }

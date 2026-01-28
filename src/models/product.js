@@ -19,26 +19,34 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-  brand: String,
-  material: String,
-  style: String,
-  fitType: String,
-  occasion: [String],
-  
-    description: {
-      type: String
-    }, sizes: {
+
+    brand: String,
+    material: String,
+    style: String,
+    fitType: String,
+    occasion: [String],
+
+    description: String,
+
+    sizes: {
       S: { type: Number, default: 0 },
       M: { type: Number, default: 0 },
       L: { type: Number, default: 0 },
       XL: { type: Number, default: 0 },
       XXL: { type: Number, default: 0 }
     },
-    images: [
-      {
-        type: String
-      }
-    ]
+
+    images: [{ type: String }],
+
+    /* 🔥 ADD THESE */
+    isDeleted: {
+      type: Boolean,
+      default: false
+    },
+    isActive: {
+      type: Boolean,
+      default: true
+    }
   },
   { timestamps: true }
 );

@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { createOffer,getAllOffers,disableOffer} = require("../controllers/offerController");
+const { createOffer,getAllOffers,disableOffer,getActiveOffer} = require("../controllers/offerController");
+const auth = require("../middlewares/authMiddleware");
 
-
-router.post("/", createOffer);
-router.get("/", getAllOffers);
-router.put("/:id/disable", disableOffer);
+router.post("/",auth,createOffer);
+router.get("/",auth,getAllOffers);
+router.put("/:id/disable",auth,disableOffer);
+router.get("/active", getActiveOffer);
 
 
 module.exports = router;

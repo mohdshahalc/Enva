@@ -395,20 +395,20 @@ function updateSummaryTotals(subtotal) {
     subtotal + shipping + tax - couponDiscountAmount;
 
   document.getElementById("subtotal").textContent =
-    `$${subtotal.toFixed(2)}`;
+    `₹${subtotal.toFixed(2)}`;
 
   document.getElementById("shipping").textContent =
-    `$${shipping.toFixed(2)}`;
+    `₹${shipping.toFixed(2)}`;
 
   document.getElementById("tax").textContent =
-    `$${tax.toFixed(2)}`;
+    `₹${tax.toFixed(2)}`;
 
   document.getElementById("total").textContent =
-    `$${total.toFixed(2)}`;
+    `₹${total.toFixed(2)}`;
 
   const btn = document.getElementById("placeOrderBtn");
   if (btn) {
-    btn.textContent = `Place Order – $${total.toFixed(2)}`;
+    btn.textContent = `Place Order – ₹${total.toFixed(2)}`;
   }
 }
 
@@ -658,7 +658,7 @@ loader?.classList.add("d-none");
 placeOrderBtn.textContent = "Order Placed ✓";
 placeOrderBtn.disabled = true;
 
-redirectToThankYou(order._id);
+redirectToThankYou(order.orderId);
 
   } catch (err) {
     console.error(err);
@@ -676,10 +676,10 @@ redirectToThankYou(order._id);
     // ================================
     // 💵 CASH ON DELIVERY
     // ================================
-    await placeOrder("cod");
+    const order = await placeOrder("cod");
 
     placeOrderBtn.textContent = "Order Placed ✓";
-     redirectToThankYou();
+    redirectToThankYou(order.orderId);
 
   } catch (err) {
     console.error("CHECKOUT ERROR:", err);
@@ -802,9 +802,8 @@ async function redirectToThankYou(orderId = null) {
   setTimeout(() => {
     document.body.classList.add("page-fade-out");
     setTimeout(() => {
-      window.location.href = orderId
-        ? `thankyou.html?order=${orderId}`
-        : "thankyou.html";
+      window.location.href = `thankyou.html?order=${orderId}`
+      
     }, 800);
   }, 2000);
 }

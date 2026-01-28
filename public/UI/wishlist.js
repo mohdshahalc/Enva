@@ -3,10 +3,14 @@ document.addEventListener("DOMContentLoaded", loadWishlist);
 async function loadWishlist() {
   const token = localStorage.getItem("userToken");
 
-  if (!token) {
-    window.location.href = "login.html";
-    return;
-  }
+ if (!token) {
+  const modal = new bootstrap.Modal(
+    document.getElementById("loginRequiredModal")
+  );
+  modal.show();
+  return;
+}
+
 
   try {
     const res = await apiFetch("http://localhost:5000/api/user/wishlist", {
@@ -232,4 +236,12 @@ function showToast(message, type = "success") {
   toastBox.appendChild(toast);
 
   setTimeout(() => toast.remove(), 3200);
+}
+
+function redirectToLogin() {
+  window.location.href = "login.html";
+}
+
+function redirectToProducts() {
+  window.location.href = "home.html";
 }

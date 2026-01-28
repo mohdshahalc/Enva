@@ -35,13 +35,15 @@ exports.createCheckoutSession = async (req, res) => {
 
       // 🔥 IMPORTANT: STORE EVERYTHING WEBHOOK NEEDS
       metadata: {
-        userId: req.user.id || req.user._id,
+  type: "order",                 // 🔥 REQUIRED
+  userId: String(req.user.id || req.user._id),
 
-        // Stripe metadata must be strings
-        shippingAddress: JSON.stringify(shippingAddress),
-        shippingMethod: shippingMethod || "standard",
-        shippingPrice: String(shippingPrice || 15)
-      },
+  amount: String(amount),        // 🔥 REQUIRED (Stripe source of truth)
+
+  shippingAddress: JSON.stringify(shippingAddress),
+  shippingMethod: shippingMethod || "standard",
+  shippingPrice: String(shippingPrice || 15)
+},
 
       success_url:
         "http://localhost:5000/UI/checkout.html?payment=success",

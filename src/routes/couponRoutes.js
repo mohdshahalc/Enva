@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { createCoupon,getAllCoupons,deleteCoupon,getCouponStats} = require("../controllers/AdminCouponController");
+const auth = require("../middlewares/authMiddleware");
 
 // ADMIN – Create coupon
-router.post("/", createCoupon);
+router.post("/",auth,createCoupon);
 router.get("/",getAllCoupons)
-router.delete("/:id", deleteCoupon);
-router.get("/stats", getCouponStats);
+router.delete("/:id",auth,deleteCoupon);
+router.get("/stats",auth,getCouponStats);
 
 module.exports = router;

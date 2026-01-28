@@ -169,9 +169,13 @@ async function handleAddToCart() {
   const token = localStorage.getItem("userToken");
 
   if (!token) {
-    window.location.href = "login.html";
-    return;
-  }
+  const modal = new bootstrap.Modal(
+    document.getElementById("loginRequiredModal")
+  );
+  modal.show();
+  return;
+}
+
 
   if (!selectedSize) {
     showToast("Please select a size before adding to cart", "warning");
@@ -229,9 +233,13 @@ function handleAddToWishlist() {
   const token = localStorage.getItem("userToken");
 
   if (!token) {
-    window.location.href = "login.html";
-    return;
-  }
+  const modal = new bootstrap.Modal(
+    document.getElementById("loginRequiredModal")
+  );
+  modal.show();
+  return;
+}
+
 
   // 🚫 SIZE REQUIRED
   if (!selectedSize || !selectedSize.label) {
@@ -376,4 +384,7 @@ function showToast(message, type = "success") {
   setTimeout(() => toast.remove(), 3200);
 }
 
+function redirectToLogin() {
+  window.location.href = "login.html";
+}
 

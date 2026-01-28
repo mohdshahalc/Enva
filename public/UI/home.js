@@ -1,10 +1,14 @@
 let allProducts = [];
 let filteredProducts = [];
 let homeProducts = [];
+let flashDealInterval = null;
+let timerStarted = false;
+
+
 
 async function loadHomeProducts() {
   try {
-    const res = await fetch("http://localhost:5000/api/user/products");
+    const res = await fetch("http://localhost:5000/api/user/products/shop");
     const products = await res.json();
 
     homeProducts = products;        // for category images
@@ -39,7 +43,7 @@ async function loadPopularCategories() {
 
   container.innerHTML = categories
     .filter(cat => cat.status === "active")
-    .slice(4, 9)
+    .slice(3, 7)
     .map(cat => {
 
       // 🔥 find product image for category
@@ -73,12 +77,13 @@ async function loadPopularCategories() {
     })
     .join("");
 }
+
 function loadRandomDailyBestSells() {
 
   const container = document.getElementById("dailyScroll");
   if (!container || !allProducts.length) return;
 
-  // 🔥 1. Separate offer & normal products
+  // ✅ DEFINE OFFER PRODUCTS HERE
   const offerProducts = allProducts.filter(
     p => p.discountPercent && p.oldPrice && p.finalPrice
   );
@@ -87,21 +92,19 @@ function loadRandomDailyBestSells() {
     p => !p.discountPercent
   );
 
-  // 🔀 2. Shuffle helper
+  // 🔀 Shuffle helper
   const shuffle = arr => [...arr].sort(() => 0.5 - Math.random());
 
-  // 🧠 3. Pick products (prefer offers)
+  // 🧠 Pick products (prefer offers)
   let selected = [];
 
   selected.push(...shuffle(offerProducts).slice(0, 4));
   selected.push(...shuffle(normalProducts).slice(0, 6));
 
-  selected = shuffle(selected).slice(0, 8); // total cards
+  selected = shuffle(selected).slice(0, 8);
 
-  // 🎨 4. Render
+  // 🎨 Render
   container.innerHTML = selected.map(product => {
-    console.log(product);
-    
     const imageSrc = `/uploads/${product.images[0]}`;
 
     const hasOffer =
@@ -129,7 +132,9 @@ function loadRandomDailyBestSells() {
                class="w-100"
                style="height:190px; object-fit:contain;">
 
-          <p class="text-secondary small mt-2 mb-1">  ${product.category}</p>
+          <p class="text-secondary small mt-2 mb-1">
+            ${product.category}
+          </p>
 
           <h6 class="fw-semibold mb-2">
             ${product.name}
@@ -159,24 +164,35 @@ function loadRandomDailyBestSells() {
             }
           </div>
 
-          
           <button class="btn btn-danger fw-semibold w-100 rounded-3">
-          Add To Cart
+            Add To Cart
           </button>
-          </a>
+        </a>
       </div>
     `;
   }).join("");
 }
 
+
 function loadFlashDealProducts() {
   const grid = document.getElementById("flashDealsGrid");
-  if (!grid || !allProducts.length) return;
+  if (!grid || !allProducts.length || !activeFlashOffer) return;
 
-  // 🔥 ONLY OFFER PRODUCTS
-  const offerProducts = allProducts.filter(
-    p => p.discountPercent && p.oldPrice && p.finalPrice
-  );
+  let offerProducts = [];
+
+  if (activeFlashOffer.offerType === "category") {
+    offerProducts = allProducts.filter(
+      p => p.category === activeOfferCategoryName
+    );
+  }
+
+  if (activeFlashOffer.offerType === "product") {
+    offerProducts = allProducts.filter(
+      p => p._id === activeFlashOffer.product
+    );
+  }
+
+  console.log("Matched offer products:", offerProducts.length);
 
   if (!offerProducts.length) {
     grid.innerHTML = `
@@ -186,48 +202,27 @@ function loadFlashDealProducts() {
     return;
   }
 
-  // 🔀 Shuffle & pick 4 items
-  const shuffled = [...offerProducts].sort(() => 0.5 - Math.random());
-  const selected = shuffled.slice(0, 4);
+  const selected = offerProducts.slice(0, 4);
 
   grid.innerHTML = selected.map(product => {
     const imageSrc = `/uploads/${product.images[0]}`;
 
     return `
       <div class="col-6 col-md-4 col-lg-3 d-flex">
-        <a
-          href="singleProduct.html?id=${product._id}"
-          class="pro-card position-relative flex-fill text-decoration-none text-dark">
+        <a href="singleProduct.html?id=${product._id}"
+           class="pro-card flex-fill text-decoration-none text-dark">
 
           <span class="deal-tag">
-            ${product.discountPercent}% OFF
+            ${activeFlashOffer.discountPercent}% OFF
           </span>
 
           <div class="pro-img">
             <img src="${imageSrc}">
-            <div class="pro-img-overlay">
-              <button class="view-btn">
-                <i class="fa-regular fa-eye me-2"></i> View
-              </button>
-            </div>
           </div>
 
           <div class="pro-body">
-            <div>
-              <p class="pro-category m-0">
-                ${product.category}
-              </p>
-
-              <h5 class="pro-title">
-                ${product.name}
-              </h5>
-
-              <div class="pro-stars">
-                ${"★".repeat(product.rating || 4)}
-                ${"☆".repeat(5 - (product.rating || 4))}
-              </div>
-            </div>
-
+            <p class="pro-category">${product.category}</p>
+            <h5 class="pro-title">${product.name}</h5>
             <div class="pro-price">
               <span class="old">₹${product.oldPrice}</span>
               <span class="new">₹${product.finalPrice}</span>
@@ -241,9 +236,80 @@ function loadFlashDealProducts() {
 
 
 
-document.addEventListener("DOMContentLoaded", async () => {
-  await loadHomeProducts();      // ✅ products first
-  await loadPopularCategories(); // ✅ then categories
-});
+let activeFlashOffer = null;
+async function loadActiveFlashOffer() {
+  try {
+    const offerRes = await fetch("http://localhost:5000/api/admin/offers/active");
+    const offer = await offerRes.json();
 
+    if (!offer || !offer.isActive) return;
+
+    activeFlashOffer = offer;
+
+    // 🔥 SET OFFER TITLE
+    document.querySelector(".deal-main-title").textContent =
+      offer.name.toUpperCase();
+
+    // 🔥 START TIMER (THIS WAS MISSING)
+    startFlashDealTimer(offer.endDate);
+
+    // 🔥 LOAD CATEGORY NAME
+    if (offer.offerType === "category") {
+      const catRes = await fetch("http://localhost:5000/api/admin/categories");
+      const categories = await catRes.json();
+
+      const matchedCategory = categories.find(
+        c => c._id === offer.category
+      );
+
+      activeOfferCategoryName = matchedCategory?.name;
+    }
+
+  } catch (err) {
+    console.error("Failed to load active offer", err);
+  }
+}
+
+
+function startFlashDealTimer(endDate) {
+  if (flashDealInterval) return;
+
+  const endTime = new Date(endDate).getTime();
+
+  const dEl = document.getElementById("d");
+  const hEl = document.getElementById("h");
+  const mEl = document.getElementById("m");
+  const sEl = document.getElementById("s");
+
+  function update() {
+    const diff = endTime - Date.now();
+
+    if (diff <= 0) {
+      dEl.textContent = hEl.textContent =
+      mEl.textContent = sEl.textContent = "00";
+      clearInterval(flashDealInterval);
+      return;
+    }
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    dEl.textContent = String(d).padStart(2, "0");
+    hEl.textContent = String(h).padStart(2, "0");
+    mEl.textContent = String(m).padStart(2, "0");
+    sEl.textContent = String(s).padStart(2, "0");
+  }
+
+  update();
+  flashDealInterval = setInterval(update, 1000);
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadHomeProducts();
+  await loadActiveFlashOffer();   // 🔥 must come before
+  loadFlashDealProducts();
+  await loadPopularCategories();
+});
 

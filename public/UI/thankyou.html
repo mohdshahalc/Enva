@@ -9,237 +9,176 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
- <style>
+    <link rel="stylesheet" href="navBar.css">
+<style>
   /* ============================================
-   1. CORE LAYOUT & NAVIGATION (FIXED)
-   ============================================ */
+   SUCCESS / ORDER CONFIRMATION PAGE
+============================================ */
 
-/* MAIN WHITE NAVBAR (Top) */
-nav.navbar-main {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-    backdrop-filter: blur(10px); /* Modern Glass Effect */
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-    z-index: 1050;
-    display: flex !important;
-    align-items: center !important;
-    padding: 0 !important;
-    transition: all 0.3s ease;
+/* Page Wrapper */
+.success-page-wrapper {
+  background-color: #fafafa;
 }
 
-/* BLACK SECONDARY NAVBAR (Below Main) */
-.navbar-sub {
-    position: fixed;
-    top: 80px;
-    left: 0;
-    width: 100%;
-    height: 48px;
-    background: #000000 !important;
-    color: #ffffff;
-    z-index: 1040;
-    display: flex;
-    align-items: center;
-    padding: 0 !important;
+/* Main Card */
+.success-card {
+  background: #ffffff;
+  max-width: 560px;
+  width: 100%;
+  padding: 3.5rem 2.5rem;
+  border-radius: 2.5rem;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.02);
 }
 
-/* CONTENT SPACER (Ensures body content starts below navs) */
-.body-spacer {
-    height: 128px; /* 80px + 48px */
+/* Success Animation */
+.check-animation-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
 }
 
-/* ============================================
-   2. BRANDING & TYPOGRAPHY
-   ============================================ */
-
-.brand-name {
-    letter-spacing: 0.5px;
-    color: #111;
-    font-weight: 600;
-    font-family: 'Playfair Display', serif; /* Matching your hero style */
+.check-circle {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-.brand-tagline {
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #6c757d;
+.check-icon {
+  position: relative;
+  color: #fff;
+  font-size: 32px;
+  line-height: 80px;
+  opacity: 0;
+  animation: fadeIn 0.3s 0.4s forwards;
 }
 
-.hero-heading {
-    font-family: 'Playfair Display', serif;
-    font-weight: 300;
-    font-size: 3.5rem; /* Set base size */
-    line-height: 1.15;
-    color: #ffffff;
-    letter-spacing: 1px;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+/* Order Stepper */
+.order-stepper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
 }
 
-.heading-accent {
-    width: 80px;
-    height: 4px;
-    background-color: #dc3545;
-    border-radius: 2px;
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
 }
 
-/* ============================================
-   3. DESKTOP INTERACTION (NAV LINKS)
-   ============================================ */
-
-.nav-link {
-    position: relative;
-    transition: color 0.3s ease;
-    font-weight: 500;
-    color: #333 !important;
+.step-circle {
+  width: 32px;
+  height: 32px;
+  background: #f1f1f1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #999;
+  transition: 0.3s;
 }
 
-.nav-link:hover {
-    color: #000 !important;
+.step.active .step-circle {
+  background: #000;
+  color: #fff;
+  box-shadow: 0 0 0 5px rgba(0,0,0,0.05);
 }
 
-/* Animated Underline Effect */
-.nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: -5px;
-    left: 0;
-    background-color: #000;
-    transition: width 0.3s ease;
+.step-text {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #999;
 }
 
-.nav-link:hover::after {
-    width: 100%;
+.step.active .step-text {
+  color: #000;
 }
 
-/* ============================================
-   4. SEARCH BAR & ACTION ICONS
-   ============================================ */
-
-.input-group {
-    background: #f8f8f8 !important;
-    border-radius: 50px !important; /* Premium Pill Shape */
-    padding: 2px 5px;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
+.step-divider {
+  flex: 1;
+  height: 2px;
+  background: #f1f1f1;
+  margin-bottom: 22px;
 }
 
-.input-group:focus-within {
-    background: #fff !important;
-    border-color: #000;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05) !important;
+/* Receipt Card */
+.receipt-card {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  text-align: left;
+  border: 1px dashed #e0e0e0;
 }
 
-.input-group .form-control {
-    background: transparent !important;
-    box-shadow: none !important;
+/* Buttons */
+.action-btn {
+  transition: all 0.3s ease;
+  font-size: 14px;
 }
 
-.nav-icon {
-    transition: all 0.2s ease;
-    padding: 8px;
-    border-radius: 8px;
-    color: #333 !important;
-    text-decoration: none;
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
 }
 
-.nav-icon:hover {
-    background-color: #f8f8f8;
-    transform: translateY(-2px);
-    color: #000 !important;
+/* Animations */
+@keyframes popIn {
+  to { transform: scale(1); }
 }
 
-/* ============================================
-   5. FOOTER & SOCIALS
-   ============================================ */
-
-.footer-bg {
-    background-color: #f2f2f2;
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
 
-.social-icon-box {
-    width: 36px;
-    height: 36px;
-    background-color: #e9ecef;
-    color: #6c757d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
+/* Mobile */
+@media (max-width: 576px) {
+  .success-card {
+    padding: 2.5rem 1.5rem;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
+  }
+
+  .success-page-wrapper {
+    background: #fff;
+  }
+}.copy-msg {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+
+  font-size: 11px;
+  font-weight: 600;
+  color: #16a34a;
+
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.social-icon-box:hover {
-    background-color: #000;
-    color: #fff;
-    transform: scale(1.1);
+.copy-msg.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* ============================================
-   6. RESPONSIVE LOGIC
-   ============================================ */
 
-   /* Create a clear gap between Branding and Menu */
-@media (min-width: 992px) {
-    .nav.d-lg-flex {
-        margin-left: 60px !important; /* Increase this number for more distance */
-        padding-left: 20px;
-        /* Optional: Add a subtle divider line */
-        border-left: 1px solid rgba(0,0,0,0.05); 
-    }
-}
-
-/* Ensure the search bar takes up the remaining middle space */
-.flex-grow-1 {
-    flex-grow: 1 !important;
-}
-
-/* MOBILE ONLY Styles (0px to 768px) */
-@media (max-width: 768px) {
-    .nav, .d-lg-flex {
-        display: none !important; /* Hide Desktop menu & search */
-    }
-
-    .nav-text {
-        display: none; /* Icons only for Cart/Wishlist/Account */
-    }
-
-    .nav-icon i {
-        font-size: 20px;
-    }
-
-    .brand-name {
-        font-size: 14px;
-    }
-
-    .mobile-only {
-        display: flex !important;
-    }
-
-    .gap-3 {
-        gap: 0.75rem !important;
-    }
-}
-
-/* DESKTOP ONLY Styles (769px and up) */
-@media (min-width: 769px) {
-    .mobile-only {
-        display: none !important;
-    }
-}
-
-/* UTILITIES */
-.custom-container-lg {
-    max-width: 1400px;
-}
- </style>
+</style>
 </head>
 
 <body class="bg-white text-dark">
@@ -263,7 +202,7 @@ nav.navbar-main {
 </ul>
 
         <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center px-4">
-            <div class="input-group shadow-none" style="max-width: 350px;">
+            <div class="input-group srch-btn shadow-none" style="max-width: 350px;">
                 <input type="text" class="form-control border-0 py-2 small fw-medium" placeholder="Search trends...">
                 <button class="btn border-0 text-dark">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -343,31 +282,39 @@ nav.navbar-main {
         </div>
       </div>
 
-      <div class="receipt-card mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-secondary small fw-medium">Order Reference</span>
-          <span class="fw-bold text-dark">
+     <div class="receipt-card mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-secondary small fw-medium">Order Reference</span>
+  <span class="fw-bold text-dark position-relative">
   <span id="orderRef">#ENVA</span>
   <i
     class="fa-regular fa-copy ms-1 text-muted"
     style="cursor:pointer; font-size:12px;"
     onclick="copyOrderId()"
   ></i>
+
+  <!-- small inline message -->
+  <div id="copyMsg" class="copy-msg">Copied</div>
 </span>
 
-        </div>
-        <div class="d-flex justify-content-between align-items-center">
-          <span class="text-secondary small fw-medium">Estimated Delivery</span>
-          <span class="fw-bold text-dark">Jan 20 — Jan 22</span>
-        </div>
-        <hr class="my-3 opacity-10">
-        <div class="d-flex gap-2 align-items-start">
-          <i class="fa-solid fa-circle-info text-dark mt-1" style="font-size: 12px;"></i>
-          <p class="small text-muted mb-0" style="font-size: 12px; line-height: 1.5;">
-            A confirmation email with tracking details will be sent once your package leaves our warehouse.
-          </p>
-        </div>
-      </div>
+    
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <span class="text-secondary small fw-medium">Estimated Delivery</span>
+    <span id="deliveryDate" class="fw-bold text-dark">—</span>
+  </div>
+
+  <hr class="my-3 opacity-10">
+
+  <div class="d-flex gap-2 align-items-start">
+    <i class="fa-solid fa-circle-info text-dark mt-1" style="font-size: 12px;"></i>
+    <p class="small text-muted mb-0" style="font-size: 12px; line-height: 1.5;">
+      A confirmation email with tracking details will be sent once your package leaves our warehouse.
+    </p>
+  </div>
+</div>
+
 
       <div class="row g-3">
         <div class="col-12 col-md-6">
@@ -388,220 +335,105 @@ nav.navbar-main {
   </div>
 </section>
 
- <style>
-    /* WRAPPER */
-.success-page-wrapper {
-    background-color: #fafafa;
-}
+    
+<footer class="footer-bg py-5 mt-5">
+  <div class="container-fluid px-4 custom-container-lg mx-auto">
+    <div class="row g-5">
 
-.success-card {
-    background: #ffffff;
-    max-width: 560px;
-    width: 100%;
-    padding: 3.5rem 2.5rem;
-    border-radius: 2.5rem;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.03);
-    border: 1px solid rgba(0,0,0,0.02);
-}
-
-/* CELEBRATION ICON */
-.check-animation-wrapper {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1.5rem;
-}
-.check-circle {
-    position: absolute;
-    inset: 0;
-    background: #000;
-    border-radius: 50%;
-    transform: scale(0);
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-.check-icon {
-    position: relative;
-    color: #fff;
-    font-size: 32px;
-    line-height: 80px;
-    opacity: 0;
-    animation: fadeIn 0.3s 0.4s forwards;
-}
-
-/* PREMIUM STEPPER */
-.order-stepper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-}
-.step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-    z-index: 1;
-}
-.step-circle {
-    width: 32px;
-    height: 32px;
-    background: #f1f1f1;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: #999;
-    transition: 0.3s;
-}
-.step.active .step-circle {
-    background: #000;
-    color: #fff;
-    box-shadow: 0 0 0 5px rgba(0,0,0,0.05);
-}
-.step-text {
-    font-size: 11px;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: #999;
-}
-.step.active .step-text { color: #000; }
-.step-divider {
-    flex: 1;
-    height: 2px;
-    background: #f1f1f1;
-    margin-bottom: 22px;
-}
-
-/* RECEIPT DESIGN */
-.receipt-card {
-    background: #f9f9f9;
-    padding: 1.5rem;
-    border-radius: 1.5rem;
-    text-align: left;
-    border: 1px dashed #e0e0e0;
-}
-
-/* BUTTONS */
-.action-btn {
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-.action-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-}
-
-/* ANIMATIONS */
-@keyframes popIn { to { transform: scale(1); } }
-@keyframes fadeIn { to { opacity: 1; } }
-
-/* MOBILE RESPONSIVE */
-@media (max-width: 576px) {
-    .success-card { padding: 2.5rem 1.5rem; border-radius: 0; box-shadow: none; min-height: 100vh; }
-    .success-page-wrapper { background: #fff; }
-}
- </style>
-  <footer class="footer-bg py-5 mt-4">
-    <div class="container-fluid px-4 custom-container-lg mx-auto">
-      <div class="row row-cols-1 row-cols-md-4 g-5">
-
-        <div class="col">
-          <div class="small">
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <img src="../Images/Envalogo.jpeg" class="rounded-circle bg-light" style="width: 56px; height: 56px;">
-              <div>
-                <div class="fw-semibold fs-5">Enva</div>
-                <div class="small text-secondary" style="margin-top: -4px;">Designer for Every Woman</div>
-              </div>
-            </div>
-
-            <p class="text-secondary" style="font-size: 0.75rem; line-height: 1.4;">
-              Discover the latest trends in women's fashion. Shop stylish outfits, accessories, and essentials curated just for you.
-            </p>
-
-            <div class="mt-4 text-secondary" style="font-size: 0.75rem;">
-              <div class="mb-1">📍 51 Green St Huntington ohio beach ontario, NY 11746 NY 6783, USA</div>
-              <div class="mb-1">✉ example@email.com</div>
-              <div class="mb-1">📞 +91 123 4567890</div>
-            </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <img src="../Images/Envalogo.jpeg" class="rounded-circle shadow-sm" style="width: 50px; height: 50px;">
+          <div>
+            <div class="fw-bold fs-4 text-dark">Enva</div>
+            <div class="small text-muted" style="margin-top: -5px;">Designer for Every Woman</div>
           </div>
         </div>
 
-        <div class="col">
-          <div class="small">
-            <h3 class="fw-semibold mb-3">Company</h3>
-            <ul class="list-unstyled text-secondary" style="font-size: 0.75rem; line-height: 2;">
-              <li><a href="#" class="text-decoration-none text-secondary">About Us</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Delivery Information</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Privacy Policy</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Terms & Conditions</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Contact Us</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Support Center</a></li>
-            </ul>
+        <p class="text-secondary mb-4" style="font-size: 0.85rem; line-height: 1.6; max-width: 320px;">
+          Discover the latest trends in women's fashion. We curate stylish outfits, accessories, and essentials designed to empower every woman.
+        </p>
+
+        <div class="text-secondary" style="font-size: 0.85rem;">
+          <div class="mb-2 d-flex align-items-start gap-2">
+            <span>📍</span> <span>51 Green St, Huntington, NY 11746, USA</span>
+          </div>
+          <div class="mb-2 d-flex align-items-center gap-2">
+            <span>✉</span> <span>support@enva.com</span>
+          </div>
+          <div class="mb-0 d-flex align-items-center gap-2">
+            <span>📞</span> <span>+91 123 4567890</span>
           </div>
         </div>
+      </div>
 
-        <div class="col">
-          <div class="small">
-            <h3 class="fw-semibold mb-3">Category</h3>
-            <ul class="list-unstyled text-secondary" style="font-size: 0.75rem; line-height: 2;">
-              <li><a href="#" class="text-decoration-none text-secondary">Dresses</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Tops & Tees</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Ethnic Wear</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Kurtis & Kurtas</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Western Wear</a></li>
-              <li><a href="#" class="text-decoration-none text-secondary">Casual Wear</a></li>
-            </ul>
-          </div>
+      <div class="col-lg-2 col-md-3 col-6">
+        <h3 class="footer-title">Company</h3>
+        <ul class="list-unstyled text-secondary" style="font-size: 0.85rem;">
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">About Us</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Delivery Info</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Privacy Policy</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Terms & Conditions</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Support Center</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-6">
+        <h3 class="footer-title">Shop</h3>
+        <ul class="list-unstyled text-secondary" style="font-size: 0.85rem;">
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">New Arrivals</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Dresses</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Ethnic Wear</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Kurtas</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Western Wear</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-4 col-md-12">
+        <h3 class="footer-title">Stay in Touch</h3>
+        <p class="text-secondary mb-3" style="font-size: 0.85rem;">Subscribe to get special offers and once-in-a-lifetime deals.</p>
+        
+        <div class="input-group mb-4">
+          <input type="email" class="form-control newsletter-input" placeholder="Your Email Address">
+          <button class="btn btn-dark newsletter-btn" type="button">Subscribe</button>
         </div>
 
-        <div class="col">
-          <div class="small">
-            <h3 class="fw-semibold mb-3">Subscribe Our Newsletter</h3>
-            <div class="input-group mb-3">
-              <input type="text" class="form-control form-control-sm" placeholder="Search here..." aria-label="Search here...">
-              <button class="btn btn-dark" type="button">
-                &gt;
-              </button>
-            </div>
-
-            <div class="d-flex gap-2 mt-4">
-
-              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
-                <i class="fa-brands fa-facebook-f"></i>
-              </a>
-
-              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
-                <i class="fa-brands fa-twitter"></i>
-              </a>
-
-              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
-                <i class="fa-brands fa-instagram"></i>
-              </a>
-
-              <a href="#" class="d-flex align-items-center justify-content-center rounded social-icon-box">
-                <i class="fa-brands fa-x-twitter"></i>
-              </a>
-
-            </div>
-
-
-            <div class="d-flex gap-2 mt-4">
-              <img src="../Images/about1.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 1">
-              <img src="../Images/about2.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 2">
-              <img src="../Images/about3.jpg" class="rounded bg-light" style="width: 64px; height: 64px;" alt="About Image 3">
-            </div>
-          </div>
+        <div class="d-flex gap-2 mb-4">
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-pinterest-p"></i>
+          </a>
         </div>
 
+        <div class="d-flex gap-2">
+          <img src="../Images/about1.jpg" class="rounded footer-gallery-img" alt="Gallery 1">
+          <img src="../Images/about2.jpg" class="rounded footer-gallery-img" alt="Gallery 2">
+          <img src="../Images/about3.jpg" class="rounded footer-gallery-img" alt="Gallery 3">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row mt-5 pt-4 border-top">
+      <div class="col-md-6 text-center text-md-start">
+        <p class="text-muted small">© 2026 Enva Fashion. All rights reserved.</p>
+      </div>
+      <div class="col-md-6 text-center text-md-end">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" height="20" class="me-3 opacity-50" alt="PayPal">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" height="15" class="me-3 opacity-50" alt="Visa">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" height="20" class="opacity-50" alt="Mastercard">
       </div>
     </div>
-  </footer>
+  </div>
+</footer>
+  
  <style>
     /* ============================================
    ORDER SUCCESS PAGE STYLING
@@ -809,20 +641,68 @@ nav.navbar-main {
 </style>
 
 <script>
+(function () {
   const params = new URLSearchParams(window.location.search);
   const orderId = params.get("order");
 
-  if (orderId) {
-    document.getElementById("orderRef").innerText =
-      "#ENVA-" + orderId.slice(-6).toUpperCase();
+  if (!orderId) {
+    console.warn("No order ID found in URL");
+    return;
   }
 
-  function copyOrderId() {
-    if (!orderId) return;
+  // ✅ Show Order Reference
+  document.getElementById("orderRef").innerText =
+    "#ENVA-" + orderId.slice(-6).toUpperCase();
+
+  // ✅ COPY ORDER ID (GLOBAL)
+  window.copyOrderId = function () {
     navigator.clipboard.writeText(orderId);
-    alert("Order ID copied!");
+
+    const msg = document.getElementById("copyMsg");
+    msg.classList.add("show");
+
+    setTimeout(() => {
+      msg.classList.remove("show");
+    }, 1200);
+  };
+
+  // ✅ Format date
+  function formatDate(date) {
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric"
+    });
   }
+
+  // ✅ Fetch order details
+  fetch(`http://localhost:5000/api/user/orders/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("userToken")}`
+    }
+  })
+    .then(res => res.json())
+    .then(order => {
+      const today = new Date();
+
+      const minDays = order.shippingMethod === "express" ? 2 : 4;
+      const maxDays = order.shippingMethod === "express" ? 4 : 8;
+
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() + minDays);
+
+      const endDate = new Date(today);
+      endDate.setDate(today.getDate() + maxDays);
+
+      document.getElementById("deliveryDate").innerText =
+        `${formatDate(startDate)} — ${formatDate(endDate)}`;
+    })
+    .catch(() => {
+      document.getElementById("deliveryDate").innerText = "—";
+    });
+})();
 </script>
+
+
 <script>
   document.getElementById("viewOrdersBtn")?.addEventListener("click", () => {
     window.location.href = "./orders.html";

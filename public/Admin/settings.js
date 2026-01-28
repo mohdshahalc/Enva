@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", loadAdminProfile);
 
 async function loadAdminProfile() {
   try {
-    const res = await fetch("/api/admin/profile", {
+    const res = await apiFetch("/api/admin/profile", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -78,24 +78,46 @@ document
   .addEventListener("click", async () => {
 
     const currentPassword =
-      document.getElementById("currentPassword").value;
+      document.getElementById("currentPassword").value.trim();
     const newPassword =
-      document.getElementById("newPassword").value;
+      document.getElementById("newPassword").value.trim();
     const confirmPassword =
-      document.getElementById("confirmPassword").value;
+      document.getElementById("confirmPassword").value.trim();
 
+    // 🔹 Basic required check
     if (!currentPassword || !newPassword || !confirmPassword) {
       showToast("All fields are required", "error");
       return;
     }
 
+    // 🔹 Password strength check
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+
+    if (!passwordRegex.test(newPassword)) {
+      showToast(
+        "Password must be at least 6 characters and include a letter and a number",
+        "error"
+      );
+      return;
+    }
+
+    // 🔹 Match check
     if (newPassword !== confirmPassword) {
       showToast("Passwords do not match", "error");
       return;
     }
 
+    // 🔹 Prevent reuse
+    if (newPassword === currentPassword) {
+      showToast(
+        "New password must be different from current password",
+        "error"
+      );
+      return;
+    }
+
     try {
-      const res = await fetch("/api/admin/profile/update-password", {
+      const res = await apiFetch("/api/admin/profile/update-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,12 +132,13 @@ document
       const data = await res.json();
 
       if (!res.ok) {
-        showToast(data.message, "error");
+        showToast(data.message || "Failed to update password", "error");
         return;
       }
 
       showToast("Password updated successfully", "success");
 
+      // Clear inputs
       document.getElementById("currentPassword").value = "";
       document.getElementById("newPassword").value = "";
       document.getElementById("confirmPassword").value = "";
@@ -124,7 +147,6 @@ document
       showToast("Server error", "error");
     }
   });
-
 
   
 

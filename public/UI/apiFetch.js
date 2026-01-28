@@ -1,42 +1,42 @@
-async function apiFetch(url, options = {}) {
+async function apiFetch(url, options = {}, retry = true) {
   const isAdminPage = window.location.pathname.includes("/Admin/");
+  const tokenKey = isAdminPage ? "adminToken" : "userToken";
+  const token = localStorage.getItem(tokenKey);
 
-  const token = isAdminPage
-    ? localStorage.getItem("adminToken")
-    : localStorage.getItem("userToken");
-
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     ...options,
-    credentials: "include", // refresh token cookie if you use it
+    credentials: "include",
     headers: {
       ...(options.headers || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     }
   });
 
-  // 🔁 BACKEND MAY SEND NEW ACCESS TOKEN
+  // 🔁 CHECK FOR NEW ACCESS TOKEN FIRST
   const newToken = res.headers.get("x-access-token");
 
   if (newToken) {
-    if (isAdminPage) {
-      localStorage.setItem("adminToken", newToken);
-    } else {
-      localStorage.setItem("userToken", newToken);
+    localStorage.setItem(tokenKey, newToken);
+
+    // 🔄 retry original request ONCE with fresh token
+    if (retry) {
+      return apiFetch(url, options, false);
     }
   }
 
-  // ❌ SESSION DEAD
+  // ❌ REAL SESSION DEAD
   if (res.status === 401) {
+    localStorage.removeItem(tokenKey);
+
     if (isAdminPage) {
-      localStorage.removeItem("adminToken");
       localStorage.removeItem("adminRole");
-      window.location.href = "/Admin/login.html";
+      window.location.replace("/UI/login.html");
     } else {
-      localStorage.removeItem("userToken");
       localStorage.removeItem("userRole");
-      window.location.href = "/login.html";
+      window.location.replace("/UI/login.html");
     }
-    return;
+
+    return Promise.reject("Session expired");
   }
 
   return res;

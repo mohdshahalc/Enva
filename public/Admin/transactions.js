@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", loadTransactions);
 
 async function loadTransactions() {
   try {
-    const res = await fetch("/api/admin/transactions", {
+    const res = await apiFetch("/api/admin/transactions", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }

@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadOffers() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/offers", {
+    const res = await apiFetch("http://localhost:5000/api/admin/offers", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -135,7 +135,7 @@ function renderOffers(offers) {
 async function disableOffer(id) {
   if (!confirm("Disable this offer?")) return;
 
-  const res = await fetch(
+  const res = await apiFetch(
     `http://localhost:5000/api/admin/offers/${id}/disable`,
     {
       method: "PUT",
@@ -183,7 +183,7 @@ function capitalize(text) {
 
 
 async function loadCategories() {
-  const res = await fetch("http://localhost:5000/api/admin/categories", {
+  const res = await apiFetch("http://localhost:5000/api/admin/categories", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("adminToken")}`
     }
@@ -204,7 +204,7 @@ async function loadCategories() {
 }
 
 async function loadProductsByCategory(category) {
-  const res = await fetch(
+  const res = await apiFetch(
     `http://localhost:5000/api/admin/products?category=${category}`,
     {
       headers: {
@@ -218,7 +218,7 @@ async function loadProductsByCategory(category) {
 }
 
 async function loadAllProducts() {
-  const res = await fetch("http://localhost:5000/api/admin/products", {
+  const res = await apiFetch("http://localhost:5000/api/admin/products", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("adminToken")}`
     }
@@ -247,25 +247,109 @@ function fillProducts(products) {
 document
   .getElementById("createOfferBtn")
   .addEventListener("click", createOffer);
+
+// ✅ helper for professional offer name validation
+function isValidOfferName(name) {
+  // allows letters, spaces, hyphen, ampersand
+  const regex = /^[A-Za-z\s\-&]+$/;
+  return regex.test(name);
+}
+
 async function createOffer(e) {
   e.preventDefault();
 
   const token = localStorage.getItem("adminToken");
+  if (!token) {
+    showToast("Session expired. Please login again.", "error");
+    return;
+  }
+
+  const name = document.getElementById("offerName").value.trim();
+  const offerType = document.getElementById("offerType").value;
+  const discountPercent = Number(
+    document.getElementById("discountPercent").value
+  );
+  const productId = document.getElementById("productSelect")?.value || null;
+  const category = document.getElementById("categorySelect")?.value || null;
+  const startDate = document.getElementById("startDate").value;
+  const endDate = document.getElementById("endDate").value;
+
+  /* ---------- PROFESSIONAL VALIDATION ---------- */
+
+  // Offer name
+  if (!name) {
+    showToast("Please enter an offer name", "error");
+    return;
+  }
+
+  if (name.length < 3) {
+    showToast("Offer name must be at least 3 characters long", "error");
+    return;
+  }
+
+  if (!isValidOfferName(name)) {
+    showToast(
+      "Offer name should contain only letters and spaces (no numbers)",
+      "error"
+    );
+    return;
+  }
+
+  // Offer type
+  if (!offerType) {
+    showToast("Please select an offer type", "error");
+    return;
+  }
+
+  // Discount percent
+  if (isNaN(discountPercent) || discountPercent <= 0 || discountPercent > 90) {
+    showToast("Discount must be between 1% and 90%", "error");
+    return;
+  }
+
+  // Product / Category based on offer type
+  if (offerType === "product" && !productId) {
+    showToast("Please select a product for this offer", "error");
+    return;
+  }
+
+  if (offerType === "category" && !category) {
+    showToast("Please select a category for this offer", "error");
+    return;
+  }
+
+  // Dates
+  if (!startDate || !endDate) {
+    showToast("Please select both start and end dates", "error");
+    return;
+  }
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (start >= end) {
+    showToast("End date must be after start date", "error");
+    return;
+  }
+
+  /* ---------- PAYLOAD ---------- */
 
   const payload = {
-    name: document.getElementById("offerName").value.trim(),
-    offerType: document.getElementById("offerType").value,
-    discountPercent: Number(
-      document.getElementById("discountPercent").value
-    ),
-    productId: document.getElementById("productSelect")?.value || null,
-    category: document.getElementById("categorySelect")?.value || null,
-    startDate: document.getElementById("startDate").value,
-    endDate: document.getElementById("endDate").value
+    name: name
+      .toLowerCase()
+      .replace(/\b\w/g, c => c.toUpperCase()), // nice formatting
+    offerType,
+    discountPercent,
+    product: offerType === "product" ? productId : null,
+    category: offerType === "category" ? category : null,
+    startDate,
+    endDate
   };
 
+  /* ---------- API CALL ---------- */
+
   try {
-    const res = await fetch(
+    const res = await apiFetch(
       "http://localhost:5000/api/admin/offers",
       {
         method: "POST",
@@ -277,24 +361,23 @@ async function createOffer(e) {
       }
     );
 
-    const data = await res.json(); // ✅ ALWAYS parse JSON
+    const data = await res.json();
 
-    // 🔴 IMPORTANT PART
     if (!res.ok) {
       showToast(data.message || "Failed to create offer", "error");
       return;
     }
 
-    // ✅ SUCCESS
-    showToast(data.message || "Offer created successfully", "success");
+    showToast("Offer created successfully", "success");
     document.querySelector("form").reset();
-      loadOffers()
+    loadOffers();
 
   } catch (err) {
     console.error(err);
-    showToast("Server error", "error");
+    showToast("Server error. Please try again later.", "error");
   }
 }
+
 
 
 

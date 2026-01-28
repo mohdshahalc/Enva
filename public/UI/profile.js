@@ -4,15 +4,14 @@ async function loadProfile() {
   const token = localStorage.getItem("userToken")
 
   // 🔐 Not logged in
-  if (!token) {
-    document.body.innerHTML = `
-      <div class="text-center mt-5">
-        <h4>Please login to view your profile</h4>
-        <a href="login.html" class="btn btn-dark mt-3">Go to Login</a>
-      </div>
-    `;
-    return;
-  }
+if (!token) {
+  const modal = new bootstrap.Modal(
+    document.getElementById("loginRequiredModal")
+  );
+  modal.show();
+  return;
+}
+
 
   const res = await apiFetch("http://localhost:5000/api/user/profile", {
     headers: {
@@ -47,8 +46,8 @@ async function loadProfile() {
 document.addEventListener("DOMContentLoaded", () => {
 
   const profileForm = document.getElementById("profileForm");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+  // const logoutBtn = document.getElementById("logoutBtn");
+  // const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
 
   // ---------- PROFILE SAVE ----------
   if (profileForm) {
@@ -120,28 +119,28 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
   // ---------- LOGOUT BUTTON (OPEN MODAL) ----------
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      const modal = new bootstrap.Modal(
-        document.getElementById("logoutModal")
-      );
-      modal.show();
-    });
-  }
+  // if (logoutBtn) {
+  //   logoutBtn.addEventListener("click", () => {
+  //     const modal = new bootstrap.Modal(
+  //       document.getElementById("logoutModal")
+  //     );
+  //     modal.show();
+  //   });
+  // }
 
   // ---------- CONFIRM LOGOUT ----------
-  if (confirmLogoutBtn) {
-    confirmLogoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+  // if (confirmLogoutBtn) {
+  //   confirmLogoutBtn.addEventListener("click", () => {
+  //     localStorage.removeItem("token");
+  //     localStorage.removeItem("user");
 
-      showToast("Logged out successfully", "success");
+  //     showToast("Logged out successfully", "success");
 
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 800);
-    });
-  }
+  //     setTimeout(() => {
+  //       window.location.href = "login.html";
+  //     }, 800);
+  //   });
+  // }
 
 });
 
@@ -165,4 +164,12 @@ function showToast(message, type = "success") {
   toastBox.appendChild(toast);
 
   setTimeout(() => toast.remove(), 3200);
+}
+
+function redirectToLogin() {
+  window.location.href = "login.html";
+}
+
+function redirectToProducts() {
+  window.location.href = "home.html";
 }

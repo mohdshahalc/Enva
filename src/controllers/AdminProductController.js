@@ -104,6 +104,8 @@ exports.getProducts = async (req, res) => {
   }
 };
 
+
+
 // DELETE PRODUCT
 exports.deleteProduct = async (req, res) => {
   try {

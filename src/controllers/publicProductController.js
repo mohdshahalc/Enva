@@ -7,7 +7,11 @@ const Category=require("../models/category")
 // ======================
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().lean();
+    const products = await Product.find({
+      isActive: true,
+      isDeleted: false,
+      stock: { $gt: 0 }
+    }).lean();
 
     const now = new Date();
 

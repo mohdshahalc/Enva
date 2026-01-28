@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { getAllOrders,getOrderByIdAdmin,updateOrderStatus} = require("../controllers/adminOrderController");
+const auth = require("../middlewares/authMiddleware");
 
-router.get("/", getAllOrders);
-router.get("/:id", getOrderByIdAdmin);
-router.patch("/:id/status", updateOrderStatus);
+router.get("/", auth,getAllOrders);
+router.get("/:id",auth,getOrderByIdAdmin);
+router.patch("/:id/status",auth,updateOrderStatus);
 
 
 

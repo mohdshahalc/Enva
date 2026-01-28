@@ -11,7 +11,7 @@ document
 
 async function loadDashboard() {
   try {
-    const res = await fetch("/api/admin/dashboard", {
+    const res = await apiFetch("/api/admin/dashboard", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }

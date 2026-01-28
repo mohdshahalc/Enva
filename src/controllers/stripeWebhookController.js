@@ -9,18 +9,15 @@ const Offer = require("../models/offer");
 const Coupon = require("../models/coupon");
 const Category = require("../models/category");
 
-
 const { creditWallet } = require("./walletController");
 
-
-
-
 exports.stripeWebhook = async (req, res) => {
-
-    
   const sig = req.headers["stripe-signature"];
   let event;
 
+  // ============================
+  // 🔐 VERIFY STRIPE SIGNATURE
+  // ============================
   try {
     event = stripe.webhooks.constructEvent(
       req.body,
@@ -28,25 +25,32 @@ exports.stripeWebhook = async (req, res) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    console.error("Webhook signature error:", err.message);
+    console.error("❌ Stripe signature error:", err.message);
     return res.status(400).send("Webhook Error");
   }
 
+  // Only handle successful checkout
   if (event.type !== "checkout.session.completed") {
     return res.json({ received: true });
   }
 
   try {
     const session = event.data.object;
-    const userId = session.metadata.userId;
+    const metadata = session.metadata || {};
+    const userId = metadata.userId;
 
-     /* ================================
-       👛 WALLET TOP-UP (PRIORITY)
+    if (!userId) {
+      console.error("❌ Stripe session missing userId");
+      return res.json({ received: true });
+    }
+
+    /* ================================
+       👛 WALLET TOP-UP (FIRST PRIORITY)
     ================================ */
-    if (session.metadata?.type === "wallet_topup") {
-      const amount = Number(session.metadata.amount);
+    if (metadata.type === "wallet_topup") {
+      const amount = Number(metadata.amount || 0);
 
-      if (amount > 0 && userId) {
+      if (amount > 0) {
         await creditWallet(
           userId,
           amount,
@@ -57,35 +61,53 @@ exports.stripeWebhook = async (req, res) => {
       return res.json({ received: true });
     }
 
-    
-    // ✅ READ SHIPPING DATA FROM STRIPE METADATA
-const shippingAddress = session.metadata.shippingAddress
-  ? JSON.parse(session.metadata.shippingAddress)
-  : null;
+    /* ================================
+       📦 ORDER FLOW
+    ================================ */
 
-const shippingMethod = session.metadata.shippingMethod || "standard";
-const shippingPrice = Number(session.metadata.shippingPrice || 15);
+    // 🔁 Prevent duplicate orders
+    const existingOrder = await Order.findOne({
+      stripeSessionId: session.id
+    });
+    if (existingOrder) {
+      return res.json({ received: true });
+    }
 
-    // 🔁 prevent duplicate order
-    const existing = await Order.findOne({ stripeSessionId: session.id });
-    if (existing) return res.json({ received: true });
+    // ✅ Read shipping data from metadata
+    const shippingAddress = metadata.shippingAddress
+      ? JSON.parse(metadata.shippingAddress)
+      : null;
+
+    const shippingMethod = metadata.shippingMethod || "standard";
+    const shippingPrice = Number(metadata.shippingPrice || 15);
 
     // 1️⃣ Load cart
     const cart = await Cart.findOne({ user: userId }).populate("items.product");
-    if (!cart || !cart.items.length) return res.json({ received: true });
+
+    if (!cart) {
+      console.error("❌ Cart not found for user:", userId);
+      return res.json({ received: true });
+    }
+
+    if (!cart.items.length) {
+      console.error("❌ Cart empty for user:", userId);
+      return res.json({ received: true });
+    }
 
     const now = new Date();
     let subtotal = 0;
     const orderItems = [];
 
-    // 2️⃣ PRICE CALCULATION (same as placeOrder)
+    // 2️⃣ PRICE CALCULATION (UNCHANGED)
     for (const item of cart.items) {
       const product = item.product;
+      if (!product) continue;
 
       let finalPrice = product.price;
       let oldPrice = null;
       let discountPercent = null;
 
+      // Product offer
       let offer = await Offer.findOne({
         offerType: "product",
         product: product._id,
@@ -94,6 +116,7 @@ const shippingPrice = Number(session.metadata.shippingPrice || 15);
         endDate: { $gte: now }
       }).lean();
 
+      // Category offer
       if (!offer && product.category) {
         const categoryDoc = await Category.findOne({
           name: product.category
@@ -132,12 +155,11 @@ const shippingPrice = Number(session.metadata.shippingPrice || 15);
       });
     }
 
-   
     const tax = +(subtotal * 0.07).toFixed(2);
 
-    // ==============================
-    // 🎟️ COUPON LOGIC (SAME AS placeOrder)
-    // ==============================
+    /* ==============================
+       🎟️ COUPON LOGIC (UNCHANGED)
+    ============================== */
     let appliedCoupon = null;
     let discountAmount = 0;
 
@@ -147,11 +169,12 @@ const shippingPrice = Number(session.metadata.shippingPrice || 15);
         isActive: true
       });
 
-      if (coupon &&
-          now >= coupon.startDate &&
-          now <= coupon.endDate &&
-          subtotal >= coupon.minPurchase) {
-
+      if (
+        coupon &&
+        now >= coupon.startDate &&
+        now <= coupon.endDate &&
+        subtotal >= coupon.minPurchase
+      ) {
         discountAmount = +(
           (subtotal * coupon.discountPercent) / 100
         ).toFixed(2);
@@ -164,18 +187,19 @@ const shippingPrice = Number(session.metadata.shippingPrice || 15);
       }
     }
 
-     // ✅ STRIPE IS FINAL SOURCE OF TRUTH
-const total = session.amount_total / 100;
+    // ✅ Stripe is FINAL source of truth
+    const total = session.amount_total / 100;
 
-
-    // 5️⃣ STOCK REDUCTION
+    // 3️⃣ STOCK VALIDATION
     for (const item of cart.items) {
       const product = await Product.findById(item.product._id);
       if (!product || product.sizes[item.size] < item.quantity) {
+        console.error("❌ Stock issue:", product?._id);
         return res.json({ received: true });
       }
     }
 
+    // 4️⃣ STOCK REDUCTION
     for (const item of cart.items) {
       const product = await Product.findById(item.product._id);
       product.sizes[item.size] -= item.quantity;
@@ -183,32 +207,30 @@ const total = session.amount_total / 100;
       await product.save();
     }
 
-    // 6️⃣ CREATE ORDER (WITH COUPON)
+    // 5️⃣ CREATE ORDER
     await Order.create({
-  user: userId,
-  stripeSessionId: session.id,
+      user: userId,
+      stripeSessionId: session.id,
 
-  items: orderItems,
+      items: orderItems,
 
-  // 🔥 NOW STORED
-  shippingAddress,
-  shippingMethod,
-  shippingPrice,
+      shippingAddress,
+      shippingMethod,
+      shippingPrice,
 
-  paymentMethod: "stripe",
-  paymentStatus: "paid",
+      paymentMethod: "stripe",
+      paymentStatus: "paid",
 
-  subtotal,
-  tax,
-  discountAmount,
-  coupon: appliedCoupon,
+      subtotal,
+      tax,
+      discountAmount,
+      coupon: appliedCoupon,
 
-  total,
-  status: "confirmed"
-});
+      total,
+      status: "confirmed"
+    });
 
-
-    // 7️⃣ CLEAR CART
+    // 6️⃣ CLEAR CART
     cart.items = [];
     cart.couponCode = null;
     await cart.save();
@@ -216,7 +238,7 @@ const total = session.amount_total / 100;
     return res.json({ received: true });
 
   } catch (err) {
-    console.error("🔥 Stripe webhook error:", err);
-    return res.json({ received: true });
+    console.error("🔥 Stripe webhook processing error:", err);
+    return res.json({ received: true }); // NEVER FAIL STRIPE
   }
 };

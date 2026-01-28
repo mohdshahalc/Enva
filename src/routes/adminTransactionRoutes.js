@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { getAllTransactions } = require("../controllers/adminTransactionController");
+const auth = require("../middlewares/authMiddleware");
 
-
-router.get("/", getAllTransactions);
+router.get("/",auth,getAllTransactions);
 
 module.exports = router;

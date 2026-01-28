@@ -3,6 +3,10 @@ document.addEventListener("DOMContentLoaded", loadWallet);
 
 document.addEventListener("DOMContentLoaded", loadUserName);
 
+let showAllTransactions = false;
+let cachedTransactions = [];
+
+
 async function loadUserName() {
   const token =  localStorage.getItem("userToken")
 
@@ -59,14 +63,21 @@ function renderWallet({ balance, transactions }) {
   document.getElementById("walletBalance").textContent =
     Number(balance).toFixed(2);
 
-  // 🆔 Wallet ID (frontend generated)
+  // 🆔 Wallet ID
   document.getElementById("walletId").textContent =
     "ENVA-" + Math.floor(1000 + Math.random() * 9000);
 
-  // 📜 Transactions
+  // 📦 Cache transactions once
+  cachedTransactions = transactions || [];
+
+  // Render based on toggle
+  renderTransactionList();
+}
+
+function renderTransactionList() {
   const list = document.getElementById("transactionList");
 
-  if (!transactions || transactions.length === 0) {
+  if (!cachedTransactions.length) {
     list.innerHTML = `
       <div class="p-4 text-center text-muted small">
         No wallet transactions yet
@@ -75,11 +86,49 @@ function renderWallet({ balance, transactions }) {
     return;
   }
 
-  list.innerHTML = transactions
-    .slice(0, 5) // latest 5
-    .map(tx => renderTransaction(tx))
-    .join("");
+  const data = showAllTransactions
+    ? [...cachedTransactions].reverse()        // ALL (newest first)
+    : cachedTransactions.slice(-5).reverse(); // LAST 5
+
+  list.innerHTML = data.map(renderTransaction).join("");
 }
+
+
+
+function renderWallet({ balance, transactions }) {
+  document.getElementById("walletBalance").textContent =
+    Number(balance).toFixed(2);
+
+  document.getElementById("walletId").textContent =
+    "ENVA-" + Math.floor(1000 + Math.random() * 9000);
+
+  cachedTransactions = transactions || [];
+  renderTransactionList();
+}
+
+document
+  .getElementById("toggleTransactions")
+  ?.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    showAllTransactions = !showAllTransactions;
+
+    document.getElementById("toggleTransactions").textContent =
+      showAllTransactions ? "Show Less" : "View All";
+
+    renderTransactionList();
+  });
+
+
+function toggleTransactions() {
+  showAllTransactions = !showAllTransactions;
+
+  const btn = document.getElementById("viewAllBtn");
+  btn.textContent = showAllTransactions ? "Show Less" : "View All";
+
+  renderTransactionList();
+}
+
 
 function renderTransaction(tx) {
   const isCredit = tx.type === "credit";
@@ -153,7 +202,7 @@ async function startWalletTopup() {
   }
 
   try {
-    const res = await fetch(
+    const res = await apiFetch(
       "http://localhost:5000/api/payment/wallet-topup",
       {
         method: "POST",
