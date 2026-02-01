@@ -36,8 +36,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../public")));
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/UI/home.html"));
+  res.redirect("/UI/home.html");
 });
+
 
 
 // routes
