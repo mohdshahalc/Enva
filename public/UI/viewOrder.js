@@ -25,7 +25,7 @@ async function loadOrderDetails() {
 
 
   const res = await apiFetch(
-    `http://localhost:5000/api/user/orders/${orderId}`,
+    `https://envastore.online/api/user/orders/${orderId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -325,7 +325,7 @@ async function confirmCancelOrder() {
   const token = localStorage.getItem("userToken");
 
   const res = await fetch(
-  `http://localhost:5000/api/user/orders/${currentOrderId}/items/${selectedItemId}/cancel`,
+  `https://envastore.online/api/user/orders/${currentOrderId}/items/${selectedItemId}/cancel`,
   {
     method: "POST",
     headers: {
@@ -368,7 +368,7 @@ async function confirmReturnOrder() {
   const token = localStorage.getItem("userToken");
 
   const res = await fetch(
-  `http://localhost:5000/api/user/orders/${currentOrderId}/items/${selectedItemId}/return`,
+  `https://envastore.online/api/user/orders/${currentOrderId}/items/${selectedItemId}/return`,
   {
     method: "POST",
     headers: {

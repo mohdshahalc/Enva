@@ -46,9 +46,9 @@ exports.createCheckoutSession = async (req, res) => {
 },
 
       success_url:
-        "http://localhost:5000/UI/checkout.html?payment=success",
+        "https://envastore.online/UI/checkout.html?payment=success",
       cancel_url:
-        "http://localhost:5000/UI/checkout.html?payment=cancel"
+        "https://envastore.online/UI/checkout.html?payment=cancel"
     });
 
     res.status(200).json({ url: session.url });
@@ -93,8 +93,8 @@ exports.createWalletTopupSession = async (req, res) => {
         amount
       },
 
-      success_url: "http://localhost:5000/UI/wallet.html?topup=success",
-      cancel_url: "http://localhost:5000/UI/wallet.html?topup=cancel"
+      success_url: "https://envastore.online/UI/wallet.html?topup=success",
+      cancel_url: "https://envastore.online/UI/wallet.html?topup=cancel"
     });
 
     res.json({ url: session.url });

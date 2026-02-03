@@ -8,7 +8,7 @@ let timerStarted = false;
 
 async function loadHomeProducts() {
   try {
-    const res = await fetch("http://localhost:5000/api/user/products/shop");
+    const res = await fetch("https://envastore.online/api/user/products/shop");
     const products = await res.json();
 
     homeProducts = products;        // for category images
@@ -35,7 +35,7 @@ async function loadHomeProducts() {
 
 
 async function loadPopularCategories() {
-  const res = await fetch("http://localhost:5000/api/admin/categories");
+  const res = await fetch("https://envastore.online/api/admin/categories");
   const categories = await res.json();
 
   const container = document.getElementById("popularCategories");
@@ -239,7 +239,7 @@ function loadFlashDealProducts() {
 let activeFlashOffer = null;
 async function loadActiveFlashOffer() {
   try {
-    const offerRes = await fetch("http://localhost:5000/api/admin/offers/active");
+    const offerRes = await fetch("https://envastore.online/api/admin/offers/active");
     const offer = await offerRes.json();
 
     if (!offer || !offer.isActive) return;
@@ -255,7 +255,7 @@ async function loadActiveFlashOffer() {
 
     // 🔥 LOAD CATEGORY NAME
     if (offer.offerType === "category") {
-      const catRes = await fetch("http://localhost:5000/api/admin/categories");
+      const catRes = await fetch("https://envastore.online/api/admin/categories");
       const categories = await catRes.json();
 
       const matchedCategory = categories.find(

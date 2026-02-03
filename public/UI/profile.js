@@ -13,7 +13,7 @@ if (!token) {
 }
 
 
-  const res = await apiFetch("http://localhost:5000/api/user/profile", {
+  const res = await apiFetch("https://envastore.online/api/user/profile", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
        API CALL
     ========================= */
     try {
-      const res = await apiFetch("http://localhost:5000/api/user/profile", {
+      const res = await apiFetch("https://envastore.online/api/user/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

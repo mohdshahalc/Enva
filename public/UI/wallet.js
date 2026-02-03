@@ -12,7 +12,7 @@ async function loadUserName() {
 
   if (!token) return;
 
-  const res = await apiFetch("http://localhost:5000/api/user/profile", {
+  const res = await apiFetch("https://envastore.online/api/user/profile", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -32,7 +32,7 @@ async function loadWallet() {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/user/wallet", {
+    const res = await fetch("https://envastore.online/api/user/wallet", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -203,7 +203,7 @@ async function startWalletTopup() {
 
   try {
     const res = await apiFetch(
-      "http://localhost:5000/api/payment/wallet-topup",
+      "https://envastore.online/api/payment/wallet-topup",
       {
         method: "POST",
         headers: {

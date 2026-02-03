@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", loadAddresses);
 async function loadAddresses() {
   const token = localStorage.getItem("userToken")
 
-  const res = await apiFetch("http://localhost:5000/api/user/address", {
+  const res = await apiFetch("https://envastore.online/api/user/address", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -30,7 +30,7 @@ async function loadUserName() {
 
   if (!token) return;
 
-  const res = await apiFetch("http://localhost:5000/api/user/profile", {
+  const res = await apiFetch("https://envastore.online/api/user/profile", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -211,7 +211,7 @@ document.querySelector("#addressForm").addEventListener("submit", async e => {
   ========================= */
   try {
     const res = await apiFetch(
-      "http://localhost:5000/api/user/address/add",
+      "https://envastore.online/api/user/address/add",
       {
         method: "POST",
         headers: {
@@ -241,7 +241,7 @@ document.querySelector("#addressForm").addEventListener("submit", async e => {
 
 
 async function deleteAddress(id) {
-  await apiFetch(`http://localhost:5000/api/user/address/${id}`, {
+  await apiFetch(`https://envastore.online/api/user/address/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${ localStorage.getItem("userToken")}`
@@ -253,7 +253,7 @@ async function deleteAddress(id) {
 
 
 function setDefaultAddress(addressId) {
-  apiFetch(`http://localhost:5000/api/user/address/default/${addressId}`, {
+  apiFetch(`https://envastore.online/api/user/address/default/${addressId}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${ localStorage.getItem("userToken")}`

@@ -13,7 +13,7 @@ async function loadWishlist() {
 
 
   try {
-    const res = await apiFetch("http://localhost:5000/api/user/wishlist", {
+    const res = await apiFetch("https://envastore.online/api/user/wishlist", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -140,7 +140,7 @@ async function addWishlistItemToCart(productId, size) {
   }
 
   try {
-    const res = await apiFetch("http://localhost:5000/api/user/cart/add", {
+    const res = await apiFetch("https://envastore.online/api/user/cart/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -185,7 +185,7 @@ async function addWishlistItemToCart(productId, size) {
 
 function removeWishlistItem(productId, size) {
   apiFetch(
-    `http://localhost:5000/api/user/wishlist/remove/${productId}/${size}`,
+    `https://envastore.online/api/user/wishlist/remove/${productId}/${size}`,
     {
       method: "DELETE",
       headers: {
@@ -202,7 +202,7 @@ function removeWishlistItem(productId, size) {
 
 
 // function moveToCart(productId) {
-//   fetch("http://localhost:5000/api/user/cart/add", {
+//   fetch("https://envastore.online/api/user/cart/add", {
 //     method: "POST",
 //     headers: {
 //       "Content-Type": "application/json",

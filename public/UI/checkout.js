@@ -30,7 +30,7 @@ async function loadOrderSummary() {
   const token = localStorage.getItem("userToken")
   if (!token) return;
 
-  const res = await apiFetch("http://localhost:5000/api/user/cart", {
+  const res = await apiFetch("https://envastore.online/api/user/cart", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -101,7 +101,7 @@ function renderOrderSummary(items) {
 
 async function loadAllCoupons(subtotal) {
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/coupons", {
+    const res = await apiFetch("https://envastore.online/api/admin/coupons", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("userToken")}`
       }
@@ -312,7 +312,7 @@ async function applyCoupon() {
 
   try {
     const res = await apiFetch(
-      "http://localhost:5000/api/user/orders/validate",
+      "https://envastore.online/api/user/orders/validate",
       {
         method: "POST",
         headers: {
@@ -425,7 +425,7 @@ async function loadSavedAddresses() {
   const token = localStorage.getItem("userToken")
   if (!token) return;
 
-  const res = await apiFetch("http://localhost:5000/api/user/address", {
+  const res = await apiFetch("https://envastore.online/api/user/address", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -483,7 +483,7 @@ console.log(addr.state);
 async function placeOrder(paymentMethod, paymentIntentId = null) {
   const token = localStorage.getItem("userToken");
 
-  const res = await apiFetch("http://localhost:5000/api/user/orders", {
+  const res = await apiFetch("https://envastore.online/api/user/orders", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -570,7 +570,7 @@ orderForm.addEventListener("submit", async function (e) {
   const shippingPrice = Number(selectedShipping?.value || 15);
 
   const res = await apiFetch(
-    "http://localhost:5000/api/payment/create-checkout-session",
+    "https://envastore.online/api/payment/create-checkout-session",
     {
       method: "POST",
       headers: {
@@ -618,7 +618,7 @@ orderForm.addEventListener("submit", async function (e) {
   loader?.classList.remove("d-none");
 
   const walletRes = await apiFetch(
-    "http://localhost:5000/api/user/wallet",
+    "https://envastore.online/api/user/wallet",
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("userToken")}`
@@ -757,7 +757,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadWalletBalance() {
   try {
-    const res = await apiFetch("http://localhost:5000/api/user/wallet", {
+    const res = await apiFetch("https://envastore.online/api/user/wallet", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("userToken")}`
       }

@@ -46,7 +46,7 @@ if (password !== confirmPassword) {
 
     try {
       const res = await fetch(
-        "http://localhost:5000/api/auth/user/reset-password",
+        "https://envastore.online/api/auth/user/reset-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

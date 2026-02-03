@@ -675,7 +675,7 @@
   }
 
   // ✅ Fetch order details
-  fetch(`http://localhost:5000/api/user/orders/${orderId}`, {
+  fetch(`https://envastore.online/api/user/orders/${orderId}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("userToken")}`
     }

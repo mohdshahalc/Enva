@@ -7,7 +7,7 @@ async function loadUserName() {
 
   if (!token) return;
 
-  const res = await fetch("http://localhost:5000/api/user/profile", {
+  const res = await fetch("https://envastore.online/api/user/profile", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -23,7 +23,7 @@ async function loadMyOrders() {
     
   const token = localStorage.getItem("userToken")
 
-  const res = await fetch("http://localhost:5000/api/user/orders", {
+  const res = await fetch("https://envastore.online/api/user/orders", {
     headers: {
       Authorization: `Bearer ${token}`
     }

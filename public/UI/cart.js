@@ -12,7 +12,7 @@ async function loadCart() {
   }
 
   try {
-    const res = await apiFetch("http://localhost:5000/api/user/cart", {
+    const res = await apiFetch("https://envastore.online/api/user/cart", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -174,7 +174,7 @@ function updateQuantity(productId, size, quantity) {
 
   isUpdatingQty = true;
 
-  apiFetch("http://localhost:5000/api/user/cart/update", {
+  apiFetch("https://envastore.online/api/user/cart/update", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -206,7 +206,7 @@ function removeFromCart(productId, size) {
   const encodedSize = encodeURIComponent(size);
  
   apiFetch(
-    `http://localhost:5000/api/user/cart/remove/${productId}/${encodedSize}`,
+    `https://envastore.online/api/user/cart/remove/${productId}/${encodedSize}`,
     {
       method: "DELETE",
       headers: {

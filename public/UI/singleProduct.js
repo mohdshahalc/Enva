@@ -15,7 +15,7 @@ if (qtyInput) qtyInput.disabled = true;
   }
 
   try {
-    const res = await fetch(`http://localhost:5000/api/user/products/${productId}`);
+    const res = await fetch(`https://envastore.online/api/user/products/${productId}`);
 
     if (!res.ok) {
       throw new Error("Product not found");
@@ -192,7 +192,7 @@ async function handleAddToCart() {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/user/cart/add", {
+    const res = await fetch("https://envastore.online/api/user/cart/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -253,7 +253,7 @@ function handleAddToWishlist() {
 
   // ❤️ REMOVE from wishlist
   if (isWishlisted) {
-    fetch(`http://localhost:5000/api/user/wishlist/remove/${productId}`, {
+    fetch(`https://envastore.online/api/user/wishlist/remove/${productId}`, {
   method: "DELETE",
   headers: {
     Authorization: `Bearer ${token}`
@@ -275,7 +275,7 @@ function handleAddToWishlist() {
   }
 
   // 🤍 ADD to wishlist
-  fetch("http://localhost:5000/api/user/wishlist/add", {
+  fetch("https://envastore.online/api/user/wishlist/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -315,7 +315,7 @@ async function checkWishlistStatus() {
   const size = selectedSize.label;
 
   try {
-    const res = await fetch("http://localhost:5000/api/user/wishlist", {
+    const res = await fetch("https://envastore.online/api/user/wishlist", {
       headers: {
         Authorization: `Bearer ${token}`
       }

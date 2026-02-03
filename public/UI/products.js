@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadUserProducts() {
   try {
-    const res = await fetch("http://localhost:5000/api/user/products/shop");
+    const res = await fetch("https://envastore.online/api/user/products/shop");
     const products = await res.json();
 console.log(products);
 
@@ -115,7 +115,7 @@ return `
 async function loadFilterCategories() {
 
 
-  const res = await fetch("http://localhost:5000/api/admin/categories");
+  const res = await fetch("https://envastore.online/api/admin/categories");
   const categories = await res.json();
 
   document.getElementById("categoryFilters").innerHTML =
