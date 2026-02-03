@@ -383,27 +383,30 @@
 </head>
 
 <body class="bg-white text-dark">
-
 <!-- ========================= MAIN NAVBAR ========================= -->
-<nav class="navbar-main w-100 position-fixed top-0 start-0 z-3 shadow-sm">
+<nav class="navbar-main w-100 top-0 start-0 z-3 shadow-sm">
+
   <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between">
 
+    <!-- BRAND -->
     <a href="./home.html" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
-      <img src="../Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
+      <img src="/Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
       <div class="brand-text">
         <div class="brand-name fw-bold">Enva cloth & co</div>
         <div class="brand-tagline">Wear Your Confidence</div>
       </div>
     </a>
 
+    <!-- DESKTOP LINKS -->
     <ul class="nav gap-4 d-none d-lg-flex small fw-bold ms-5">
       <li><a href="./home.html" class="nav-link text-dark p-0">Home</a></li>
       <li><a href="./products.html" class="nav-link text-dark p-0">Products</a></li>
       <li><a href="./blog.html" class="nav-link text-dark p-0">Blog</a></li>
     </ul>
 
+    <!-- DESKTOP SEARCH -->
     <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center px-4">
-      <div class="input-group srch-btn shadow-none" style="max-width: 350px;">
+      <div class="input-group srch-btn shadow-none" style="max-width:350px;">
         <input type="text" class="form-control border-0 py-2 small fw-medium" placeholder="Search trends...">
         <button class="btn border-0 text-dark">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -411,34 +414,46 @@
       </div>
     </div>
 
+    <!-- ICONS -->
     <div class="d-flex align-items-center gap-2 gap-md-3 small fw-medium text-secondary">
 
-      <a href="./home.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
+      <!-- MOBILE SHORTCUTS -->
+      <a href="./home.html" class="nav-icon mobile-only">
         <i class="fa-solid fa-house"></i>
       </a>
 
-      <a href="./products.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
+      <a href="./products.html" class="nav-icon mobile-only">
         <i class="fa-solid fa-bag-shopping"></i>
       </a>
 
-      <a href="./profile.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+      <!-- ACCOUNT -->
+      <a href="./profile.html" class="nav-icon">
         <i class="fa-regular fa-user"></i>
         <span class="nav-text d-none d-xl-inline">Account</span>
       </a>
 
-      <a href="./wishlist.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+      <!-- WISHLIST -->
+      <a href="./wishlist.html" class="nav-icon">
         <i class="fa-regular fa-heart"></i>
         <span class="nav-text d-none d-xl-inline">Wishlist</span>
       </a>
 
-      <a href="./cart.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+      <!-- CART -->
+      <a href="./cart.html" class="nav-icon">
         <i class="fa-solid fa-cart-shopping"></i>
         <span class="nav-text d-none d-xl-inline">Cart</span>
       </a>
 
+      <!-- MOBILE HAMBURGER -->
+      <a class="nav-icon mobile-only" id="menuToggle">
+        <i class="fa-solid fa-bars"></i>
+      </a>
+
     </div>
+
   </div>
 </nav>
+
 
 <div class="navbar-sub w-100 bg-black text-white">
   <div class="container-fluid px-4 custom-container-lg mx-auto">
@@ -990,5 +1005,46 @@ confirmLogoutBtn?.addEventListener("click", () => {
   </div>
 </div>
 <script src="apiFetch.js"></script>
+
+
+
+<!-- MOBILE SLIDE MENU -->
+<div id="mobileDrawer" class="mobile-drawer">
+
+  <div class="drawer-header">
+    <strong>Menu</strong>
+    <span id="closeDrawer">✕</span>
+  </div>
+
+  <a href="./home.html">Home</a>
+  <a href="./products.html">Products</a>
+  <a href="./wishlist.html">Wishlist</a>
+  <a href="./cart.html">Cart</a>
+  <a href="./profile.html">Account</a>
+
+</div>
+<script>
+const toggle = document.getElementById("menuToggle");
+const drawer = document.getElementById("mobileDrawer");
+const close = document.getElementById("closeDrawer");
+const backdrop = document.getElementById("drawerBackdrop");
+
+toggle.onclick = () => {
+  drawer.classList.add("open");
+  backdrop.classList.add("show");
+};
+
+close.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+
+backdrop.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+</script>
+
+<div id="drawerBackdrop"></div>
 </body>
 </html>
