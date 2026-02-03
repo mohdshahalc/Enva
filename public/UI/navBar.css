@@ -345,3 +345,464 @@ footer.footer-bg {
   position: relative;
   z-index: 1;
 }
+
+
+/* =====================================================
+   MOBILE — SHOW WISHLIST + CART + TOGGLE ONLY
+===================================================== */
+
+@media (max-width: 576px) {
+
+  /* Hide home + product shortcuts */
+  nav.navbar-main a[href="./home.html"].mobile-only,
+  nav.navbar-main a[href="./products.html"].mobile-only {
+    display: none !important;
+  }
+
+  /* Hide account on mobile */
+  nav.navbar-main a[href="./profile.html"] {
+    display: none !important;
+  }
+
+  /* Make sure wishlist + cart + toggle stay visible */
+  nav.navbar-main a[href*="wishlist"],
+  nav.navbar-main a[href*="cart"],
+  #menuToggle {
+    display: flex !important;
+  }
+
+}
+
+@media (max-width: 576px) {
+
+  nav.navbar-main .d-flex.align-items-center.gap-2 {
+    gap: 10px !important;
+  }
+
+}
+/* =====================================================
+   MOBILE — CLEAN ICONS (NO DUPLICATES)
+===================================================== */
+
+@media (max-width: 576px) {
+
+  /* Hide mobile Home + Products shortcuts */
+  nav.navbar-main .mobile-only:not(#menuToggle) {
+    display: none !important;
+  }
+
+  /* Hide Account on mobile */
+  nav.navbar-main a[href*="profile"] {
+    display: none !important;
+  }
+
+  /* Ensure wishlist + cart + toggle are visible */
+  nav.navbar-main a[href*="wishlist"],
+  nav.navbar-main a[href*="cart"],
+  #menuToggle {
+    display: flex !important;
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE SEARCH — EXACT MATCH
+===================================================== */
+
+@media (max-width: 576px) {
+
+  /* Force search visible on mobile */
+  nav.navbar-main .d-none.d-lg-flex {
+    display: flex !important;
+    width: 100%;
+    order: 2;
+    margin-top: 8px;
+    padding: 0 !important;
+  }
+
+  /* Search pill */
+  nav.navbar-main .input-group {
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #f2f2f2;
+    border-radius: 28px;
+    padding: 8px 14px;
+    box-shadow: none !important;
+  }
+
+  nav.navbar-main .form-control {
+    border: none !important;
+    background: transparent !important;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+
+  nav.navbar-main .form-control::placeholder {
+    color: #999;
+  }
+
+  nav.navbar-main .btn {
+    border: none !important;
+    background: transparent !important;
+    padding: 0;
+  }
+
+  nav.navbar-main .btn i {
+    font-size: 16px;
+    color: #222;
+  }
+
+}
+@media (max-width: 576px) {
+
+  nav.navbar-main .custom-container-lg {
+    flex-wrap: wrap;
+  }
+
+}
+
+/* =====================================================
+   MOBILE NAVBAR — FINAL CLEAN (NO SEARCH)
+===================================================== */
+
+@media (max-width: 576px) {
+
+  /* Navbar sizing */
+  nav.navbar-main {
+    height: auto !important;
+    padding: 10px 12px !important;
+    /* z-index: 20000; */
+  }
+
+  nav.navbar-main .custom-container-lg {
+    flex-wrap: wrap !important;
+  }
+
+  /* Hide Home + Products shortcuts */
+  nav.navbar-main .mobile-only:not(#menuToggle) {
+    display: none !important;
+  }
+
+  /* Hide Account */
+  nav.navbar-main a[href*="profile"] {
+    display: none !important;
+  }
+
+  /* Hide search completely */
+  nav.navbar-main .input-group,
+  nav.navbar-main .d-none.d-lg-flex {
+    display: none !important;
+  }
+
+  /* Show ONLY wishlist + cart + toggle */
+  nav.navbar-main a[href*="wishlist"],
+  nav.navbar-main a[href*="cart"],
+  #menuToggle {
+    display: flex !important;
+  }
+
+  /* Icon sizing */
+  .nav-icon {
+    padding: 4px !important;
+  }
+
+  .nav-icon i {
+    font-size: 18px;
+  }
+
+  /* Black bar placement */
+  .navbar-sub {
+    position: relative !important;
+    top: 0 !important;
+    margin-top: 6px;
+    z-index: 0;
+  }
+
+  /* Remove spacer */
+  .body-spacer {
+    display: none !important;
+  }
+
+  body {
+    padding-top: 110px;
+  }
+
+}
+
+/* =====================================================
+   MOBILE TOGGLE + DRAWER — FINAL FIX
+===================================================== */
+
+@media (max-width: 576px) {
+
+  /* Always show hamburger */
+  #menuToggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+}
+
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 85%;
+  max-width: 320px;
+  height: 100vh;
+  background: #fff;
+  z-index: 25000;
+  padding: 20px;
+  transition: right .3s ease;
+  box-shadow: -8px 0 20px rgba(0,0,0,.15);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-drawer.open {
+  right: 0;
+}
+
+/* Header */
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+#closeDrawer {
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Links */
+.mobile-drawer a {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  color: #111;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.mobile-drawer a:last-child {
+  border-bottom: none;
+}
+#drawerBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 24000;
+  opacity: 0;
+  pointer-events: none;
+  transition: .3s;
+}
+
+#drawerBackdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* =====================================================
+   UI POLISH — MODERN ECOMMERCE FEEL
+===================================================== */
+
+/* Softer navbar */
+nav.navbar-main {
+  box-shadow: 0 6px 20px rgba(0,0,0,.06);
+}
+
+/* Brand tighter */
+.brand-name {
+  font-weight: 700;
+}
+
+.brand-tagline {
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+/* Icons polish */
+.nav-icon {
+  border-radius: 12px;
+}
+
+.nav-icon:hover {
+  background: #f2f2f2;
+}
+
+/* =====================================================
+   MOBILE DRAWER — PREMIUM LOOK
+===================================================== */
+
+.mobile-drawer {
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+}
+
+/* Drawer header */
+.drawer-header {
+  padding-bottom: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.drawer-header strong {
+  font-size: 18px;
+}
+
+/* Close button */
+#closeDrawer {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Drawer links */
+.mobile-drawer a {
+  padding: 14px 10px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  transition: .2s;
+}
+
+.mobile-drawer a:hover {
+  background: #f8f8f8;
+  padding-left: 18px;
+}
+
+/* Active feeling */
+.mobile-drawer a:first-of-type {
+  background: #000;
+  color: #fff;
+}
+
+/* =====================================================
+   MOBILE ICON BAR — BETTER BALANCE
+===================================================== */
+
+@media (max-width:576px) {
+
+  .nav-icon {
+    padding: 6px !important;
+  }
+
+  .nav-icon i {
+    font-size: 19px;
+  }
+
+  #menuToggle {
+    background: #f3f3f3;
+    border-radius: 12px;
+    padding: 6px 10px !important;
+  }
+
+}
+
+/* =====================================================
+   BACKDROP SMOOTHNESS
+===================================================== */
+
+#drawerBackdrop {
+  backdrop-filter: blur(2px);
+}
+
+
+/* =====================================================
+   MOBILE FOOTER — PROFESSIONAL ECOMMERCE STYLE ONLY
+===================================================== */
+
+@media (max-width:576px){
+
+  footer.footer-bg {
+    background: #fafafa;
+    padding-top: 50px;
+    box-shadow: inset 0 1px 0 #eee;
+  }
+
+  /* Titles */
+  .footer-title {
+    font-size: 14px;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* Paragraph */
+  .footer-bg p {
+    color: #666;
+    max-width: 100%;
+  }
+
+  /* Footer links */
+  .footer-link {
+    font-size: 13px;
+    position: relative;
+  }
+
+  .footer-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0;
+    height: 1px;
+    background: #000;
+    transition: .3s;
+  }
+
+  .footer-link:hover::after {
+    width: 100%;
+  }
+
+  /* Newsletter */
+  .newsletter-input,
+  .newsletter-btn {
+    border-radius: 12px !important;
+    font-size: 14px;
+  }
+
+  /* Social icons */
+  .social-icon-box {
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .social-icon-box:hover {
+    background: #000;
+    transform: translateY(-3px);
+  }
+
+  /* Gallery */
+  .footer-gallery-img {
+    border-radius: 10px;
+    transition: .25s;
+  }
+
+  .footer-gallery-img:hover {
+    transform: scale(1.05);
+  }
+
+  /* Payment bar */
+  footer .border-top {
+    border-color: #eee !important;
+    margin-top: 35px;
+  }
+
+  /* Center social + payments */
+  footer .d-flex.gap-2,
+  footer .text-md-end {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+}
