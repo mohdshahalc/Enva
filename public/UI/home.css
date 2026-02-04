@@ -2618,7 +2618,7 @@ section {
 }
 
 /* =========================================
-   PREMIUM FLASH DEAL OFFER BOX
+   PREMIUM FLASH DEAL OFFER BOX (FINAL)
 ========================================= */
 
 .flash-deals-wrapper{
@@ -2629,11 +2629,11 @@ section {
   margin-top:60px;
 }
 
-/* Header */
+/* HEADER */
 .flash-deals-wrapper .deal-header-box{
   background:
-    linear-gradient(135deg,rgba(0,0,0,.35),rgba(0,0,0,.15)),
-    url("/Images/cart.png");   /* you already use this image */
+    linear-gradient(135deg,rgba(0,0,0,.45),rgba(0,0,0,.2)),
+    url("/Images/cart.png");
   background-size:cover;
   background-position:right center;
   padding:42px 20px!important;
@@ -2641,70 +2641,89 @@ section {
   position:relative;
 }
 
-/* soft shine */
+/* Soft glow */
 .flash-deals-wrapper .deal-header-box::after{
   content:"";
   position:absolute;
-  width:220px;
-  height:220px;
-  background:rgba(255,255,255,.18);
-  filter:blur(70px);
+  width:240px;
+  height:240px;
+  background:rgba(255,255,255,.2);
+  filter:blur(80px);
   border-radius:50%;
-  top:-60px;
-  right:-60px;
+  top:-70px;
+  right:-70px;
 }
 
 /* Icon */
 .flash-deals-wrapper .deal-icon{
-  width:60px;
-  height:60px;
-  border-radius:16px;
-  background:rgba(255,255,255,.22);
+  width:64px;
+  height:64px;
+  border-radius:18px;
+  background:rgba(255,255,255,.25);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:1.6rem;
+  font-size:1.8rem;
   color:#ffd54f;
-  margin:0 auto 10px;
+  margin:0 auto 12px;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
   animation:pulseGlow 1.8s infinite ease-in-out;
 }
 
 @keyframes pulseGlow{
   0%,100%{transform:scale(1)}
-  50%{transform:scale(1.1)}
+  50%{transform:scale(1.12)}
 }
 
 /* Title */
 .flash-deals-wrapper .deal-main-title{
-  font-size:2.1rem;
+  font-size:2.2rem;
   font-weight:800;
   color:#fff;
-  letter-spacing:.5px;
+  letter-spacing:.6px;
+  margin-bottom:10px;
 }
 
-/* Timer pill */
+/* TIMER PILL */
 .flash-deals-wrapper .deal-timer-pill{
-  background:rgba(255,255,255,.2);
-  border:1px solid rgba(255,255,255,.35);
-  padding:10px 22px;
-  border-radius:40px;
-  backdrop-filter:blur(6px);
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.4);
+  padding:10px 24px;
+  border-radius:999px;
+  backdrop-filter:blur(8px);
+  display:flex;
+  justify-content:center;
 }
 
-/* Timer numbers */
+/* TIMER */
 .deal-timer{
+  display:flex;
+  align-items:center;
+  gap:6px;
   font-size:1.4rem;
   font-weight:700;
+}
+
+/* IMPORTANT: allow backend updates */
+.deal-timer span{
+  width:auto!important;
+  min-width:auto!important;
+}
+
+.deal-timer small{
+  opacity:.85;
+  margin-right:8px;
 }
 
 /* Subtitle */
 .flash-deals-wrapper .deal-subtext{
   font-size:.9rem;
+  opacity:.85;
 }
 
 /* Product grid spacing */
 #flashDealsGrid{
-  margin-top:25px;
+  margin-top:28px;
 }
 
 /* =========================================
@@ -2726,25 +2745,31 @@ section {
 
 /* Icon */
 .flash-deals-wrapper .deal-icon{
-  width:44px;
-  height:44px;
+  width:46px;
+  height:46px;
   font-size:1.3rem;
 }
 
 /* Title */
 .flash-deals-wrapper .deal-main-title{
-  font-size:1.4rem;
+  font-size:1.35rem;
 }
 
-/* Timer */
+/* Timer pill */
 .flash-deals-wrapper .deal-timer-pill{
   width:100%;
-  justify-content:center;
   padding:6px 14px;
 }
 
+/* Timer text */
 .deal-timer{
   font-size:1.05rem;
+  gap:5px;
+}
+
+.deal-timer small{
+  font-size:.7rem;
+  margin-right:6px;
 }
 
 /* Grid tighter */
