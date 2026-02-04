@@ -6,7 +6,7 @@ let orderStatusChartInstance = null;
 
 async function loadOrders() {
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/orders", {
+    const res = await apiFetch("/api/admin/orders", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -383,7 +383,7 @@ async function updateStatus(orderId, status) {
 
   try {
     const res = await apiFetch(
-      `http://localhost:5000/api/admin/orders/${orderId}/status`,
+      `/api/admin/orders/${orderId}/status`,
       {
         method: "PATCH",
         headers: {

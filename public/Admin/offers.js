@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadOffers() {
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/offers", {
+    const res = await apiFetch("/api/admin/offers", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -136,7 +136,7 @@ async function disableOffer(id) {
   if (!confirm("Disable this offer?")) return;
 
   const res = await apiFetch(
-    `http://localhost:5000/api/admin/offers/${id}/disable`,
+    `/api/admin/offers/${id}/disable`,
     {
       method: "PUT",
       headers: {
@@ -183,7 +183,7 @@ function capitalize(text) {
 
 
 async function loadCategories() {
-  const res = await apiFetch("http://localhost:5000/api/admin/categories", {
+  const res = await apiFetch("/api/admin/categories", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("adminToken")}`
     }
@@ -205,7 +205,7 @@ async function loadCategories() {
 
 async function loadProductsByCategory(category) {
   const res = await apiFetch(
-    `http://localhost:5000/api/admin/products?category=${category}`,
+    `/api/admin/products?category=${category}`,
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -218,7 +218,7 @@ async function loadProductsByCategory(category) {
 }
 
 async function loadAllProducts() {
-  const res = await apiFetch("http://localhost:5000/api/admin/products", {
+  const res = await apiFetch("/api/admin/products", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("adminToken")}`
     }
@@ -350,7 +350,7 @@ async function createOffer(e) {
 
   try {
     const res = await apiFetch(
-      "http://localhost:5000/api/admin/offers",
+      "/api/admin/offers",
       {
         method: "POST",
         headers: {

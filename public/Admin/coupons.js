@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("FINAL COUPON DATA:", couponData);
 
     try {
-      const res = await apiFetch("http://localhost:5000/api/admin/coupons", {
+      const res = await apiFetch("/api/admin/coupons", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ async function loadCoupons() {
   const token =localStorage.getItem("adminToken")
 
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/coupons", {
+    const res = await apiFetch("/api/admin/coupons", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -230,7 +230,7 @@ async function deleteCoupon(id) {
   const token = localStorage.getItem("adminToken");
 
   try {
-    await apiFetch(`http://localhost:5000/api/admin/coupons/${id}`, {
+    await apiFetch(`/api/admin/coupons/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -248,7 +248,7 @@ async function loadCouponStats() {
 
   try {
     const res = await apiFetch(
-      "http://localhost:5000/api/admin/coupons/stats",
+      "/api/admin/coupons/stats",
       {
         headers: {
           Authorization: `Bearer ${token}`

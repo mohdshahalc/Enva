@@ -6,7 +6,7 @@ async function loadCustomers() {
   const token = localStorage.getItem("adminToken");
 
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/customers", {
+    const res = await apiFetch("/api/admin/customers", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -191,7 +191,7 @@ function isActiveLast30Days(customer) {
 function blockCustomer(customerId) {
   if (!confirm("Are you sure you want to block this customer?")) return;
 
-  apiFetch(`http://localhost:5000/api/admin/customers/block-user/${customerId}`, {
+  apiFetch(`/api/admin/customers/block-user/${customerId}`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -215,7 +215,7 @@ function blockCustomer(customerId) {
 function unblockCustomer(customerId) {
   if (!confirm("Are you sure you want to unblock this customer?")) return;
 
-  apiFetch(`http://localhost:5000/api/admin/customers/unblock-user/${customerId}`, {
+  apiFetch(`/api/admin/customers/unblock-user/${customerId}`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("adminToken")}`

@@ -3,7 +3,7 @@ let editingProductId = null;
 
 
 async function loadCategoriesForProduct() {
-  const res = await apiFetch("http://localhost:5000/api/admin/categories", {
+  const res = await apiFetch("/api/admin/categories", {
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("adminToken")}`
     }
@@ -27,7 +27,7 @@ selects.forEach(select => {
 
 async function loadProducts() {
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/products", {
+    const res = await apiFetch("/api/admin/products", {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -375,8 +375,8 @@ if (images.length > 3) {
 
   try {
    const url = editingProductId
-  ? `http://localhost:5000/api/admin/products/${editingProductId}`
-  : "http://localhost:5000/api/admin/products";
+  ? `/api/admin/products/${editingProductId}`
+  : "/api/admin/products";
 
 const method = editingProductId ? "PUT" : "POST";
 
@@ -426,7 +426,7 @@ async function openDeleteModal(id) {
 
   try {
     const res = await apiFetch(
-      `http://localhost:5000/api/admin/products/${id}`,
+      `/api/admin/products/${id}`,
       {
         method: "DELETE",
         headers: {
