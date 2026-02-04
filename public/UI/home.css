@@ -1973,3 +1973,614 @@ section {
     margin-top: 10px;
   }
 }
+
+/* ==========================================
+   MOBILE PROFESSIONAL OPTIMIZATION (max-width: 768px)
+========================================== */
+@media (max-width: 768px) {
+    /* 1. Hero Section Adjustments */
+    .hero-slide {
+        height: 60vh; /* Shorter on mobile */
+        min-height: 400px;
+    }
+
+    .hero-heading {
+        font-size: 1.8rem !important; /* Scale down title */
+        line-height: 1.2;
+    }
+
+    .hero-text {
+        bottom: 10% !important;
+        left: 5% !important;
+        right: 5% !important;
+        max-width: 100% !important;
+    }
+
+    /* 2. Flash Deal Header - Compact for Mobile */
+    .deal-header-box {
+        padding: 20px 15px !important;
+        margin-bottom: -30px !important;
+    }
+
+    .deal-main-title {
+        font-size: 1.5rem !important;
+        text-align: center;
+    }
+
+    .deal-timer-pill {
+        font-size: 0.85rem !important;
+        padding: 6px 15px !important;
+        justify-content: center;
+        width: 100%; /* Full width for easier reading */
+    }
+
+    /* 3. Product Grid - 2 Column Layout */
+    .flash-deals-wrapper .row {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+
+    .flash-deals-wrapper .col-6 {
+        padding: 5px !important; /* Tighter gutters */
+    }
+
+    /* 4. Professional Card Refinement */
+    .pro-card {
+        border-radius: 12px; /* Softer corners */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .pro-img {
+        height: 160px; /* Consistent height for smaller screens */
+    }
+
+    .pro-img img {
+        padding: 10px; /* Prevent image from touching card edges */
+    }
+
+    /* Disable hover overlays on touch devices (improves UX) */
+    .pro-img-overlay {
+        display: none !important; 
+    }
+
+    /* 5. Typography & Buttons */
+    .pro-title {
+        font-size: 0.9rem !important;
+        min-height: 38px;
+        line-height: 1.3;
+    }
+
+    .pro-price .new {
+        font-size: 1.1rem !important;
+    }
+
+    .add-cart-btn {
+        height: 38px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+        margin-top: 8px;
+    }
+
+    /* 6. Horizontal Scrolling Categories (Optional but Professional) */
+    .daily-sells-scroller {
+        display: flex;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 15px;
+        padding-bottom: 15px;
+    }
+    
+    .daily-sells-scroller::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* 7. Icon adjustments */
+    .deal-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+}
+
+/* =====================================================
+   MOBILE MARKETPLACE MODE (Flipkart / Amazon Style)
+===================================================== */
+
+@media (max-width: 576px) {
+
+  /* ---------- HERO ---------- */
+
+  .hero-slide {
+    height: 52vh !important;
+    min-height: 340px !important;
+  }
+
+  .hero-heading {
+    font-size: 1.45rem !important;
+    line-height: 1.25;
+  }
+
+  .hero-text {
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 10% !important;
+    max-width: 100% !important;
+  }
+
+  /* ---------- REMOVE ALL HOVER / OVERLAYS ---------- */
+
+  .pro-img-overlay,
+  .deal-hover,
+  .style-card::before {
+    display: none !important;
+  }
+
+  .pro-card:hover,
+  .daily-card:hover,
+  .creative-feature:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* ---------- PRODUCT GRID ---------- */
+
+  .flash-deals-wrapper .row {
+    margin: 0 !important;
+  }
+
+  .flash-deals-wrapper .col-6 {
+    padding: 6px !important;
+  }
+
+  /* ---------- PRODUCT CARD ---------- */
+
+  .pro-card {
+    border-radius: 10px !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,.08) !important;
+  }
+
+  .pro-img {
+    height: 150px !important;
+  }
+
+  .pro-img img {
+    padding: 6px;
+  }
+
+  /* ---------- TEXT HIERARCHY ---------- */
+
+  .pro-title {
+    font-size: .85rem !important;
+    min-height: 36px !important;
+    line-height: 1.3;
+  }
+
+  .pro-category {
+    font-size: .7rem;
+  }
+
+  .pro-stars {
+    display: none; /* Amazon hides stars in tight grids */
+  }
+
+  /* ---------- PRICE ---------- */
+
+  .pro-price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .pro-price .new {
+    font-size: 1rem !important;
+    font-weight: 700;
+    color: #d32f2f;
+  }
+
+  .pro-price .old {
+    font-size: .75rem;
+  }
+
+  /* ---------- ADD TO CART ---------- */
+
+  .add-cart-btn {
+    height: 36px !important;
+    font-size: .8rem !important;
+    border-radius: 6px !important;
+    margin-top: 6px;
+  }
+
+  /* ---------- DEAL HEADER ---------- */
+
+  .deal-header-box {
+    padding: 18px 12px !important;
+    margin-bottom: -20px !important;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .deal-main-title {
+    font-size: 1.35rem !important;
+  }
+
+  .deal-timer-pill {
+    width: 100%;
+    justify-content: center;
+    font-size: .85rem !important;
+  }
+
+  /* ---------- FEATURE BAR ---------- */
+
+  .feature-box {
+    padding: 10px !important;
+    box-shadow: none !important;
+  }
+
+  .feature-box h6 {
+    font-size: .75rem;
+  }
+
+  .feature-box p {
+    font-size: .65rem;
+  }
+
+  /* ---------- DAILY SCROLLER ---------- */
+
+  .daily-sells-scroller {
+    gap: 10px;
+    padding-bottom: 12px;
+  }
+
+  /* ---------- FOOTER ---------- */
+
+  footer.footer-bg {
+    padding-top: 35px;
+  }
+
+}
+
+/* =====================================================
+   MOBILE MARKETPLACE MODE (Flipkart / Amazon Style)
+===================================================== */
+
+@media (max-width: 576px) {
+
+  /* ---------- HERO ---------- */
+
+  .hero-slide {
+    height: 52vh !important;
+    min-height: 340px !important;
+  }
+
+  .hero-heading {
+    font-size: 1.45rem !important;
+    line-height: 1.25;
+  }
+
+  .hero-text {
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 10% !important;
+    max-width: 100% !important;
+  }
+
+  /* ---------- REMOVE ALL HOVER / OVERLAYS ---------- */
+
+  .pro-img-overlay,
+  .deal-hover,
+  .style-card::before {
+    display: none !important;
+  }
+
+  .pro-card:hover,
+  .daily-card:hover,
+  .creative-feature:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* ---------- PRODUCT GRID ---------- */
+
+  .flash-deals-wrapper .row {
+    margin: 0 !important;
+  }
+
+  .flash-deals-wrapper .col-6 {
+    padding: 6px !important;
+  }
+
+  /* ---------- PRODUCT CARD ---------- */
+
+  .pro-card {
+    border-radius: 10px !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,.08) !important;
+  }
+
+  .pro-img {
+    height: 150px !important;
+  }
+
+  .pro-img img {
+    padding: 6px;
+  }
+
+  /* ---------- TEXT HIERARCHY ---------- */
+
+  .pro-title {
+    font-size: .85rem !important;
+    min-height: 36px !important;
+    line-height: 1.3;
+  }
+
+  .pro-category {
+    font-size: .7rem;
+  }
+
+  .pro-stars {
+    display: none; /* Amazon hides stars in tight grids */
+  }
+
+  /* ---------- PRICE ---------- */
+
+  .pro-price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .pro-price .new {
+    font-size: 1rem !important;
+    font-weight: 700;
+    color: #d32f2f;
+  }
+
+  .pro-price .old {
+    font-size: .75rem;
+  }
+
+  /* ---------- ADD TO CART ---------- */
+
+  .add-cart-btn {
+    height: 36px !important;
+    font-size: .8rem !important;
+    border-radius: 6px !important;
+    margin-top: 6px;
+  }
+
+  /* ---------- DEAL HEADER ---------- */
+
+  .deal-header-box {
+    padding: 18px 12px !important;
+    margin-bottom: -20px !important;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .deal-main-title {
+    font-size: 1.35rem !important;
+  }
+
+  .deal-timer-pill {
+    width: 100%;
+    justify-content: center;
+    font-size: .85rem !important;
+  }
+
+  /* ---------- FEATURE BAR ---------- */
+
+  .feature-box {
+    padding: 10px !important;
+    box-shadow: none !important;
+  }
+
+  .feature-box h6 {
+    font-size: .75rem;
+  }
+
+  .feature-box p {
+    font-size: .65rem;
+  }
+
+  /* ---------- DAILY SCROLLER ---------- */
+
+  .daily-sells-scroller {
+    gap: 10px;
+    padding-bottom: 12px;
+  }
+
+  /* ---------- FOOTER ---------- */
+
+  footer.footer-bg {
+    padding-top: 35px;
+  }
+
+}
+
+/* =====================================================
+   MOBILE — WHY CHOOSE + PROMO (Marketplace Style)
+===================================================== */
+
+@media (max-width: 576px) {
+
+  /* ================= WHY CHOOSE ================= */
+
+  .choose-us-section {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+
+  /* Image becomes banner */
+  .choose-image-box {
+    height: 220px !important;
+    border-radius: 12px !important;
+    margin-bottom: 10px;
+  }
+
+  /* Title */
+  .choose-us-section h2 {
+    font-size: 1.4rem !important;
+    text-align: center;
+    margin-bottom: 18px !important;
+  }
+
+  /* Cards → flat list */
+  .choose-card {
+    padding: 12px !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+  }
+
+  .choose-card + .choose-card {
+    margin-top: 8px;
+  }
+
+  .choose-card h5 {
+    font-size: .9rem;
+  }
+
+  .choose-card p {
+    font-size: .75rem;
+    line-height: 1.4;
+  }
+
+  .choose-icon {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 1rem;
+  }
+
+  /* ================= PROMO BLACK BOX ================= */
+
+  .container > .rounded-4.p-5 {
+    padding: 18px !important;
+    border-radius: 14px !important;
+    text-align: center;
+  }
+
+  /* Stack content */
+  .container > .rounded-4.p-5 .col-md-6,
+  .container > .rounded-4.p-5 .col-md-5 {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Promo heading */
+  .hero-title {
+    font-size: 1.3rem !important;
+    line-height: 1.3;
+  }
+
+  .hero-text {
+    font-size: .8rem !important;
+  }
+
+  /* Subscribe full width */
+  .subscribe-box {
+    max-width: 100% !important;
+    margin: 0 auto;
+  }
+
+  .subscribe-btn {
+    padding: 8px 16px;
+    font-size: .8rem;
+  }
+
+  /* Promo image smaller */
+  .container > .rounded-4.p-5 img {
+    max-height: 160px !important;
+    margin-top: 12px;
+  }
+
+  /* ================= FEATURE BAR ================= */
+
+  .feature-bar {
+    margin-top: 15px !important;
+  }
+
+  .feature-bar .col-6 {
+    padding: 6px !important;
+  }
+
+  .feature-box {
+    padding: 10px !important;
+    min-height: auto !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+  }
+
+  .feature-box h6 {
+    font-size: .75rem;
+  }
+
+  .feature-box p {
+    font-size: .65rem;
+  }
+
+  .icon-wrap {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+}
+
+/* =========================================
+   PROMO TEXT PERFECT MOBILE ALIGNMENT
+========================================= */
+
+@media (max-width: 576px) {
+
+  /* Main black promo container */
+  .rounded-4.p-5 {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 20px 14px !important;
+    min-height: auto !important;
+  }
+
+  /* Text column */
+  .rounded-4.p-5 .col-md-6 {
+    width: 100% !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* Heading */
+  .hero-title {
+    font-size: 1.35rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Paragraph */
+  .hero-text {
+    font-size: 0.8rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* Subscribe box */
+  .subscribe-box {
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .subscribe-box input {
+    font-size: 0.8rem;
+  }
+
+  .subscribe-btn {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+
+  /* Image column */
+  .rounded-4.p-5 .col-md-5 {
+    width: 100% !important;
+    margin-top: 10px;
+  }
+
+  .rounded-4.p-5 img {
+    max-height: 150px !important;
+  }
+}
+

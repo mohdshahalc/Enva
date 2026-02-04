@@ -965,3 +965,125 @@ nav.navbar-main {
 
 }
 
+/* =====================================================
+   MOBILE FOOTER — CLEAN PROFESSIONAL ALIGNMENT
+===================================================== */
+
+@media (max-width:576px){
+
+/* Main footer container */
+footer.footer-bg .container-fluid{
+  padding-left:16px!important;
+  padding-right:16px!important;
+}
+
+/* Brand section */
+footer .col-lg-4.col-md-6{
+  text-align:center;
+}
+
+footer .col-lg-4.col-md-6 p{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* Contact rows centered */
+footer .text-secondary div{
+  justify-content:center!important;
+}
+
+/* Company + Shop → side-by-side */
+footer .col-lg-2.col-md-3.col-6{
+  width:50%;
+}
+
+/* Titles centered */
+footer .footer-title{
+  text-align:center;
+}
+
+/* UL grid centered */
+footer ul{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:6px;
+  text-align:center;
+  padding:0;
+}
+
+/* Newsletter */
+footer .input-group{
+  flex-direction:column;
+  max-width:280px;
+  margin:0 auto 20px;
+}
+
+/* Social icons */
+footer .d-flex.gap-2{
+  justify-content:center!important;
+}
+
+/* Gallery centered */
+footer .d-flex.gap-2:last-child{
+  justify-content:center;
+}
+
+/* Bottom bar */
+footer .border-top{
+  text-align:center;
+}
+
+/* Copyright */
+footer .text-md-start{
+  text-align:center!important;
+}
+
+/* Payment icons stacked nicely */
+footer .text-md-end{
+  display:flex!important;
+  justify-content:center!important;
+  margin-top:8px;
+  gap:12px;
+}
+
+}
+/* =====================================================
+   MOBILE — NEWSLETTER BOX FIX
+===================================================== */
+
+@media (max-width:576px){
+
+footer .input-group{
+  display:flex!important;
+  flex-direction:column;
+  gap:10px;
+  width:100%;
+  max-width:300px;
+  margin:0 auto 24px;
+}
+
+/* Input */
+footer .newsletter-input{
+  width:100%!important;
+  border-radius:12px!important;
+  padding:12px 14px!important;
+  font-size:14px;
+  border:1px solid #ddd!important;
+}
+
+/* Button */
+footer .newsletter-btn{
+  width:100%!important;
+  border-radius:12px!important;
+  padding:12px!important;
+  font-size:14px;
+  font-weight:600;
+}
+
+/* Remove Bootstrap input-group borders */
+footer .input-group>.form-control,
+footer .input-group>.btn{
+  border-left:1px solid #ddd!important;
+}
+
+}
