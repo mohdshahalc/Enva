@@ -1243,6 +1243,270 @@ if (priceRange && priceValue) {
   }
 }
 
+/* =====================================================
+   MOBILE PRODUCT PAGE – FINAL CLEAN LAYOUT
+===================================================== */
+
+@media (max-width: 768px) {
+
+  /* Remove side padding */
+  .premium-product-page {
+    padding: 20px 10px !important;
+  }
+
+  /* NAV spacing fix */
+  .navbar-main .container-fluid {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .navbar-sub .container-fluid {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Filter / Sort bar */
+  .filter-sort-bar {
+    top: 110px;
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+
+  .filter-btn,
+  .sort-btn {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+
+  /* Product grid → 2 columns */
+  .product-grid-premium {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+
+  /* Product cards */
+  .product-card-premium {
+    border-radius: 10px;
+  }
+
+  .product-img-box {
+    height: 170px;
+  }
+
+  .product-card-info {
+    padding: 10px;
+  }
+
+  .product-name {
+    font-size: 14px;
+  }
+
+  .product-desc {
+    display: none;
+  }
+
+  /* Price */
+  .price-current {
+    font-size: 15px;
+  }
+
+  .price-old {
+    font-size: 12px;
+  }
+
+  /* Button */
+  .product-card-button {
+    padding: 9px 0;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  /* Pagination */
+  .pagination-section {
+    gap: 6px;
+  }
+
+  .pagination-section a {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* Footer stack */
+  footer .row > div {
+    text-align: center;
+  }
+
+  footer .footer-gallery-img {
+    width: 56px;
+    height: 56px;
+  }
+
+  footer .input-group {
+    flex-direction: column;
+  }
+
+  footer .newsletter-input {
+    border-radius: 8px !important;
+    margin-bottom: 8px;
+  }
+
+  footer .newsletter-btn {
+    width: 100%;
+    border-radius: 8px !important;
+  }
+}
+
+/* EXTRA SMALL PHONES */
+
+@media (max-width: 480px) {
+
+  /* Single column on very small devices */
+  .product-grid-premium {
+    grid-template-columns: 1fr !important;
+  }
+
+  .product-img-box {
+    height: 190px;
+  }
+
+  .filter-sort-bar {
+    top: 105px;
+  }
+
+}
+/* ===============================
+   RESPONSIVE TOAST SYSTEM
+================================ */
+
+#toastBox {
+  position: fixed;
+  top: 90px;                 /* below navbar */
+  right: 20px;
+  z-index: 99999;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+/* Toast base */
+.custom-toast {
+  width: 320px;
+  min-height: 64px;
+  padding: 14px 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+
+  box-shadow: 0 14px 35px rgba(0,0,0,.18);
+
+  animation: slideIn .35s ease, fadeOut .35s ease 2.8s;
+}
+
+/* Icon */
+.custom-toast i {
+  font-size: 20px;
+}
+
+/* Message */
+.custom-toast span {
+  line-height: 1.4;
+}
+
+/* Types */
+.custom-toast.success {
+  background: linear-gradient(135deg,#2ecc71,#27ae60);
+}
+
+.custom-toast.error {
+  background: linear-gradient(135deg,#e74c3c,#c0392b);
+}
+
+.custom-toast.warning {
+  background: linear-gradient(135deg,#f1c40f,#d4ac0d);
+  color:#000;
+}
+
+.custom-toast.info {
+  background: linear-gradient(135deg,#3498db,#2c80b4);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from { transform: translateX(120%); opacity:0 }
+  to   { transform: translateX(0); opacity:1 }
+}
+
+@keyframes fadeOut {
+  to { transform: translateX(120%); opacity:0 }
+}
+
+/* ===============================
+   MOBILE MODE (Flipkart Style)
+================================ */
+
+@media (max-width:576px){
+
+  #toastBox{
+    top:auto;
+    bottom:90px;            /* above bottom UI */
+    left:50%;
+    right:auto;
+    transform:translateX(-50%);
+    width:100%;
+    padding:0 12px;
+  }
+
+  .custom-toast{
+    width:100%;
+    min-height:56px;
+    font-size:.85rem;
+    border-radius:10px;
+  }
+}
+/* =========================================
+   FILTER BAR — STICKY UNDER BLACK NAVBAR
+========================================= */
+
+.filter-sort-bar{
+  position: sticky;
+  top: 128px;               /* 80 white + 48 black */
+
+  z-index: 900;
+  background:#fff;
+
+  border-radius:0 0 14px 14px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+  margin-bottom:18px;
+}
+
+/* MOBILE */
+
+@media(max-width:576px){
+
+  .filter-sort-bar{
+    top:100px;             /* 60 white + 40 black */
+    border-radius:0;
+  }
+
+}
+.product-main-grid{
+  overflow: visible !important;
+}
+
+.premium-product-page{
+  overflow: visible !important;
+}
+
+
 </style>
 
 <div id="toastBox"></div>

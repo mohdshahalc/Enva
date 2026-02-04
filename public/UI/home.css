@@ -2583,36 +2583,54 @@ section {
     max-height: 150px !important;
   }
 }
-
 /* ================================
    HERO / CAROUSEL HEIGHT (DESKTOP)
 ================================ */
 
 .hero-slide {
   height: 75vh;
-  min-height: 840px;
-  max-height: 720px;
+  min-height: 700px;   /* 820 was fighting with max-height */
+  max-height: 700px;
 }
 
 /* ================================
-   HERO / CAROUSEL HEIGHT (MOBILE)
+   HERO / CAROUSEL HEIGHT (TABLET + MOBILE)
+================================ */
+
+@media (max-width: 768px) {
+
+  .hero-slide {
+    height: 80vh !important;
+    min-height: 500px !important;
+    max-height: 600px !important;
+  }
+
+}
+
+/* ================================
+   HERO / CAROUSEL HEIGHT (SMALL MOBILE)
 ================================ */
 
 @media (max-width: 576px) {
 
   .hero-slide {
     height: 85vh !important;
-    min-height: 530px !important;
-    max-height: 630px !important;
+    min-height: 480px !important;
+    max-height: 580px !important;
   }
 
 }
+
+/* ================================
+   HERO / CAROUSEL HEIGHT (EXTRA SMALL PHONES)
+================================ */
 
 @media (max-width: 380px){
 
   .hero-slide{
     height: 48vh !important;
     min-height: 300px !important;
+    max-height: 420px !important;
   }
 
 }
