@@ -819,109 +819,103 @@ function moveLens(e) {
     min-height: 60px;
   }
 }
-
 @media (max-width:576px){
 
 body{
-  padding-bottom:190px!important;
+  padding-bottom:180px!important;
 }
+
+/* MAIN BAR */
+.mobile-buy-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+
+  background:#fff;
+
+  display:grid;
+  grid-template-columns:1fr auto;
+  grid-template-rows:auto auto;
+  gap:10px;
+
+  padding:12px 12px env(safe-area-inset-bottom);
+
+  border-top:1px solid #eee;
+  box-shadow:0 -8px 25px rgba(0,0,0,.12);
+  border-radius:18px 18px 0 0;
+
+  z-index:9999;
+}
+
 /* Sizes FIRST */
 .mobile-size-bar{
-  grid-column:1;
+  grid-column:1 / span 2;
   grid-row:1;
 
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(34px,1fr));
+  grid-template-columns:repeat(4,1fr);
   gap:6px;
-}
-
-/* Quantity SECOND */
-.qty-box{
-  grid-column:2;
-  grid-row:1;
-
-  border-radius:24px;
-  overflow:hidden;
-  border:1px solid #ddd;
-  background:#fafafa;
-}
-
-
-/* Quantity */
-.qty-box{
-  grid-column:1;
-  grid-row:1;
-
-  border-radius:30px;
-  overflow:hidden;
-  border:1px solid #ddd;
-  background:#fafafa;
-}
-
-/* Sizes – adaptive for ALL small screens */
-.mobile-size-bar{
-  grid-column:2;
-  grid-row:1;
-
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(36px,1fr));
-  gap:6px;
-
-  overflow:visible;
 }
 
 /* Size buttons */
 .mobile-size-bar .size-btn{
-  width:100%;
   height:34px;
-
-  border-radius:16px;
-  background:#f2f2f2;
+  border-radius:14px;
+  background:#f3f3f3;
   border:0;
-
-  font-size:11px;
+  font-size:12px;
   font-weight:700;
-
   padding:0;
 }
 
-/* Active */
 .mobile-size-bar .size-btn.active{
   background:#000;
   color:#fff;
 }
 
-
-/* CART */
-#addToCartBtn{
-  grid-column:1 / span 2;
+/* Quantity SECOND */
+.qty-box{
+  grid-column:1;
   grid-row:2;
 
-  height:48px;              /* reduced */
-  border-radius:24px!important;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid #ddd;
+  background:#fafafa;
+}
 
-  font-size:15px!important;
+/* Cart */
+#addToCartBtn{
+  grid-column:2;
+  grid-row:2;
+
+  height:42px;
+  padding:0 18px;
+
+  border-radius:21px!important;
+  font-size:14px!important;
   font-weight:700;
 
   background:linear-gradient(135deg,#ff4d4d,#d10000)!important;
   border:none;
 
-  box-shadow:0 6px 16px rgba(209,0,0,.3);
+  box-shadow:0 5px 14px rgba(209,0,0,.3);
 }
 
-
-/* Wishlist */
+/* Wishlist floating */
 #addToWishlistBtn{
-  grid-column:3;
-  grid-row:2;
+  position:absolute;
+  right:14px;
+  top:-18px;
 
-  width:52px;
-  height:52px;
+  width:44px;
+  height:44px;
 
   border-radius:50%;
   background:#fff;
 
-  box-shadow:0 6px 18px rgba(0,0,0,.2);
+  box-shadow:0 4px 12px rgba(0,0,0,.18);
 
   display:flex;
   align-items:center;
@@ -937,9 +931,11 @@ label.fw-semibold.small,
 
 }
 
+/* Tiny phones */
 @media(max-width:360px){
-  .qty-btn{width:32px}
-  .qty-input{width:32px}
+.mobile-size-bar{
+  grid-template-columns:repeat(2,1fr);
+}
 }
 
 
