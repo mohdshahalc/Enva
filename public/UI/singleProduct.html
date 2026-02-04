@@ -817,36 +817,6 @@ function moveLens(e) {
   }
 }
 
-/* =====================================================
-   MOBILE FIXED BUY BAR — FLIPKART STYLE
-===================================================== */
-
-@media(max-width:576px){
-
-/* Prevent content hiding behind bar */
-body{
-  padding-bottom:90px!important;
-}
-
-/* Buy bar container */
-.mobile-buy-bar{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:#fff;
-  z-index:3000;
-
-  padding:10px 12px;
-
-  display:grid!important;
-  grid-template-columns:1fr auto;
-  gap:10px;
-
-  border-top:1px solid #eee;
-  box-shadow:0 -6px 20px rgba(0,0,0,.08);
-}
-
 /* =========================================
    MOBILE SIZE BAR — PROFESSIONAL STYLE
 ========================================= */
@@ -1330,21 +1300,22 @@ body{
   display:none!important;
 }
 
-}/* =========================================
-   MOBILE BUY BAR WITH SIZE ON RIGHT
-========================================= */
+}
 
 @media(max-width:576px){
 
-/* Kill old floating size bar */
-#sizeOptions{
-  position:static!important;
-  border:none!important;
-  padding:0!important;
-  background:none!important;
+/* Hide desktop label + stock */
+label.fw-semibold.small,
+#sizeStockText{
+  display:none!important;
 }
 
-/* Buy bar layout */
+/* Space for bottom bar */
+body{
+  padding-bottom:130px!important;
+}
+
+/* BUY BAR */
 .mobile-buy-bar{
   position:fixed;
   bottom:0;
@@ -1352,7 +1323,7 @@ body{
   width:100%;
   background:#fff;
 
-  padding:10px 10px 12px;
+  padding:10px;
 
   display:grid!important;
   grid-template-columns:auto 1fr;
@@ -1362,17 +1333,17 @@ body{
   border-top:1px solid #eee;
   box-shadow:0 -6px 20px rgba(0,0,0,.08);
 
-  z-index:10000;
+  z-index:9999;
 }
 
-/* Quantity left */
+/* Quantity */
 .qty-box{
   grid-column:1;
   grid-row:1;
   border-radius:20px;
 }
 
-/* Size pills right */
+/* Size beside quantity */
 #sizeOptions{
   grid-column:2;
   grid-row:1;
@@ -1382,13 +1353,17 @@ body{
 
   overflow-x:auto;
   white-space:nowrap;
+
+  background:none!important;
+  padding:0!important;
+  border:none!important;
 }
 
 #sizeOptions::-webkit-scrollbar{
   display:none;
 }
 
-/* Size buttons */
+/* Size pills */
 .size-btn{
   min-width:42px;
   height:34px;
@@ -1410,7 +1385,7 @@ body{
   color:#fff!important;
 }
 
-/* Add To Cart full width */
+/* Add to cart full width */
 #addToCartBtn{
   grid-column:1 / -1;
   grid-row:2;
@@ -1425,18 +1400,8 @@ body{
   display:none!important;
 }
 
-/* Hide size label + stock */
-label.fw-semibold.small,
-#sizeStockText{
-  display:none!important;
 }
 
-/* Body space for bar */
-body{
-  padding-bottom:130px!important;
-}
-
-}
 
 
 </style>
