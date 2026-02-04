@@ -376,7 +376,8 @@
 </div>
 
 
-      <div class="d-flex align-items-center gap-3 mb-4">
+     <div class="mobile-buy-bar">
+
 
         <div class="qty-box">
           <button class="qty-btn" onclick="decQty()">-</button>
@@ -815,6 +816,109 @@ function moveLens(e) {
     min-height: 60px;
   }
 }
+
+/* =====================================================
+   MOBILE FIXED BUY BAR — FLIPKART STYLE
+===================================================== */
+
+@media(max-width:576px){
+
+/* Prevent content hiding behind bar */
+body{
+  padding-bottom:90px!important;
+}
+
+/* Buy bar container */
+.mobile-buy-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#fff;
+  z-index:3000;
+
+  padding:10px 12px;
+
+  display:grid!important;
+  grid-template-columns:1fr auto;
+  gap:10px;
+
+  border-top:1px solid #eee;
+  box-shadow:0 -6px 20px rgba(0,0,0,.08);
+}
+
+/* Size options move above */
+#sizeOptions{
+  position:fixed;
+  bottom:72px;
+  left:0;
+  width:100%;
+  background:#fff;
+  padding:8px 12px;
+  justify-content:center;
+
+  border-top:1px solid #eee;
+  z-index:2999;
+}
+
+/* Quantity compact */
+.qty-box{
+  border-radius:20px;
+  overflow:hidden;
+}
+
+/* Add to cart button */
+#addToCartBtn{
+  grid-column:1 / -1;
+  border-radius:24px!important;
+  font-size:14px;
+  padding:12px 0!important;
+}
+
+/* Wishlist icon smaller */
+#addToWishlistBtn{
+  display:none!important;
+}
+
+/* Size buttons */
+.size-btn{
+  padding:6px 12px!important;
+  font-size:12px!important;
+  border-radius:16px;
+}
+
+/* Product description spacing */
+#productDesc{
+  margin-bottom:120px!important;
+}
+
+/* Main image smaller */
+.product-main-img-box{
+  height:320px!important;
+}
+
+/* Thumbnails center */
+.thumb-wrapper{
+  justify-content:center;
+}
+
+/* Table full width */
+#productDetailsTable{
+  width:100%!important;
+}
+
+/* Title smaller */
+#productName{
+  font-size:18px;
+}
+
+/* Price */
+.price-new{
+  font-size:1.4rem!important;
+}
+
+}
+
 
 </style>
 
