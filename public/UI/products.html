@@ -1538,6 +1538,116 @@ if (priceRange && priceValue) {
   overflow: visible !important;
 }
 
+/* =====================================================
+   MOBILE PRODUCT GRID — FLIPKART STYLE
+===================================================== */
+
+@media (max-width:576px){
+
+/* Page padding tighter */
+.premium-product-page{
+  padding:12px 8px !important;
+}
+
+/* Grid → 2 columns */
+.product-grid-premium{
+  grid-template-columns:repeat(2,1fr)!important;
+  gap:10px!important;
+}
+
+/* Card */
+.product-card-premium{
+  border:none!important;
+  border-radius:12px!important;
+  box-shadow:0 2px 10px rgba(0,0,0,.08)!important;
+}
+
+/* Image */
+.product-img-box{
+  height:190px!important;
+  border-radius:12px 12px 0 0;
+}
+
+/* Content tighter */
+.product-card-info{
+  padding:10px!important;
+}
+
+/* Category small */
+.product-category{
+  font-size:10px!important;
+}
+
+/* Name */
+.product-name{
+  font-size:13px!important;
+  line-height:1.3;
+  margin-bottom:4px!important;
+
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* Hide description */
+.product-desc{
+  display:none!important;
+}
+
+/* Rating smaller */
+.product-rating{
+  font-size:12px;
+  margin-bottom:4px;
+}
+
+/* Price row */
+.price-box{
+  margin-bottom:8px!important;
+}
+
+.price-current{
+  font-size:15px!important;
+}
+
+.price-old{
+  font-size:11px!important;
+}
+
+/* Button → Flipkart pill */
+.product-card-button{
+  width:100%;
+  padding:8px 0!important;
+  border-radius:20px!important;
+  font-size:12px!important;
+}
+
+/* Offer badge */
+.offer-badge{
+  font-size:10px!important;
+  padding:4px 6px!important;
+}
+
+/* Pagination compact */
+.pagination-section a{
+  padding:6px 10px!important;
+  font-size:12px!important;
+}
+
+/* Extra small phones */
+@media(max-width:420px){
+
+  .product-grid-premium{
+    grid-template-columns:1fr!important;
+  }
+
+  .product-img-box{
+    height:220px!important;
+  }
+
+}
+
+}
 
 </style>
 
