@@ -1184,6 +1184,153 @@ label.fw-semibold.small,
 }
 
 }
+/* =========================================
+   FINAL MOBILE PRODUCT LAYOUT (CLEAN)
+========================================= */
+
+@media(max-width:576px){
+
+/* Remove top gaps */
+section.container{
+  margin-top:0!important;
+  padding-top:6px!important;
+}
+
+.body-spacer{
+  display:none!important;
+}
+
+/* Image */
+.product-main-img-box{
+  height:300px!important;
+  margin-bottom:6px!important;
+}
+
+/* Title + description tighter */
+#productName{
+  margin-top:6px!important;
+  font-size:18px;
+}
+
+#productDesc{
+  margin-bottom:8px!important;
+}
+
+/* ⭐ Rating in ONE line */
+.d-flex.align-items-center.mb-2{
+  flex-wrap:nowrap!important;
+  white-space:nowrap!important;
+  gap:6px;
+}
+
+.d-flex.align-items-center.mb-2 span:first-child{
+  font-size:14px!important;
+}
+
+.d-flex.align-items-center.mb-2 span:last-child{
+  font-size:12px!important;
+}
+
+/* ================= SIZE BAR ================= */
+
+label.fw-semibold.small,
+#sizeStockText{
+  display:none!important;
+}
+
+#sizeOptions{
+  position:fixed!important;
+  bottom:88px!important;
+  left:0;
+  width:100%;
+
+  background:#fff;
+  padding:10px 12px;
+
+  display:flex!important;
+  gap:10px;
+
+  overflow-x:auto;
+  white-space:nowrap;
+
+  border-top:1px solid #eee;
+  z-index:9999;
+}
+
+#sizeOptions::-webkit-scrollbar{
+  display:none;
+}
+
+.size-btn{
+  min-width:46px;
+  height:36px;
+
+  border-radius:18px;
+  background:#f3f3f3;
+  border:1px solid #ddd;
+
+  font-size:13px;
+  font-weight:600;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.size-btn.active{
+  background:#000!important;
+  color:#fff!important;
+}
+
+/* ================= BUY BAR ================= */
+
+body{
+  padding-bottom:140px!important;
+}
+
+.mobile-buy-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#fff;
+
+  padding:10px 12px;
+
+  display:grid!important;
+  grid-template-columns:1fr auto;
+  gap:10px;
+
+  border-top:1px solid #eee;
+  box-shadow:0 -6px 20px rgba(0,0,0,.08);
+
+  z-index:10000;
+}
+
+/* Quantity */
+.qty-box{
+  border-radius:20px;
+}
+
+/* Add to cart */
+#addToCartBtn{
+  grid-column:1 / -1;
+  border-radius:24px!important;
+  padding:12px 0!important;
+  font-size:14px;
+}
+
+/* Hide wishlist on mobile */
+#addToWishlistBtn{
+  display:none!important;
+}
+
+/* Remove empty bootstrap spacer */
+.col-lg-7 > .mb-3{
+  display:none!important;
+}
+
+}
 
 </style>
 
