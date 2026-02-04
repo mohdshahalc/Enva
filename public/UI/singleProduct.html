@@ -974,6 +974,112 @@ label.fw-semibold.small{
 }
 
 }
+/* =====================================
+   REMOVE IMAGE → CONTENT GAP (MOBILE)
+===================================== */
+
+@media(max-width:576px){
+
+/* Kill bootstrap row spacing */
+section.container{
+  padding-top:10px!important;
+}
+
+.row.g-4{
+  --bs-gutter-y:0!important;
+}
+
+/* Image column tighter */
+.col-lg-5{
+  margin-bottom:8px!important;
+}
+
+/* Main image */
+.product-main-img-box{
+  height:300px!important;
+  margin-bottom:6px!important;
+}
+
+/* Product title spacing */
+#productName{
+  margin-top:6px!important;
+}
+
+/* Description spacing */
+#productDesc{
+  margin-bottom:10px!important;
+}
+
+}
+/* =====================================
+   MOBILE SIZE OPTIONS — FORCE SHOW
+===================================== */
+
+@media(max-width:576px){
+
+/* Size container */
+#sizeOptions{
+  position:fixed;
+  bottom:74px;              /* above add to cart */
+  left:0;
+  width:100%;
+
+  background:#fff;
+  padding:10px 12px;
+
+  display:flex!important;
+  gap:10px;
+
+  overflow-x:auto;
+  scrollbar-width:none;
+
+  border-top:1px solid #eee;
+  z-index:3000;
+}
+
+#sizeOptions::-webkit-scrollbar{
+  display:none;
+}
+
+/* Size buttons */
+.size-btn{
+  min-width:46px;
+  height:36px;
+
+  border-radius:18px!important;
+  border:1px solid #ddd!important;
+  background:#f5f5f5;
+
+  font-size:13px;
+  font-weight:600;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Active */
+.size-btn.active{
+  background:#000!important;
+  color:#fff!important;
+}
+
+/* Hide desktop label */
+label.fw-semibold.small{
+  display:none!important;
+}
+
+/* Hide stock text */
+#sizeStockText{
+  display:none!important;
+}
+
+/* Push content above bars */
+#productDesc{
+  padding-bottom:160px!important;
+}
+
+}
 
 
 </style>
