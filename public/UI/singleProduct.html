@@ -385,6 +385,9 @@
           <button class="qty-btn" onclick="incQty()">+</button>
         </div>
 
+        <div class="mobile-size-bar" id="mobileSizeOptions"></div>
+
+
         <button 
   id="addToCartBtn" 
   class="btn btn-danger px-4 py-2 fw-semibold"
@@ -816,8 +819,12 @@ function moveLens(e) {
     min-height: 60px;
   }
 }
-
 @media(max-width:576px){
+
+/* hide desktop sizes */
+#sizeOptions{
+  display:none!important;
+}
 
 body{
   padding-bottom:150px!important;
@@ -831,7 +838,7 @@ body{
   width:100%;
   background:#fff;
 
-  display:grid!important;
+  display:grid;
   grid-template-columns:auto 1fr;
   grid-template-rows:auto auto;
   gap:10px;
@@ -842,36 +849,28 @@ body{
   z-index:9999;
 }
 
-/* ROW 1 */
-
-/* Quantity LEFT */
+/* qty */
 .qty-box{
   grid-column:1;
   grid-row:1;
-  border-radius:18px;
 }
 
-/* Size RIGHT */
-#sizeOptions{
-  position:static!important;
+/* mobile sizes */
+.mobile-size-bar{
   grid-column:2;
   grid-row:1;
 
-  display:flex!important;
+  display:flex;
   justify-content:flex-end;
   gap:8px;
-
-  background:none!important;
-  padding:0!important;
-  border:none!important;
 
   overflow-x:auto;
   white-space:nowrap;
 }
 
-#sizeOptions::-webkit-scrollbar{display:none;}
+.mobile-size-bar::-webkit-scrollbar{display:none;}
 
-.size-btn{
+.mobile-size-bar .size-btn{
   min-width:42px;
   height:34px;
   border-radius:16px;
@@ -881,65 +880,36 @@ body{
   font-weight:600;
 }
 
-.size-btn.active{
-  background:#000!important;
-  color:#fff!important;
+.mobile-size-bar .size-btn.active{
+  background:#000;
+  color:#fff;
 }
 
-/* ROW 2 */
-
-/* BIG CART */
+/* cart */
 #addToCartBtn{
   grid-column:1;
   grid-row:2;
-
-  width:100%!important;
+  width:100%;
   padding:14px 0!important;
   border-radius:22px!important;
-  font-size:15px!important;
 }
 
-/* SMALL WISHLIST */
+/* wishlist */
 #addToWishlistBtn{
   grid-column:2;
   grid-row:2;
-
-  width:48px!important;
-  min-width:48px!important;
-  padding:0!important;
-
-  display:flex!important;
+  width:48px;
+  padding:0;
+  display:flex;
   align-items:center;
   justify-content:center;
-
-  border-radius:22px!important;
+  border-radius:22px;
 }
 
-#addToWishlistBtn i{
-  margin:0!important;
-}
-
-/* Hide label + stock */
+/* hide labels */
 label.fw-semibold.small,
 #sizeStockText{
   display:none!important;
-}
-
-}
-
-@media(max-width:576px){
-
-#sizeOptions{
-  align-items:center;
-}
-
-/* Slightly smaller qty */
-.qty-btn{
-  height:34px;
-}
-
-.qty-input{
-  height:34px;
 }
 
 }
@@ -1027,6 +997,17 @@ backdrop.onclick = () => {
   drawer.classList.remove("open");
   backdrop.classList.remove("show");
 };
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const desktopSizes = document.getElementById("sizeOptions");
+  const mobileSizes = document.getElementById("mobileSizeOptions");
+
+  if (desktopSizes && mobileSizes) {
+    mobileSizes.innerHTML = desktopSizes.innerHTML;
+  }
+});
 </script>
 
 <div id="drawerBackdrop"></div>
