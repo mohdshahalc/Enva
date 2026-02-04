@@ -781,6 +781,24 @@ backdrop.onclick = () => {
   backdrop.classList.remove("show");
 };
 </script>
+<script>
+/* ===============================
+   MOBILE DRAWER ACTIVE LINK
+================================ */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const currentPage = location.pathname.split("/").pop();
+  const drawerLinks = document.querySelectorAll("#mobileDrawer a");
+
+  drawerLinks.forEach(link => {
+    const href = link.getAttribute("href");
+
+    if (href && href.includes(currentPage)) {
+      link.classList.add("active-nav");
+    }
+  });
+});
+</script>
 
 <div id="drawerBackdrop"></div>
 </body>

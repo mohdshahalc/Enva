@@ -785,6 +785,40 @@ backdrop.onclick = () => {
   drawer.classList.remove("open");
   backdrop.classList.remove("show");
 };
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const page = location.pathname.split("/").pop();
+
+  const drawerLinks = document.querySelectorAll("#mobileDrawer a");
+
+  drawerLinks.forEach(link => link.classList.remove("active-nav"));
+
+  // Pages that belong to Account
+  const accountPages = [
+    "profile.html",
+    "address.html",
+    "wallet.html",
+    "orders.html",
+    "profileWishlist.html",
+    "profileCart.html"
+  ];
+
+  drawerLinks.forEach(link => {
+    const href = link.getAttribute("href");
+
+    // Normal match
+    if (href && href.includes(page)) {
+      link.classList.add("active-nav");
+    }
+
+    // Account group match
+    if (accountPages.includes(page) && href.includes("profile.html")) {
+      link.classList.add("active-nav");
+    }
+  });
+});
 </script>
 
 <div id="drawerBackdrop"></div>

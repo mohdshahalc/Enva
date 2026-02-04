@@ -675,9 +675,15 @@ nav.navbar-main {
 }
 
 /* Active feeling */
-.mobile-drawer a:first-of-type {
+/* Drawer active link */
+.mobile-drawer a.active-nav {
   background: #000;
   color: #fff;
+  padding-left: 18px;
+}
+
+.mobile-drawer a.active-nav i {
+  color: #fff !important;
 }
 
 /* =====================================================
@@ -958,3 +964,4 @@ nav.navbar-main {
   }
 
 }
+
