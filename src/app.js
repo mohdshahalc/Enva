@@ -68,10 +68,6 @@ app.use("/api/user/wallet", walletRoutes);
 
 
 
-// test route
-app.get("/", (req, res) => {
-  res.send("ENVA API running");
-  
-});
+
 
 module.exports = app;
