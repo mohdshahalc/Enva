@@ -817,502 +817,22 @@ function moveLens(e) {
   }
 }
 
-/* =========================================
-   MOBILE SIZE BAR — PROFESSIONAL STYLE
-========================================= */
-
 @media(max-width:576px){
 
-/* Size wrapper */
-#sizeOptions{
-  position:fixed;
-  bottom:84px;                 /* sits above buy bar */
-  left:0;
-  width:100%;
-
-  background:#fff;
-  padding:10px 12px;
-
-  display:flex!important;
-  gap:10px;
-  justify-content:flex-start;
-
-  overflow-x:auto;
-  scrollbar-width:none;
-
-  border-top:1px solid #eee;
-  z-index:2500;
-}
-
-#sizeOptions::-webkit-scrollbar{
-  display:none;
-}
-
-/* Size buttons */
-.size-btn{
-  min-width:48px;
-  height:36px;
-
-  border-radius:18px!important;
-  font-size:13px!important;
-
-  background:#f4f4f4;
-  border:none;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.size-btn.active{
-  background:#000!important;
-  color:#fff!important;
-}
-
-/* Label hidden on mobile */
-label.fw-semibold.small{
-  display:none;
-}
-
-/* Stock text hidden */
-#sizeStockText{
-  display:none;
-}
-
-/* Push content above bars */
-#productDesc{
-  margin-bottom:140px!important;
-}
-
-}
-
-
-/* Quantity compact */
-.qty-box{
-  border-radius:20px;
-  overflow:hidden;
-}
-
-/* Add to cart button */
-#addToCartBtn{
-  grid-column:1 / -1;
-  border-radius:24px!important;
-  font-size:14px;
-  padding:12px 0!important;
-}
-
-/* Wishlist icon smaller */
-#addToWishlistBtn{
-  display:none!important;
-}
-
-/* Size buttons */
-.size-btn{
-  padding:6px 12px!important;
-  font-size:12px!important;
-  border-radius:16px;
-}
-
-/* Product description spacing */
-#productDesc{
-  margin-bottom:120px!important;
-}
-
-/* Main image smaller */
-.product-main-img-box{
-  height:320px!important;
-}
-
-/* Thumbnails center */
-.thumb-wrapper{
-  justify-content:center;
-}
-
-/* Table full width */
-#productDetailsTable{
-  width:100%!important;
-}
-
-/* Title smaller */
-#productName{
-  font-size:18px;
-}
-
-/* Price */
+/* Keep price visible */
 .price-new{
   font-size:1.4rem!important;
 }
 
-}
-/* =====================================
-   REMOVE IMAGE → CONTENT GAP (MOBILE)
-===================================== */
-
-@media(max-width:576px){
-
-/* Kill bootstrap row spacing */
-section.container{
-  padding-top:10px!important;
-}
-
-.row.g-4{
-  --bs-gutter-y:0!important;
-}
-
-/* Image column tighter */
-.col-lg-5{
-  margin-bottom:8px!important;
-}
-
-/* Main image */
-.product-main-img-box{
-  height:300px!important;
-  margin-bottom:6px!important;
-}
-
-/* Product title spacing */
-#productName{
-  margin-top:6px!important;
-}
-
-/* Description spacing */
-#productDesc{
-  margin-bottom:10px!important;
-}
-
-}
-/* =====================================
-   MOBILE SIZE OPTIONS — FORCE SHOW
-===================================== */
-
-@media(max-width:576px){
-
-/* Size container */
-#sizeOptions{
-  position:fixed;
-  bottom:74px;              /* above add to cart */
-  left:0;
-  width:100%;
-
-  background:#fff;
-  padding:10px 12px;
-
-  display:flex!important;
-  gap:10px;
-
-  overflow-x:auto;
-  scrollbar-width:none;
-
-  border-top:1px solid #eee;
-  z-index:3000;
-}
-
-#sizeOptions::-webkit-scrollbar{
-  display:none;
-}
-
-/* Size buttons */
-.size-btn{
-  min-width:46px;
-  height:36px;
-
-  border-radius:18px!important;
-  border:1px solid #ddd!important;
-  background:#f5f5f5;
-
-  font-size:13px;
-  font-weight:600;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* Active */
-.size-btn.active{
-  background:#000!important;
-  color:#fff!important;
-}
-
-/* Hide desktop label */
-label.fw-semibold.small{
-  display:none!important;
-}
-
-/* Hide stock text */
-#sizeStockText{
-  display:none!important;
-}
-
-/* Push content above bars */
-/* #productDesc{
-  padding-bottom:160px!important;
-} */
-
-}
-/* =====================================
-   REMOVE TOP WHITE SPACE (MOBILE)
-===================================== */
-
-@media(max-width:576px){
-
-section.container{
-  margin-top:0!important;
-  padding-top:6px!important;
-}
-
-.body-spacer{
-  display:none!important;
-}
-
-.navbar-sub{
-  margin-bottom:0!important;
-}
-
-}
-
-/* =====================================
-   FORCE SIZE BAR VISIBILITY (FINAL)
-===================================== */
-
-@media(max-width:576px){
-
-#sizeOptions{
-  position:fixed!important;
-  bottom:88px!important;      /* above buy bar */
-  left:0!important;
-  width:100%!important;
-
-  background:#fff!important;
-  padding:10px 12px!important;
-
-  display:flex!important;
-  gap:10px!important;
-
-  overflow-x:auto!important;
-  white-space:nowrap;
-
-  border-top:1px solid #eee!important;
-  z-index:9999!important;
-}
-
-/* Pills */
-.size-btn{
-  min-width:46px!important;
-  height:36px!important;
-
-  border-radius:18px!important;
-  background:#f3f3f3!important;
-  border:1px solid #ddd!important;
-
-  font-size:13px!important;
-  font-weight:600!important;
-
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-}
-
-/* Active */
-.size-btn.active{
-  background:#000!important;
-  color:#fff!important;
-}
-
-/* Hide label + stock */
+/* Hide size label + stock */
 label.fw-semibold.small,
 #sizeStockText{
   display:none!important;
 }
 
-/* Give space for bars
-#productDesc{
-  padding-bottom:170px!important;
-} */
-
-}
-/* =====================================
-   FORCE RATING + REVIEWS IN ONE LINE
-===================================== */
-
-@media(max-width:576px){
-
-.d-flex.align-items-center.mb-2{
-  flex-wrap:nowrap!important;
-  white-space:nowrap;
-  gap:6px;
-}
-
-/* Stars slightly smaller */
-.d-flex.align-items-center.mb-2 span:first-child{
-  font-size:14px!important;
-}
-
-/* Reviews text smaller */
-.d-flex.align-items-center.mb-2 span:last-child{
-  font-size:12px!important;
-}
-
-}
-/* =========================================
-   FINAL MOBILE PRODUCT LAYOUT (CLEAN)
-========================================= */
-
-@media(max-width:576px){
-
-/* Remove top gaps */
-section.container{
-  margin-top:0!important;
-  padding-top:6px!important;
-}
-
-.body-spacer{
-  display:none!important;
-}
-
-/* Image */
-.product-main-img-box{
-  height:300px!important;
-  margin-bottom:6px!important;
-}
-
-/* Title + description tighter */
-#productName{
-  margin-top:6px!important;
-  font-size:18px;
-}
-
-#productDesc{
-  margin-bottom:8px!important;
-}
-
-/* ⭐ Rating in ONE line */
-.d-flex.align-items-center.mb-2{
-  flex-wrap:nowrap!important;
-  white-space:nowrap!important;
-  gap:6px;
-}
-
-.d-flex.align-items-center.mb-2 span:first-child{
-  font-size:14px!important;
-}
-
-.d-flex.align-items-center.mb-2 span:last-child{
-  font-size:12px!important;
-}
-
-/* ================= SIZE BAR ================= */
-
-label.fw-semibold.small,
-#sizeStockText{
-  display:none!important;
-}
-
-#sizeOptions{
-  position:fixed!important;
-  bottom:88px!important;
-  left:0;
-  width:100%;
-
-  background:#fff;
-  padding:10px 12px;
-
-  display:flex!important;
-  gap:10px;
-
-  overflow-x:auto;
-  white-space:nowrap;
-
-  border-top:1px solid #eee;
-  z-index:9999;
-}
-
-#sizeOptions::-webkit-scrollbar{
-  display:none;
-}
-
-.size-btn{
-  min-width:46px;
-  height:36px;
-
-  border-radius:18px;
-  background:#f3f3f3;
-  border:1px solid #ddd;
-
-  font-size:13px;
-  font-weight:600;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.size-btn.active{
-  background:#000!important;
-  color:#fff!important;
-}
-
-/* ================= BUY BAR ================= */
-
+/* Space for bar */
 body{
-  padding-bottom:140px!important;
-}
-
-.mobile-buy-bar{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:#fff;
-
-  padding:10px 12px;
-
-  display:grid!important;
-  grid-template-columns:1fr auto;
-  gap:10px;
-
-  border-top:1px solid #eee;
-  box-shadow:0 -6px 20px rgba(0,0,0,.08);
-
-  z-index:10000;
-}
-
-/* Quantity */
-.qty-box{
-  border-radius:20px;
-}
-
-/* Add to cart */
-#addToCartBtn{
-  grid-column:1 / -1;
-  border-radius:24px!important;
-  padding:12px 0!important;
-  font-size:14px;
-}
-
-/* Hide wishlist on mobile */
-#addToWishlistBtn{
-  display:none!important;
-}
-
-/* Remove empty bootstrap spacer */
-.col-lg-7 > .mb-3{
-  display:none!important;
-}
-
-}
-
-@media(max-width:576px){
-
-/* Hide desktop label + stock */
-label.fw-semibold.small,
-#sizeStockText{
-  display:none!important;
-}
-
-/* Space for bottom bar */
-body{
-  padding-bottom:130px!important;
+  padding-bottom:120px!important;
 }
 
 /* BUY BAR */
@@ -1332,18 +852,16 @@ body{
 
   border-top:1px solid #eee;
   box-shadow:0 -6px 20px rgba(0,0,0,.08);
-
   z-index:9999;
 }
 
-/* Quantity */
+/* Quantity left */
 .qty-box{
   grid-column:1;
   grid-row:1;
-  border-radius:20px;
 }
 
-/* Size beside quantity */
+/* Size right */
 #sizeOptions{
   grid-column:2;
   grid-row:1;
@@ -1353,10 +871,6 @@ body{
 
   overflow-x:auto;
   white-space:nowrap;
-
-  background:none!important;
-  padding:0!important;
-  border:none!important;
 }
 
 #sizeOptions::-webkit-scrollbar{
@@ -1367,17 +881,11 @@ body{
 .size-btn{
   min-width:42px;
   height:34px;
-
   border-radius:16px;
   background:#f3f3f3;
   border:1px solid #ddd;
-
   font-size:12px;
   font-weight:600;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 
 .size-btn.active{
@@ -1389,10 +897,8 @@ body{
 #addToCartBtn{
   grid-column:1 / -1;
   grid-row:2;
-
-  border-radius:22px!important;
   padding:12px 0!important;
-  font-size:14px;
+  border-radius:22px!important;
 }
 
 /* Hide wishlist */
@@ -1401,8 +907,6 @@ body{
 }
 
 }
-
-
 
 </style>
 
