@@ -974,6 +974,39 @@ body{
 }
 
 }
+@media(max-width:576px){
+
+/* Make row-1 clearly split */
+.mobile-buy-bar{
+  grid-template-columns: auto 1fr !important;
+}
+
+/* Size on RIGHT */
+#sizeOptions{
+  justify-content:flex-end!important;
+}
+
+/* Bigger Add To Cart */
+#addToCartBtn{
+  width:100%!important;
+  font-size:15px!important;
+  padding:14px 0!important;
+}
+
+/* Smaller Wishlist */
+#addToWishlistBtn{
+  width:48px!important;
+  min-width:48px!important;
+  padding:0!important;
+}
+
+/* Center heart */
+#addToWishlistBtn i{
+  margin:0!important;
+  font-size:16px;
+}
+
+}
 
 
 </style>
