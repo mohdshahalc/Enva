@@ -2616,3 +2616,140 @@ section {
   }
 
 }
+
+/* =========================================
+   PREMIUM FLASH DEAL OFFER BOX
+========================================= */
+
+.flash-deals-wrapper{
+  background:#fff;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 18px 40px rgba(0,0,0,.08);
+  margin-top:60px;
+}
+
+/* Header */
+.flash-deals-wrapper .deal-header-box{
+  background:
+    linear-gradient(135deg,rgba(0,0,0,.35),rgba(0,0,0,.15)),
+    url("/Images/cart.png");   /* you already use this image */
+  background-size:cover;
+  background-position:right center;
+  padding:42px 20px!important;
+  text-align:center;
+  position:relative;
+}
+
+/* soft shine */
+.flash-deals-wrapper .deal-header-box::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  background:rgba(255,255,255,.18);
+  filter:blur(70px);
+  border-radius:50%;
+  top:-60px;
+  right:-60px;
+}
+
+/* Icon */
+.flash-deals-wrapper .deal-icon{
+  width:60px;
+  height:60px;
+  border-radius:16px;
+  background:rgba(255,255,255,.22);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.6rem;
+  color:#ffd54f;
+  margin:0 auto 10px;
+  animation:pulseGlow 1.8s infinite ease-in-out;
+}
+
+@keyframes pulseGlow{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+}
+
+/* Title */
+.flash-deals-wrapper .deal-main-title{
+  font-size:2.1rem;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:.5px;
+}
+
+/* Timer pill */
+.flash-deals-wrapper .deal-timer-pill{
+  background:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.35);
+  padding:10px 22px;
+  border-radius:40px;
+  backdrop-filter:blur(6px);
+}
+
+/* Timer numbers */
+.deal-timer{
+  font-size:1.4rem;
+  font-weight:700;
+}
+
+/* Subtitle */
+.flash-deals-wrapper .deal-subtext{
+  font-size:.9rem;
+}
+
+/* Product grid spacing */
+#flashDealsGrid{
+  margin-top:25px;
+}
+
+/* =========================================
+   MOBILE PREMIUM VERSION
+========================================= */
+
+@media(max-width:576px){
+
+.flash-deals-wrapper{
+  border-radius:16px;
+  margin-top:30px;
+}
+
+/* Header */
+.flash-deals-wrapper .deal-header-box{
+  padding:22px 14px!important;
+  background-position:center;
+}
+
+/* Icon */
+.flash-deals-wrapper .deal-icon{
+  width:44px;
+  height:44px;
+  font-size:1.3rem;
+}
+
+/* Title */
+.flash-deals-wrapper .deal-main-title{
+  font-size:1.4rem;
+}
+
+/* Timer */
+.flash-deals-wrapper .deal-timer-pill{
+  width:100%;
+  justify-content:center;
+  padding:6px 14px;
+}
+
+.deal-timer{
+  font-size:1.05rem;
+}
+
+/* Grid tighter */
+#flashDealsGrid{
+  padding:8px!important;
+}
+
+}
