@@ -1505,6 +1505,38 @@ if (priceRange && priceValue) {
 .premium-product-page{
   overflow: visible !important;
 }
+/* =========================================
+   FILTER BAR — STICKY (DESKTOP + MOBILE)
+========================================= */
+
+.filter-sort-bar{
+  position: sticky;
+  top: 128px;              /* 80 white + 48 black (desktop) */
+
+  z-index: 900;
+  background:#fff;
+
+  border-radius:0 0 14px 14px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+  margin-bottom:18px;
+}
+
+/* Mobile navbar heights */
+@media(max-width:576px){
+
+  .filter-sort-bar{
+    top:100px;           /* 60 white + 40 black */
+    border-radius:0;
+  }
+
+}
+
+/* VERY IMPORTANT — allow sticky to work */
+.product-main-grid,
+.premium-product-page{
+  overflow: visible !important;
+}
 
 
 </style>
