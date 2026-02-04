@@ -1161,6 +1161,29 @@ label.fw-semibold.small,
 }
 
 }
+/* =====================================
+   FORCE RATING + REVIEWS IN ONE LINE
+===================================== */
+
+@media(max-width:576px){
+
+.d-flex.align-items-center.mb-2{
+  flex-wrap:nowrap!important;
+  white-space:nowrap;
+  gap:6px;
+}
+
+/* Stars slightly smaller */
+.d-flex.align-items-center.mb-2 span:first-child{
+  font-size:14px!important;
+}
+
+/* Reviews text smaller */
+.d-flex.align-items-center.mb-2 span:last-child{
+  font-size:12px!important;
+}
+
+}
 
 </style>
 
