@@ -1080,7 +1080,87 @@ label.fw-semibold.small{
 }
 
 }
+/* =====================================
+   REMOVE TOP WHITE SPACE (MOBILE)
+===================================== */
 
+@media(max-width:576px){
+
+section.container{
+  margin-top:0!important;
+  padding-top:6px!important;
+}
+
+.body-spacer{
+  display:none!important;
+}
+
+.navbar-sub{
+  margin-bottom:0!important;
+}
+
+}
+
+/* =====================================
+   FORCE SIZE BAR VISIBILITY (FINAL)
+===================================== */
+
+@media(max-width:576px){
+
+#sizeOptions{
+  position:fixed!important;
+  bottom:88px!important;      /* above buy bar */
+  left:0!important;
+  width:100%!important;
+
+  background:#fff!important;
+  padding:10px 12px!important;
+
+  display:flex!important;
+  gap:10px!important;
+
+  overflow-x:auto!important;
+  white-space:nowrap;
+
+  border-top:1px solid #eee!important;
+  z-index:9999!important;
+}
+
+/* Pills */
+.size-btn{
+  min-width:46px!important;
+  height:36px!important;
+
+  border-radius:18px!important;
+  background:#f3f3f3!important;
+  border:1px solid #ddd!important;
+
+  font-size:13px!important;
+  font-weight:600!important;
+
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+/* Active */
+.size-btn.active{
+  background:#000!important;
+  color:#fff!important;
+}
+
+/* Hide label + stock */
+label.fw-semibold.small,
+#sizeStockText{
+  display:none!important;
+}
+
+/* Give space for bars */
+#productDesc{
+  padding-bottom:170px!important;
+}
+
+}
 
 </style>
 
