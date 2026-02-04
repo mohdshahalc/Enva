@@ -821,16 +821,13 @@ function moveLens(e) {
 }
 @media(max-width:576px){
 
-/* hide desktop sizes */
-#sizeOptions{
-  display:none!important;
-}
-
+/* space for bar */
 body{
-  padding-bottom:150px!important;
+  padding-bottom:170px!important;
 }
 
-/* BUY BAR */
+/* ================= BUY BAR ================= */
+
 .mobile-buy-bar{
   position:fixed;
   bottom:0;
@@ -841,21 +838,39 @@ body{
   display:grid;
   grid-template-columns:auto 1fr;
   grid-template-rows:auto auto;
-  gap:10px;
+  gap:12px;
 
-  padding:10px 12px;
+  padding:14px 14px env(safe-area-inset-bottom);
+
   border-top:1px solid #eee;
-  box-shadow:0 -6px 20px rgba(0,0,0,.08);
+  box-shadow:0 -10px 30px rgba(0,0,0,.12);
+
+  border-radius:18px 18px 0 0;
+
   z-index:9999;
 }
 
-/* qty */
+/* ---------- ROW 1 ---------- */
+
+/* Quantity */
 .qty-box{
   grid-column:1;
   grid-row:1;
+
+  border-radius:20px;
+  overflow:hidden;
 }
 
-/* mobile sizes */
+.qty-btn{
+  width:34px;
+  height:38px;
+}
+
+.qty-input{
+  height:38px;
+}
+
+/* Sizes */
 .mobile-size-bar{
   grid-column:2;
   grid-row:1;
@@ -871,11 +886,13 @@ body{
 .mobile-size-bar::-webkit-scrollbar{display:none;}
 
 .mobile-size-bar .size-btn{
-  min-width:42px;
-  height:34px;
-  border-radius:16px;
-  background:#f3f3f3;
+  min-width:44px;
+  height:36px;
+
+  border-radius:18px;
+  background:#f4f4f4;
   border:1px solid #ddd;
+
   font-size:12px;
   font-weight:600;
 }
@@ -885,35 +902,190 @@ body{
   color:#fff;
 }
 
-/* cart */
+/* ---------- ROW 2 ---------- */
+
+/* BIG CART BUTTON */
 #addToCartBtn{
   grid-column:1;
   grid-row:2;
-  width:100%;
-  padding:14px 0!important;
-  border-radius:22px!important;
-}
 
-/* wishlist */
-#addToWishlistBtn{
-  grid-column:2;
-  grid-row:2;
-  width:48px;
-  padding:0;
+  width:100%;
+  height:52px;
+
+  border-radius:26px!important;
+  font-size:16px!important;
+  font-weight:700;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:22px;
 }
 
-/* hide labels */
+/* Wishlist */
+#addToWishlistBtn{
+  grid-column:2;
+  grid-row:2;
+
+  width:54px;
+  height:52px;
+
+  padding:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:26px;
+}
+
+#addToWishlistBtn i{
+  font-size:18px;
+}
+
+/* Hide desktop size */
+#sizeOptions{
+  display:none!important;
+}
+
 label.fw-semibold.small,
 #sizeStockText{
   display:none!important;
 }
-
 }
 
+@media(max-width:576px){
+
+/* space for bar */
+body{
+  padding-bottom:170px!important;
+}
+
+/* ================= BUY BAR ================= */
+
+.mobile-buy-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#fff;
+
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-rows:auto auto;
+  gap:12px;
+
+  padding:14px 14px env(safe-area-inset-bottom);
+
+  border-top:1px solid #eee;
+  box-shadow:0 -10px 30px rgba(0,0,0,.12);
+
+  border-radius:18px 18px 0 0;
+
+  z-index:9999;
+}
+
+/* ---------- ROW 1 ---------- */
+
+/* Quantity */
+.qty-box{
+  grid-column:1;
+  grid-row:1;
+
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.qty-btn{
+  width:34px;
+  height:38px;
+}
+
+.qty-input{
+  height:38px;
+}
+
+/* Sizes */
+.mobile-size-bar{
+  grid-column:2;
+  grid-row:1;
+
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+
+  overflow-x:auto;
+  white-space:nowrap;
+}
+
+.mobile-size-bar::-webkit-scrollbar{display:none;}
+
+.mobile-size-bar .size-btn{
+  min-width:44px;
+  height:36px;
+
+  border-radius:18px;
+  background:#f4f4f4;
+  border:1px solid #ddd;
+
+  font-size:12px;
+  font-weight:600;
+}
+
+.mobile-size-bar .size-btn.active{
+  background:#000;
+  color:#fff;
+}
+
+/* ---------- ROW 2 ---------- */
+
+/* BIG CART BUTTON */
+#addToCartBtn{
+  grid-column:1;
+  grid-row:2;
+
+  width:100%;
+  height:52px;
+
+  border-radius:26px!important;
+  font-size:16px!important;
+  font-weight:700;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Wishlist */
+#addToWishlistBtn{
+  grid-column:2;
+  grid-row:2;
+
+  width:54px;
+  height:52px;
+
+  padding:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:26px;
+}
+
+#addToWishlistBtn i{
+  font-size:18px;
+}
+
+/* Hide desktop size */
+#sizeOptions{
+  display:none!important;
+}
+
+label.fw-semibold.small,
+#sizeStockText{
+  display:none!important;
+}
+}
 
 </style>
 
