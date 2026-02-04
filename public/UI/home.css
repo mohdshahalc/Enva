@@ -2584,3 +2584,35 @@ section {
   }
 }
 
+/* ================================
+   HERO / CAROUSEL HEIGHT (DESKTOP)
+================================ */
+
+.hero-slide {
+  height: 75vh;
+  min-height: 840px;
+  max-height: 720px;
+}
+
+/* ================================
+   HERO / CAROUSEL HEIGHT (MOBILE)
+================================ */
+
+@media (max-width: 576px) {
+
+  .hero-slide {
+    height: 85vh !important;
+    min-height: 530px !important;
+    max-height: 630px !important;
+  }
+
+}
+
+@media (max-width: 380px){
+
+  .hero-slide{
+    height: 48vh !important;
+    min-height: 300px !important;
+  }
+
+}
