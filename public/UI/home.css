@@ -2588,9 +2588,9 @@ section {
 ================================ */
 
 .hero-slide {
-  height: 75vh;
-  min-height: 700px;   /* 820 was fighting with max-height */
-  max-height: 700px;
+  height: 80vh;
+  min-height: 730px;   /* 820 was fighting with max-height */
+  max-height: 730px;
 }
 
 /* ================================

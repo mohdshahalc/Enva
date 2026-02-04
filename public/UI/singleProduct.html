@@ -847,19 +847,75 @@ body{
   box-shadow:0 -6px 20px rgba(0,0,0,.08);
 }
 
-/* Size options move above */
+/* =========================================
+   MOBILE SIZE BAR — PROFESSIONAL STYLE
+========================================= */
+
+@media(max-width:576px){
+
+/* Size wrapper */
 #sizeOptions{
   position:fixed;
-  bottom:72px;
+  bottom:84px;                 /* sits above buy bar */
   left:0;
   width:100%;
+
   background:#fff;
-  padding:8px 12px;
-  justify-content:center;
+  padding:10px 12px;
+
+  display:flex!important;
+  gap:10px;
+  justify-content:flex-start;
+
+  overflow-x:auto;
+  scrollbar-width:none;
 
   border-top:1px solid #eee;
-  z-index:2999;
+  z-index:2500;
 }
+
+#sizeOptions::-webkit-scrollbar{
+  display:none;
+}
+
+/* Size buttons */
+.size-btn{
+  min-width:48px;
+  height:36px;
+
+  border-radius:18px!important;
+  font-size:13px!important;
+
+  background:#f4f4f4;
+  border:none;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.size-btn.active{
+  background:#000!important;
+  color:#fff!important;
+}
+
+/* Label hidden on mobile */
+label.fw-semibold.small{
+  display:none;
+}
+
+/* Stock text hidden */
+#sizeStockText{
+  display:none;
+}
+
+/* Push content above bars */
+#productDesc{
+  margin-bottom:140px!important;
+}
+
+}
+
 
 /* Quantity compact */
 .qty-box{
