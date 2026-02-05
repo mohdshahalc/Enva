@@ -1,6 +1,8 @@
 
 let allProducts = [];   // store original products
 let filteredProducts = []; // working copy
+let categoryToastShown = false;
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -304,7 +306,7 @@ document.getElementById("clearProductFilters")
   });
 
 
-  function applyCategoryFromURL() {
+ function applyCategoryFromURL() {
   const params = new URLSearchParams(window.location.search);
   const category = params.get("category");
 
@@ -320,7 +322,11 @@ document.getElementById("clearProductFilters")
 
   renderUserProducts(filteredProducts);
 
-  showToast(`Showing ${category} products`, "info");
+  // ✅ SHOW TOAST ONLY ONCE (FROM HOME)
+  if (!categoryToastShown) {
+    showToast(`Showing ${category} products`, "info");
+    categoryToastShown = true;
+  }
 }
 
 
