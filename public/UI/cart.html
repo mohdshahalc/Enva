@@ -436,26 +436,7 @@
   }
 }
 
-/* ===== Z-INDEX BALANCE FIX ===== */
-@media (max-width: 991px) {
 
-  /* Lower checkout bar priority */
-  .cart-summary {
-    z-index: 20 !important;
-  }
-
-  /* Ensure main content above background */
-  .cart-section {
-    position: relative;
-    z-index: 5;
-  }
-
-  /* Footer normal layer */
-  footer {
-    position: relative;
-    z-index: 1;
-  }
-}
 
 /* EXTRA SMALL */
 @media (max-width: 480px) {
@@ -576,7 +557,7 @@
     padding: 14px;
 
     background: #fff;
-    z-index: 9999;
+    /* z-index: 9999; */
     box-shadow: 0 -6px 18px rgba(0,0,0,.18);
   }
 
@@ -713,6 +694,41 @@
 }
 
 
+/* ===== FINAL MOBILE Z-INDEX NORMALIZATION ===== */
+@media (max-width: 991px) {
+
+  /* Navbar always on top */
+  .navbar-main,
+  .navbar-sub {
+    z-index: 100 !important;
+  }
+
+  /* Cart cards */
+  .cart-section {
+    position: relative;
+    z-index: 10 !important;
+  }
+
+  /* Delete button inside cards */
+  .cart-item {
+    position: relative !important;
+  }
+
+  .remove-btn {
+    z-index: 15 !important;
+  }
+
+  /* Checkout bar above content but below navbar */
+  .cart-summary {
+    z-index: 50 !important;
+  }
+
+  /* Footer lowest */
+  footer {
+    position: relative;
+    z-index: 1 !important;
+  }
+}
 
  </style>
 </head>
