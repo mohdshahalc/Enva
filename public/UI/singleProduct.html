@@ -974,26 +974,35 @@ label.fw-semibold.small,
 }
 
 /* Desktop spacing between Qty → Cart → Wishlist */
+/* =========================
+   DESKTOP BUY BAR FIX
+========================= */
 @media (min-width: 577px) {
 
   .mobile-buy-bar {
-    gap: 16px; /* overall row spacing */
+    display: flex !important;
+    align-items: center;
+    gap: 18px;
+    margin-top: 18px;
+  }
+
+  .qty-box {
+    flex-shrink: 0;
   }
 
   #addToCartBtn {
-    margin-left: 12px;
-    margin-right: 8px;
-  }
-
-  #addToWishlistBtn {
-    margin-left: 6px;
-  }
-}
-
-@media (min-width: 577px) {
-  #addToCartBtn,
-  #addToWishlistBtn {
+    min-width: 160px;
     height: 44px;
+    border-radius: 10px !important;
+  }
+
+  #addToWishlistBtn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
