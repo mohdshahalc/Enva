@@ -1612,6 +1612,31 @@ p { color: var(--text-muted); font-size: 1rem; }
   display: inline-block;
 }
 
+.address-content {
+  display: grid;
+  row-gap: 6px;
+  font-size: 14px;
+}
+
+.address-content div {
+  display: flex;
+  gap: 6px;
+}
+
+.address-content strong {
+  min-width: 80px;
+  color: #111;
+}
+
+@media(max-width:768px){
+  .address-content {
+    font-size: 13px;
+  }
+
+  .address-content strong {
+    min-width: 70px;
+  }
+}
 
 </style>
 </head>
@@ -1728,7 +1753,7 @@ p { color: var(--text-muted); font-size: 1rem; }
   </div>
 
 <!-- SAVED ADDRESS CARD -->
-<div id="addressList" class="address-list"></div>
+<div id="addressList" ></div>
 
 
 

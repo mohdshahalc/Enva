@@ -453,7 +453,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 let addressMap = {};
-
 async function loadSavedAddresses() {
   const token = localStorage.getItem("userToken");
   if (!token) return;
@@ -470,10 +469,10 @@ async function loadSavedAddresses() {
     return;
   }
 
-  // ✅ Find default OR first
+  // ✅ Pick default OR first
   const addr = addresses.find(a => a.isDefault) || addresses[0];
 
-  // Fill hidden inputs
+  // Fill hidden fields (backend untouched)
   email.value = addr.email || "";
   firstName.value = addr.firstName || "";
   lastName.value = addr.lastName || "";
@@ -482,26 +481,50 @@ async function loadSavedAddresses() {
   state.value = addr.state || "";
   zip.value = addr.postcode || "";
 
-  // ✅ Render labelled UI
+  // ✅ Render premium UI
   document.getElementById("addressList").innerHTML = `
     <div class="saved-address-card">
 
-      ${addr.firstName || addr.lastName ? `
-        <div><strong>Name:</strong> ${addr.firstName || ""} ${addr.lastName || ""}</div>
-      ` : ""}
+      <div class="address-header">
+        <span class="fw-semibold">Delivering To</span>
 
-      ${addr.email ? `
-        <div><strong>Email:</strong> ${addr.email}</div>
-      ` : ""}
-
-      <div>
-        <strong>Address:</strong>
-        ${addr.street}, ${addr.city}, ${addr.state} ${addr.postcode}
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-dark"
+          onclick="window.location.href='address.html'"
+        >
+          Change Address
+        </button>
       </div>
 
+      <div class="address-content">
+
+        ${addr.firstName || addr.lastName ? `
+          <div><strong>Name:</strong> ${addr.firstName || ""} ${addr.lastName || ""}</div>
+        ` : ""}
+
+        ${addr.email ? `
+          <div><strong>Email:</strong> ${addr.email}</div>
+        ` : ""}
+
+        ${addr.city ? `
+          <div><strong>City:</strong> ${addr.city}</div>
+        ` : ""}
+
+        ${addr.postcode ? `
+          <div><strong>Pincode:</strong> ${addr.postcode}</div>
+        ` : ""}
+
+        <div>
+          <strong>Address:</strong>
+          ${addr.street}, ${addr.state}
+        </div>
+
+      </div>
     </div>
   `;
 }
+
 
 
 
