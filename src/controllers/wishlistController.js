@@ -139,20 +139,18 @@ exports.getWishlist = async (req, res) => {
 
 
 exports.removeFromWishlist = async (req, res) => {
-
-  
   try {
-    
     const userId = req.user.id;
-    const { productId, size } = req.params;
-   
+    const { productId } = req.params;
+    const size = req.params.size?.trim();
+
     const result = await Wishlist.updateOne(
       { user: userId },
       {
         $pull: {
           items: {
             product: new mongoose.Types.ObjectId(productId),
-            size: size
+            size
           }
         }
       }

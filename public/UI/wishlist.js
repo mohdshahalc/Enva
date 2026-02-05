@@ -183,20 +183,51 @@ async function addWishlistItemToCart(productId, size) {
 }
 
 
-function removeWishlistItem(productId, size) {
-  apiFetch(
-    `https://envastore.online/api/user/wishlist/remove/${productId}/${size}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("userToken")}`
+async function removeWishlistItem(productId, size) {
+  const token = localStorage.getItem("userToken");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const res = await apiFetch(
+      `https://envastore.online/api/user/wishlist/remove/${productId}/${size}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
+    );
+
+    // 🚫 BLOCKED USER
+    if (res.status === 403) {
+      const data = await res.json();
+      alert(data.message || "Your account has been blocked");
+
+      localStorage.removeItem("userToken");
+      window.location.href = "login.html";
+      return;
     }
-  )
-    .then(() => loadWishlist())
-    .then(() => showToast("Removed from wishlist", "success"))
-    .catch(() => showToast("Remove failed", "error"));
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showToast(data.message || "Remove failed", "error");
+      return;
+    }
+
+    showToast("Removed from wishlist", "success");
+    loadWishlist();
+
+  } catch (err) {
+    console.error(err);
+    showToast("Server error", "error");
+  }
 }
+
 
 
 
