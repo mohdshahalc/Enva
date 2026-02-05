@@ -496,38 +496,37 @@
 }
 
 /* =====================================================
-   FINAL MOBILE VISIBILITY FIX (≤991px)
+   FINAL MOBILE CART OFFSET FIX (≤991px)
 ===================================================== */
 @media (max-width: 991px) {
 
-  /* Push content below navbar + sub bar */
+  /* Account for navbar + black bar */
   .body-spacer {
-    height: 128px !important;
+    height: 130px !important;
   }
 
-  /* Remove section margin (causing white screen) */
+  /* Remove Bootstrap margin */
   .cart-section {
     margin: 0 !important;
   }
 
   /* Stack layout */
   .cart-container {
-    display: block;
-    margin-top: 0 !important;
-    padding: 0 10px;
+    display: block !important;
+    padding: 0 10px !important;
   }
 
-  /* FORCE product area visible */
+  /* Make cart items scrollable area */
   .cart-items {
     width: 100%;
-    min-height: calc(100vh - 260px);
+    min-height: calc(100vh - 300px);
     padding-top: 10px;
-    padding-bottom: 220px;
+    padding-bottom: 240px; /* space for fixed checkout */
   }
 
   /* Bottom checkout bar */
   .cart-summary {
-    position: fixed;
+    position: fixed !important;
     bottom: 0;
     left: 0;
     right: 0;
@@ -540,11 +539,10 @@
 
     background: #fff;
     z-index: 9999;
-
     box-shadow: 0 -6px 18px rgba(0,0,0,.18);
   }
 
-  /* Hide title */
+  /* Hide heading */
   .cart-summary h3 {
     display: none;
   }
@@ -566,9 +564,10 @@
 
   /* Prevent page cutoff */
   body {
-    padding-bottom: 220px;
+    padding-bottom: 240px;
   }
 }
+
 
 
 /* EXTRA SMALL PHONES */
