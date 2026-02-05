@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enva cloth & co - Order</title>
+  <title>Enva cloth & co - Register</title>
     <link rel="icon" type="image/png" href="../Images/favicon.png">
     
   
@@ -131,7 +131,11 @@ nav.navbar-main {
 
 .custom-container-lg {
     max-width: 1400px;
+}.order-status-badge.partial{
+  background:#fff3cd;
+  color:#856404;
 }
+
 
 .hover-black:hover {
     color: #000 !important;
@@ -267,30 +271,27 @@ body {
 <body class="bg-white text-dark">
   
 
-<!-- ========================= MAIN NAVBAR ========================= -->
-<nav class="navbar-main w-100 top-0 start-0 z-3 shadow-sm">
 
+<!-- ========================= MAIN NAVBAR ========================= -->
+<nav class="navbar-main w-100 position-fixed top-0 start-0 z-3 shadow-sm">
   <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between">
 
-    <!-- BRAND -->
     <a href="./home.html" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
-      <img src="/Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
+      <img src="../Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
       <div class="brand-text">
         <div class="brand-name fw-bold">Enva cloth & co</div>
         <div class="brand-tagline">Wear Your Confidence</div>
       </div>
     </a>
 
-    <!-- DESKTOP LINKS -->
     <ul class="nav gap-4 d-none d-lg-flex small fw-bold ms-5">
       <li><a href="./home.html" class="nav-link text-dark p-0">Home</a></li>
       <li><a href="./products.html" class="nav-link text-dark p-0">Products</a></li>
       <li><a href="./blog.html" class="nav-link text-dark p-0">Blog</a></li>
     </ul>
 
-    <!-- DESKTOP SEARCH -->
     <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center px-4">
-      <div class="input-group srch-btn shadow-none" style="max-width:350px;">
+      <div class="input-group srch-btn shadow-none" style="max-width: 350px;">
         <input type="text" class="form-control border-0 py-2 small fw-medium" placeholder="Search trends...">
         <button class="btn border-0 text-dark">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -298,43 +299,32 @@ body {
       </div>
     </div>
 
-    <!-- ICONS -->
     <div class="d-flex align-items-center gap-2 gap-md-3 small fw-medium text-secondary">
 
-      <!-- MOBILE SHORTCUTS -->
-      <a href="./home.html" class="nav-icon mobile-only">
+      <a href="./home.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
         <i class="fa-solid fa-house"></i>
       </a>
 
-      <a href="./products.html" class="nav-icon mobile-only">
+      <a href="./products.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
         <i class="fa-solid fa-bag-shopping"></i>
       </a>
 
-      <!-- ACCOUNT -->
-      <a href="./profile.html" class="nav-icon">
+      <a href="./profile.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
         <i class="fa-regular fa-user"></i>
         <span class="nav-text d-none d-xl-inline">Account</span>
       </a>
 
-      <!-- WISHLIST -->
-      <a href="./wishlist.html" class="nav-icon">
+      <a href="./wishlist.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
         <i class="fa-regular fa-heart"></i>
         <span class="nav-text d-none d-xl-inline">Wishlist</span>
       </a>
 
-      <!-- CART -->
-      <a href="./cart.html" class="nav-icon">
+      <a href="./cart.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
         <i class="fa-solid fa-cart-shopping"></i>
         <span class="nav-text d-none d-xl-inline">Cart</span>
       </a>
 
-      <!-- MOBILE HAMBURGER -->
-      <a class="nav-icon mobile-only" id="menuToggle">
-        <i class="fa-solid fa-bars"></i>
-      </a>
-
     </div>
-
   </div>
 </nav>
 
@@ -1101,81 +1091,5 @@ body {
   
 <script src="viewOrder.js"></script>
 <script src="apiFetch.js"></script>
-
-
-
-<!-- MOBILE SLIDE MENU -->
-<div id="mobileDrawer" class="mobile-drawer">
-
-  <div class="drawer-header">
-    <strong>Menu</strong>
-    <span id="closeDrawer">✕</span>
-  </div>
-
-  <a href="./home.html">Home</a>
-  <a href="./products.html">Products</a>
-  <a href="./wishlist.html">Wishlist</a>
-  <a href="./cart.html">Cart</a>
-  <a href="./profile.html">Account</a>
-
-</div>
-<script>
-const toggle = document.getElementById("menuToggle");
-const drawer = document.getElementById("mobileDrawer");
-const close = document.getElementById("closeDrawer");
-const backdrop = document.getElementById("drawerBackdrop");
-
-toggle.onclick = () => {
-  drawer.classList.add("open");
-  backdrop.classList.add("show");
-};
-
-close.onclick = () => {
-  drawer.classList.remove("open");
-  backdrop.classList.remove("show");
-};
-
-backdrop.onclick = () => {
-  drawer.classList.remove("open");
-  backdrop.classList.remove("show");
-};
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const page = location.pathname.split("/").pop();
-
-  const drawerLinks = document.querySelectorAll("#mobileDrawer a");
-
-  drawerLinks.forEach(link => link.classList.remove("active-nav"));
-
-  // Pages that belong to Account
-  const accountPages = [
-    "profile.html",
-    "address.html",
-    "wallet.html",
-    "orders.html",
-    "profileWishlist.html",
-    "profileCart.html"
-  ];
-
-  drawerLinks.forEach(link => {
-    const href = link.getAttribute("href");
-
-    // Normal match
-    if (href && href.includes(page)) {
-      link.classList.add("active-nav");
-    }
-
-    // Account group match
-    if (accountPages.includes(page) && href.includes("profile.html")) {
-      link.classList.add("active-nav");
-    }
-  });
-});
-</script>
-
-
-<div id="drawerBackdrop"></div>
 </body>
 </html>

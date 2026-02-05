@@ -25,7 +25,7 @@ async function loadOrderDetails() {
 
 
   const res = await apiFetch(
-    `https://envastore.online/api/user/orders/${orderId}`,
+    `http://localhost:5000/api/user/orders/${orderId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -108,6 +108,13 @@ switch (status) {
     stripIcon.className = "fa-solid fa-box-open me-2";
     stripText.textContent = "Your order has been delivered";
     break;
+  
+  case "partial":
+  strip.classList.add("warning");
+  stripIcon.className = "fa-solid fa-circle-half-stroke me-2";
+  stripText.textContent = "Some items were cancelled or returned";
+  break;
+
 
   case "returned":
     strip.classList.add("warning");
@@ -163,6 +170,12 @@ if (status === "returned") {
 if (status === "cancelled") {
   steps[0].classList.add("cancelled");
 }
+if (status === "partial") {
+  steps[0].classList.add("active");
+  steps[1].classList.add("active");
+  lines[0].classList.add("active");
+}
+
 
 
 /* =========================
@@ -180,6 +193,10 @@ else if (order.status === "returned") {
 else if (order.status === "cancelled") {
   etaEl.textContent = "Order Cancelled";
 }
+else if (order.status === "partial") {
+  etaEl.textContent = "Partially completed";
+}
+
 else {
   // ⏱ DELIVERY DATE CALCULATION
   let deliveryDate;
@@ -235,30 +252,25 @@ document.getElementById("orderItems").innerHTML =
         <div class="d-flex justify-content-between align-items-center mt-2">
           <strong>₹${(item.price * item.quantity).toFixed(2)}</strong>
 
-          <div>
-            ${
-              item.status === "cancelled"
-                ? `<span class="badge bg-danger">Cancelled</span>`
-                : item.status === "returned"
-                ? `<span class="badge bg-warning text-dark">Returned</span>`
-                : ["pending", "confirmed"].includes(item.status)
-                ? `<button class="btn btn-sm btn-outline-danger"
-                    onclick="openCancelModal('${item._id}')">
-                    Cancel
-                  </button>`
-                : item.status === "delivered"
-                ? `<button class="btn btn-sm btn-outline-primary"
-                    onclick="openReturnModal('${item._id}')">
-                    Return
-                  </button>`
-                : ""
-            }
-          </div>
+        
         </div>
 
-        <small class="text-muted d-block mt-1">
-          Status: ${item.status}
-        </small>
+       <div class="mt-1">
+  ${
+    item.status === "cancelled"
+      ? `<span class="badge bg-danger">Cancelled</span>`
+      : item.status === "returned"
+      ? `<span class="badge bg-warning text-dark">Returned</span>`
+      : item.status === "delivered"
+      ? `<span class="badge bg-success">Delivered</span>`
+      : item.status === "shipped"
+      ? `<span class="badge bg-info text-dark">Shipped</span>`
+      : item.status === "confirmed"
+      ? `<span class="badge bg-primary">Confirmed</span>`
+      : `<span class="badge bg-secondary">Pending</span>`
+  }
+</div>
+
       </div>
     </div>
   `).join("");
@@ -325,7 +337,7 @@ async function confirmCancelOrder() {
   const token = localStorage.getItem("userToken");
 
   const res = await fetch(
-  `https://envastore.online/api/user/orders/${currentOrderId}/items/${selectedItemId}/cancel`,
+  `http://localhost:5000/api/user/orders/${currentOrderId}/items/${selectedItemId}/cancel`,
   {
     method: "POST",
     headers: {
@@ -368,7 +380,7 @@ async function confirmReturnOrder() {
   const token = localStorage.getItem("userToken");
 
   const res = await fetch(
-  `https://envastore.online/api/user/orders/${currentOrderId}/items/${selectedItemId}/return`,
+  `http://localhost:5000/api/user/orders/${currentOrderId}/items/${selectedItemId}/return`,
   {
     method: "POST",
     headers: {
