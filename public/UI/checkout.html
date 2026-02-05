@@ -1745,6 +1745,68 @@ p { color: var(--text-muted); font-size: 1rem; }
     display: none;
   }
 }
+/* ==========================
+   📱 MOBILE FULL WIDTH + CTA TOP
+==========================*/
+@media (max-width: 768px) {
+
+  /* Remove container padding/margins (Bootstrap override) */
+  .checkout-section,
+  .checkout-section.m-5,
+  .container,
+  .container-fluid,
+  .custom-container-lg {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Checkout wrapper full edge */
+  .checkout-container {
+    margin-top: 110px !important;
+    padding: 0 10px !important;
+  }
+
+  /* ======================
+     MOVE PLACE ORDER TO TOP
+  ======================*/
+
+  /* Disable sticky bottom */
+  .place-order-btn {
+    position: relative !important;
+    border-radius: 12px !important;
+    margin-bottom: 14px;
+    z-index: auto !important;
+  }
+
+  /* Remove body bottom padding added earlier */
+  body {
+    padding-bottom: 0 !important;
+  }
+
+  /* Put button right under title */
+  .checkout-form form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #placeOrderBtn {
+    order: -1;                 /* 🔥 move to top */
+    margin-bottom: 18px;
+  }
+
+  /* Slight shadow like Flipkart */
+  #placeOrderBtn {
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  }
+
+  /* Make button slightly shorter */
+  .place-order-btn {
+    padding: 14px !important;
+    font-size: 15px !important;
+  }
+}
 
 
 </style>
