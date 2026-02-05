@@ -3,10 +3,13 @@ document.addEventListener("DOMContentLoaded", loadOrders);
 let allOrders = [];
 let ordersChartInstance = null;
 let orderStatusChartInstance = null;
+let currentOrderId = null;
+let orderModalInstance = null;
+
 
 async function loadOrders() {
   try {
-    const res = await apiFetch("/api/admin/orders", {
+    const res = await apiFetch("http://localhost:5000/api/admin/orders", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -52,61 +55,43 @@ function renderOrders(orders) {
     const canUpdate =
       ["confirmed", "shipped"].includes(o.status);
 
-    tbody.innerHTML += `
-      <tr>
-        <td>${index + 1}</td>
-        <td>${o.orderNo}</td>
-        <td>${o.customer}</td>
-        <td>${formatDate(o.date)}</td>
+   tbody.innerHTML += `
+<tr>
+  <td>${index + 1}</td>
 
-        <!-- CURRENT STATUS -->
-        <td>
-          <span class="status-pill ${getStatusClass(o.status)}">
-            ${formatStatus(o.status)}
-          </span>
-        </td>
+  <td>${o.orderNo}</td>
 
-        <!-- STATUS ACTION -->
-        <td>
-          ${
-            canConfirm
-              ? `<button class="btn btn-sm btn-success"
-                   onclick="updateStatus('${o.id}', 'confirmed')">
-                   Confirm
-                 </button>`
-              : canUpdate
-              ? `
-                <select class="form-select form-select-sm"
-                  onchange="updateStatus('${o.id}', this.value)">
-                  <option value="">Change</option>
-                  ${
-                    o.status === "confirmed"
-                      ? `<option value="shipped">Ship</option>`
-                      : ""
-                  }
-                  ${
-                    o.status === "shipped"
-                      ? `<option value="delivered">Deliver</option>`
-                      : ""
-                  }
-                </select>
-              `
-              : `<span class="text-muted small">—</span>`
-          }
-        </td>
+  <td>${o.customer}</td>
 
-        <!-- PAYMENT -->
-        <td>
-          <span class="badge ${o.paymentMethod}">
-            ${o.paymentMethod.toUpperCase()}
-          </span>
-        </td>
+  <td>${o.date ? formatDate(o.date) : "-"}</td>
 
-        <td>₹${o.total}</td>
+  <td>
+    <span class="status-pill ${getStatusClass(o.status)}">
+      ${formatStatus(o.status)}
+    </span>
+  </td>
 
-      
-      </tr>
-    `;
+  <td>
+    <span class="text-muted small">View to update</span>
+  </td>
+
+  <td>
+    <span class="badge ${o.paymentMethod}">
+      ${o.paymentMethod.toUpperCase()}
+    </span>
+  </td>
+
+  <td>₹${o.total}</td>
+
+  <td class="text-end">
+    <button class="btn btn-sm btn-dark me-2"
+      onclick="openOrderModal('${o.id}')">
+      View
+    </button>
+  </td>
+</tr>
+`;
+
   });
 }
 
@@ -163,7 +148,8 @@ function applyOrderFilters() {
   /* 🔢 ORDER ID */
   if (orderId) {
     filtered = filtered.filter(o =>
-      o.orderNo.toLowerCase().includes(orderId)
+     o.orderNo.toLowerCase().includes(orderId)
+
     );
   }
 
@@ -171,6 +157,7 @@ function applyOrderFilters() {
   if (date) {
     filtered = filtered.filter(o => {
       const orderDate = new Date(o.date).toISOString().split("T")[0];
+
       return orderDate === date;
     });
   }
@@ -207,8 +194,9 @@ function updateOrderKPIs(orders) {
 
   // 💰 TOTAL REVENUE (exclude cancelled & returned)
   const revenue = orders
-    .filter(o => !["cancelled", "returned"].includes(o.status))
-    .reduce((sum, o) => sum + o.total, 0);
+    .filter(o => ["confirmed","shipped","delivered","partial"].includes(o.status))
+    .reduce((sum, o) => sum + Number(o.total), 0);
+
 
   // ❌ CANCELED ORDERS
   const canceledOrders = orders.filter(
@@ -311,12 +299,14 @@ function renderOrderStatusChart(orders) {
   const ctx = canvas.getContext("2d");
 
   const statusCount = {
-    confirmed: 0,
-    shipped: 0,
-    delivered: 0,
-    cancelled: 0,
-    returned: 0
-  };
+  confirmed: 0,
+  shipped: 0,
+  delivered: 0,
+  cancelled: 0,
+  returned: 0,
+  partial: 0
+};
+
 
   orders.forEach(o => {
     if (statusCount[o.status] !== undefined) {
@@ -363,7 +353,8 @@ function renderStatusAction(order) {
 
   return `
     <select class="form-select form-select-sm"
-      onchange="updateOrderStatus('${order.id}', this.value)">
+      onchange="updateOrderStatus('${order.id}', this.value)"
+>
       <option value="">Change</option>
       ${allowed
         .map(
@@ -376,14 +367,207 @@ function renderStatusAction(order) {
 }
 
 
-async function updateStatus(orderId, status) {
-  if (!status) return;
 
-  if (!confirm(`Change order status to "${status}"?`)) return;
+
+async function openOrderModal(orderId) {
+  currentOrderId = orderId;
 
   try {
     const res = await apiFetch(
-      `/api/admin/orders/${orderId}/status`,
+      `http://localhost:5000/api/admin/orders/${orderId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+        }
+      }
+    );
+
+    const order = await res.json();
+  
+    if (!res.ok) {
+      showToast("Failed to load order", "error");
+      return;
+    }
+
+    /* =====================
+       BASIC INFO
+    ===================== */
+
+    document.getElementById("modalOrderNo").innerText =
+      `#ORD-${order._id.slice(-6).toUpperCase()}`;
+
+    document.getElementById("modalCustomer").innerText =
+      order.user?.name || "Guest";
+
+    document.getElementById("modalEmail").innerText =
+      order.user?.email || order.shippingAddress?.email || "";
+
+    document.getElementById("modalTotal").innerText = `₹${order.total.toFixed(2)}`;
+   
+
+
+    /* =====================
+       PRODUCTS
+    ===================== */
+
+    const itemsBox = document.getElementById("modalItems");
+    itemsBox.innerHTML = "";
+
+    order.items.forEach(i => {
+  const hasProduct = !!i.product;
+
+  const img = hasProduct && i.product.images?.length
+    ? `http://localhost:5000/uploads/${i.product.images[0]}`
+    : "../Images/no-image.png";
+
+  const name = hasProduct ? i.product.name : "Product removed";
+
+  const oldPrice = i.oldPrice || i.price;
+  const finalPrice = i.price;
+
+  // ✅ ITEM STATUS
+  const itemStatus = i.status || "pending";
+
+  // ✅ Badge color
+  let statusClass = "bg-secondary";
+  if (itemStatus === "cancelled") statusClass = "bg-danger";
+  if (itemStatus === "returned") statusClass = "bg-warning text-dark";
+  if (itemStatus === "delivered") statusClass = "bg-success";
+  if (itemStatus === "shipped") statusClass = "bg-info";
+  if (itemStatus === "confirmed") statusClass = "bg-primary";
+
+  // ✅ Allowed transitions PER ITEM
+  const transitions = {
+    pending: ["confirmed", "cancelled"],
+    confirmed: ["shipped", "cancelled"],
+    shipped: ["delivered"],
+    delivered: [],
+    cancelled: [],
+    returned: []
+  };
+
+  const allowed = transitions[itemStatus] || [];
+
+  itemsBox.innerHTML += `
+    <div class="d-flex align-items-center gap-3 mb-2 border rounded p-2">
+
+      <img src="${img}" width="60" height="60"
+        style="object-fit:cover;border-radius:8px">
+
+      <div class="flex-grow-1">
+        <div class="fw-semibold">${name}</div>
+
+        <div class="small text-muted">
+          Qty: ${i.quantity} | Size: ${i.size || "-"}
+        </div>
+
+        <span class="badge ${statusClass} mt-1">
+          ${itemStatus.toUpperCase()}
+        </span>
+
+        ${
+          allowed.length
+            ? `
+<select class="form-select form-select-sm mt-2"
+  onchange="updateItemStatus('${order._id}','${i._id}',this.value)">
+  <option value="">Change status</option>
+  ${allowed.map(s =>
+    `<option value="${s}">${s.toUpperCase()}</option>`
+  ).join("")}
+</select>
+`
+            : ""
+        }
+
+      </div>
+
+      <div class="text-end">
+        ${
+          oldPrice !== finalPrice
+            ? `<small class="text-muted text-decoration-line-through">₹${oldPrice}</small><br>`
+            : ""
+        }
+        <strong>₹${finalPrice}</strong>
+      </div>
+    </div>
+  `;
+});
+
+
+
+    /* =====================
+       ADDRESS
+    ===================== */
+
+    const a = order.shippingAddress || {};
+
+    document.getElementById("modalAddress").innerHTML = `
+      ${a.firstName || ""} ${a.lastName || ""}<br>
+      ${a.street || ""}<br>
+      ${a.city || ""}, ${a.state || ""} ${a.zip || ""}
+    `;
+
+
+    /* =====================
+       PAYMENT
+    ===================== */
+
+    document.getElementById("modalPayment").innerHTML =
+      `<span class="badge ${order.paymentMethod}">
+        ${order.paymentMethod.toUpperCase()}
+      </span>`;
+
+    document.getElementById("modalPaymentStatus").innerText =
+      order.paymentStatus.toUpperCase();
+
+
+    /* =====================
+       SUMMARY
+    ===================== */
+
+    document.getElementById("modalSubtotal").innerText =
+      (order.subtotal || 0).toFixed(2);
+
+    document.getElementById("modalShipping").innerText =
+      (order.shippingPrice || 0).toFixed(2);
+
+    document.getElementById("modalTax").innerText =
+      (order.tax || 0).toFixed(2);
+
+    document.getElementById("modalDiscount").innerText =
+      (order.discountAmount || 0).toFixed(2);
+
+    document.getElementById("modalGrandTotal").innerText =
+      (order.total || 0).toFixed(2);
+
+
+    /* =====================
+       SHOW MODAL
+    ===================== */
+
+    if (!orderModalInstance) {
+      orderModalInstance = new bootstrap.Modal(
+        document.getElementById("orderModal")
+      );
+    }
+
+    orderModalInstance.show();
+
+  } catch (err) {
+    console.error(err);
+    showToast("Server error", "error");
+  }
+}
+
+
+async function updateItemStatus(orderId, itemId, status) {
+  if (!status) return;
+
+  if (!confirm("Update this item status?")) return;
+
+  try {
+    const res = await apiFetch(
+      `http://localhost:5000/api/admin/orders/${orderId}/items/${itemId}/status`,
       {
         method: "PATCH",
         headers: {
@@ -397,20 +581,20 @@ async function updateStatus(orderId, status) {
     const data = await res.json();
 
     if (!res.ok) {
-      showToast(data.message || "Status update failed", "error");
+      showToast(data.message || "Update failed", "error");
       return;
     }
 
-    showToast("Order status updated", "success");
-    loadOrders(); // 🔄 refresh table
+    showToast("Item updated", "success");
+
+    await loadOrders();
+    openOrderModal(orderId);
 
   } catch (err) {
     console.error(err);
     showToast("Server error", "error");
   }
 }
-
-
 
 
 // ======================
