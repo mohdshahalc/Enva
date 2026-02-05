@@ -149,10 +149,10 @@ function showCouponsByStatus(subtotal) {
       return;
     }
 
-    if (end < now) {
-      invalid.push({ ...c, reason: "Expired" });
-      return;
-    }
+    
+if (end < now) {
+  return;
+}
 
    if (subtotal < c.minPurchase) {
   invalid.push({
@@ -177,7 +177,8 @@ if (c.maxPurchase && subtotal > c.maxPurchase) {
   renderCouponList("availableCouponList", available, "available");
   renderCouponList("upcomingCouponList", upcoming, "upcoming");
   renderCouponList("invalidCouponList", invalid, "invalid");
-  renderCouponList("usedCouponList", used, "used");
+  const limitedUsed = used.slice(0, 4);
+  renderCouponList("usedCouponList", limitedUsed, "used");
 }
 
 
