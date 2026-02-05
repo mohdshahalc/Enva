@@ -149,15 +149,25 @@ exports.placeOrder = async (req, res) => {
         });
       }
 
-      discountAmount = +(
-        (subtotal * coupon.discountPercent) / 100
-      ).toFixed(2);
+      if (coupon.type === "flat") {
+  discountAmount = Math.min(coupon.flatAmount, subtotal);
+} else {
+  discountAmount = (subtotal * coupon.discountPercent) / 100;
 
-      appliedCoupon = {
-        code: coupon.code,
-        discountPercent: coupon.discountPercent,
-        discountAmount
-      };
+  if (coupon.maxPurchase) {
+    discountAmount = Math.min(discountAmount, coupon.maxPurchase);
+  }
+}
+
+discountAmount = +discountAmount.toFixed(2);
+
+appliedCoupon = {
+  code: coupon.code,
+  type: coupon.type,
+  flatAmount: coupon.flatAmount || null,
+  discountPercent: coupon.discountPercent || null,
+  discountAmount
+};
 
       coupon.usedCount += 1;
       coupon.usedBy.push(userId);
@@ -291,10 +301,15 @@ exports.validateCoupon = async (req, res) => {
       });
     }
 
-    return res.json({
-      code: coupon.code,
-      discountPercent: coupon.discountPercent
-    });
+  return res.json({
+  code: coupon.code,
+  type: coupon.type,                 // 🔥 REQUIRED
+  flatAmount: coupon.flatAmount || 0,
+  discountPercent: coupon.discountPercent || 0,
+  minPurchase: coupon.minPurchase,
+  maxPurchase: coupon.maxPurchase || null
+});
+
 
   } catch (err) {
     res.status(500).json({ message: "Coupon validation failed" });
