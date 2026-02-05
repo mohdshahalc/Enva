@@ -9,7 +9,7 @@ let orderModalInstance = null;
 
 async function loadOrders() {
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/orders", {
+    const res = await apiFetch("/api/admin/orders", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -374,7 +374,7 @@ async function openOrderModal(orderId) {
 
   try {
     const res = await apiFetch(
-      `http://localhost:5000/api/admin/orders/${orderId}`,
+      `/api/admin/orders/${orderId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -417,7 +417,7 @@ async function openOrderModal(orderId) {
   const hasProduct = !!i.product;
 
   const img = hasProduct && i.product.images?.length
-    ? `http://localhost:5000/uploads/${i.product.images[0]}`
+    ? `/uploads/${i.product.images[0]}`
     : "../Images/no-image.png";
 
   const name = hasProduct ? i.product.name : "Product removed";
@@ -567,7 +567,7 @@ async function updateItemStatus(orderId, itemId, status) {
 
   try {
     const res = await apiFetch(
-      `http://localhost:5000/api/admin/orders/${orderId}/items/${itemId}/status`,
+      `/api/admin/orders/${orderId}/items/${itemId}/status`,
       {
         method: "PATCH",
         headers: {
