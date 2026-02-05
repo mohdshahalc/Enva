@@ -454,44 +454,40 @@ document.addEventListener("DOMContentLoaded", () => {
 let addressMap = {};
 
 async function loadSavedAddresses() {
-  const token = localStorage.getItem("userToken")
+  const token = localStorage.getItem("userToken");
   if (!token) return;
 
   const res = await apiFetch("https://envastore.online/api/user/address", {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    headers: { Authorization: `Bearer ${token}` }
   });
 
   const addresses = await res.json();
-  console.log(addresses);
-  
-  const select = document.getElementById("existingAddress");
 
-  if (!select) return;
+  // 🚨 NO ADDRESS → REDIRECT
+  if (!addresses.length) {
+    window.location.href = "address.html";
+    return;
+  }
 
-  // reset dropdown
-  select.innerHTML = `
-    <option value="" selected disabled>
-      Select or Enter a New Address...
-    </option>
+  // ✅ Use FIRST address automatically
+  const addr = addresses[0];
+
+  // Fill hidden inputs (backend compatibility)
+  email.value = addr.email || "";
+  firstName.value = addr.firstName || "";
+  lastName.value = addr.lastName || "";
+  address.value = addr.street || "";
+  city.value = addr.city || "";
+  state.value = addr.state || "";
+  zip.value = addr.postcode || "";
+
+  // Render UI card
+  document.getElementById("savedAddressContent").innerHTML = `
+    <div class="address-name">${addr.firstName} ${addr.lastName}</div>
+    <div>${addr.street}</div>
+    <div>${addr.city}, ${addr.state} ${addr.postcode}</div>
+    <div class="address-muted">${addr.email}</div>
   `;
-
-  addresses.forEach(addr => {
-    addressMap[addr._id] = addr;
-
-    const option = document.createElement("option");
-    option.value = addr._id;
-    option.textContent =
-      `${addr.type}: ${addr.street}, ${addr.city}, ${addr.postcode}`;
-
-    select.appendChild(option);
-  });
-
-  // ✅ THIS IS THE MISSING PART
-  select.addEventListener("change", (e) => {
-    loadAddress(e.target.value);
-  });
 }
 
 
@@ -861,3 +857,16 @@ function showToast(message, type = "success") {
   toastBox.appendChild(toast);
   setTimeout(() => toast.remove(), 3200);
 }
+
+document.getElementById("existingAddress")?.addEventListener("change", e => {
+  const addr = addressMap[e.target.value];
+  if (!addr) return;
+
+  document.getElementById("email").value = addr.email || "";
+  document.getElementById("firstName").value = addr.firstName || "";
+  document.getElementById("lastName").value = addr.lastName || "";
+  document.getElementById("address").value = addr.street || "";
+  document.getElementById("city").value = addr.city || "";
+  document.getElementById("state").value = addr.state || "";
+  document.getElementById("zip").value = addr.postcode || "";
+});

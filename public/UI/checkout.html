@@ -1338,6 +1338,174 @@ p { color: var(--text-muted); font-size: 1rem; }
   }
 }
 
+/* Improve spacing for Shipping & Payment blocks */
+.option-box {
+  padding: 14px 18px;        /* more breathing room */
+  margin-bottom: 12px;      /* vertical separation */
+  border-radius: 10px;      /* softer */
+}
+
+/* Extra space above FIRST option in each group */
+.my-3 .option-box:first-child {
+  margin-top: 10px;
+}
+
+/* Better label alignment */
+.option-box label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.option-box {
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+}
+
+.my-3 .option-box:first-child {
+  margin-top: 10px;
+}
+
+.option-box label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+/* Make Shipping & Payment wider than Order Summary */
+.checkout-form {
+  flex: 0 0 58%;   /* left panel width */
+  max-width: 58%;
+}
+
+.order-summary {
+  flex: 0 0 42%;   /* right panel width */
+  max-width: 42%;
+}
+
+.checkout-form {
+  flex: 0 0 62%;
+  max-width: 62%;
+}
+
+.order-summary {
+  flex: 0 0 38%;
+  max-width: 38%;
+}
+/* Make payment rows identical to shipping rows */
+.form-check.option-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-check-input {
+  margin-top: 0;
+}
+
+.form-check-label {
+  width: 100%;
+}
+
+/* Highlight selected row */
+.form-check-input:checked ~ label {
+  color: #c9404d;
+  font-weight: 600;
+}
+
+/* Selected card border */
+.form-check.option-box:has(.form-check-input:checked) {
+  border-color: #c9404d;
+  background: #fff5f6;
+}
+/* SAVED ADDRESS CARD */
+
+.saved-address-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.address-content {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.address-name {
+  font-weight: 700;
+}
+
+.address-muted {
+  color: #6b7280;
+  font-size: 13px;
+}
+/* =========================
+   📱 RESPONSIVE ADDRESS CARD
+========================= */
+
+@media (max-width: 768px) {
+
+  .saved-address-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .address-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .address-header button {
+    width: 100%;
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .address-content {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .address-name {
+    font-size: 14px;
+  }
+
+  .address-muted {
+    font-size: 12px;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 420px) {
+
+  .saved-address-card {
+    padding: 12px;
+  }
+
+  .address-content {
+    font-size: 12.5px;
+  }
+
+  .address-header span {
+    font-size: 13px;
+  }
+}
+.saved-address-card:hover {
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
 </style>
 </head>
 
@@ -1433,72 +1601,70 @@ p { color: var(--text-muted); font-size: 1rem; }
             <h2><i class="fas fa-truck-fast me-2"></i> Shipping & Payment</h2>
 
             <form>
-               <div class="address-select-box">
-  <label class="address-label">
-    <i class="fas fa-map-marker-alt"></i>
-    Ship to Existing Address
-  </label>
+            
+           <div class="address-select-box">
 
-  <div class="select-wrapper">
-    <select
-      id="existingAddress"
-      class="form-select address-select"
-      onchange="loadAddress(this.value)"
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <label class="address-label mb-0">
+      <i class="fas fa-map-marker-alt"></i>
+      Delivery Address
+    </label>
+
+    <!-- ADD ADDRESS BUTTON -->
+    <button
+      type="button"
+      class="btn btn-sm btn-dark"
+      onclick="window.location.href='address.html'"
     >
-      <option value="" selected disabled>
-        Select or Enter a New Address…
-      </option>
-    </select>
-
-    <span class="select-icon">
-      <i class="fas fa-chevron-down"></i>
-    </span>
+      + Add Address
+    </button>
   </div>
+
+<!-- SAVED ADDRESS CARD -->
+<div id="savedAddressCard" class="saved-address-card">
+
+  <div class="address-header">
+    <span class="fw-semibold">Delivering to</span>
+
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-dark"
+      onclick="window.location.href='address.html'"
+    >
+      Change
+    </button>
+  </div>
+
+  <div id="savedAddressContent" class="address-content">
+    Loading address…
+  </div>
+
+</div>
+
+
 </div>
 
 
 
-                <h3 class="form-section-title">Manual Address Entry</h3>
-                <div class="row g-3"> 
-                    <div class="col-12">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="email" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="firstName" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" required>
-                    </div>
-                    <div class="col-12">
-                        <label for="address" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="address" placeholder="Street Address, Apt, Suite" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="city" class="form-label">City</label>
-                        <input type="text" class="form-control" id="city" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="state" class="form-label">State</label>
-                      <select id="state" class="form-select" required>
-  <option value="">Select...</option>
-  <option value="Tamil Nadu">Tamil Nadu</option>
-  <option value="Kerala">Kerala</option>
-  <option value="Karnataka">Karnataka</option>
- </select>
+<!-- Hidden manual fields (kept for backend compatibility) -->
+<div class="manual-address-form" style="display:none">
 
-                    </div>
-                    <div class="col-md-4">
-                        <label for="zip" class="form-label">PIN</label>
-                        <input type="text" class="form-control" id="zip" required>
-                    </div>
-                </div>
+  <input id="email">
+  <input id="firstName">
+  <input id="lastName">
+  <input id="address">
+  <input id="city">
+  <input id="state">
+  <input id="zip">
+
+</div>
+
+
                 
                 <hr class="mt-4 mb-3">
 
                 <h3 class="form-section-title">Shipping Method</h3>
+
 <div class="my-3">
   <div class="form-check option-box">
     <input
@@ -1536,59 +1702,43 @@ p { color: var(--text-muted); font-size: 1rem; }
 <div class="my-3">
 
   <!-- STRIPE -->
- <!-- STRIPE -->
-<div class="form-check option-box">
-  <input
-    id="stripe"
-    name="paymentMethod"
-    type="radio"
-    class="form-check-input"
-    value="stripe"
-  >
-  <label class="form-check-label small fw-medium" for="stripe">
-    <i class="fas fa-credit-card me-2"></i>
-    Card / UPI (Stripe)
-  </label>
-</div>
-
+  <div class="form-check option-box">
+    <input id="stripe" name="paymentMethod" type="radio" class="form-check-input" value="stripe">
+    <label class="form-check-label w-100 d-flex justify-content-between align-items-center" for="stripe">
+      <span>
+        <i class="fas fa-credit-card me-2"></i>
+        Card / UPI (Stripe)
+      </span>
+    </label>
+  </div>
 
   <!-- WALLET -->
-<div class="form-check option-box">
-  <input
-    id="wallet"
-    name="paymentMethod"
-    type="radio"
-    class="form-check-input"
-    value="wallet"
-  >
-  <label class="form-check-label small fw-medium" for="wallet">
-    <i class="fas fa-wallet me-2"></i>
-    Wallet
-    (<span id="walletBalance">₹0</span>
-    <span id="walletPayable"></span>)
-  </label>
-</div>
-
-
-
+  <div class="form-check option-box">
+    <input id="wallet" name="paymentMethod" type="radio" class="form-check-input" value="wallet">
+    <label class="form-check-label w-100 d-flex justify-content-between align-items-center" for="wallet">
+      <span>
+        <i class="fas fa-wallet me-2"></i>
+        Wallet
+      </span>
+      <span class="fw-bold">
+        ₹<span id="walletBalance">0</span>
+      </span>
+    </label>
+  </div>
 
   <!-- COD -->
   <div class="form-check option-box">
-    <input
-  id="cod"
-  name="paymentMethod"
-  type="radio"
-  class="form-check-input"
-  value="cod"
-  checked
->
-    <label class="form-check-label small fw-medium" for="cod">
-      <i class="fas fa-money-bill-wave me-2"></i>
-      Cash on Delivery (COD)
+    <input id="cod" name="paymentMethod" type="radio" class="form-check-input" value="cod" checked>
+    <label class="form-check-label w-100 d-flex justify-content-between align-items-center" for="cod">
+      <span>
+        <i class="fas fa-money-bill-wave me-2"></i>
+        Cash on Delivery (COD)
+      </span>
     </label>
   </div>
 
 </div>
+
 
                 
                 <hr class="my-4">
