@@ -555,7 +555,17 @@
     padding: 14px;
     font-size: 1rem;
   }
+}@media(max-width:576px){
+  .cart-summary-card .continue-shopping{
+    width:100%;
+  }
+}.checkout-btn.secondary {
+  background:#fff;
+  color:#000;
+  border:1px solid #000;
 }
+
+
 
 
  </style>
@@ -704,8 +714,15 @@
     </div>
 
     <a href="./checkout.html" style="text-decoration: none;">
-      <button class="checkout-btn">Proceed to Checkout</button>
+      <button class="checkout-btn secondary mt-3">Proceed to Checkout</button>
     </a>
+
+    <a href="./products.html" style="text-decoration:none;">
+  <button class="checkout-btn mt-3" type="button">
+    ← Continue Shopping
+  </button>
+</a>
+
 
   </div>
 

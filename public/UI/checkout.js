@@ -177,7 +177,7 @@ if (c.maxPurchase && subtotal > c.maxPurchase) {
   renderCouponList("availableCouponList", available, "available");
   renderCouponList("upcomingCouponList", upcoming, "upcoming");
   renderCouponList("invalidCouponList", invalid, "invalid");
-  const limitedUsed = used.slice(0, 4);
+  const limitedUsed = used.slice(0, 3);
   renderCouponList("usedCouponList", limitedUsed, "used");
 }
 
