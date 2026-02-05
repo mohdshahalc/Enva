@@ -854,6 +854,54 @@ confirmLogoutBtn?.addEventListener("click", () => {
   }
 }
 
+/* ============================
+   📱 Fix Address Cards Mobile
+============================ */
+@media (max-width: 575px) {
+
+  /* Stack header vertically */
+  #savedAddresses .address-top,
+  #savedAddresses .d-flex.justify-content-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  /* Buttons move below text */
+  #savedAddresses .btn-group,
+  #savedAddresses .address-actions,
+  #savedAddresses .d-flex.gap-2 {
+    width: 100%;
+    display: flex !important;
+    gap: 6px !important;
+  }
+
+  /* Smaller buttons */
+  #savedAddresses button {
+    flex: 1;
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+    border-radius: 8px !important;
+  }
+
+  /* Softer delete */
+  #savedAddresses .btn-danger {
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+  }
+
+  /* Default badge spacing */
+  .default-badge {
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  /* Prevent card overflow */
+  #savedAddresses > div {
+    overflow: hidden;
+  }
+}
 
 </style>
 
