@@ -436,6 +436,26 @@
   }
 }
 
+/* ===== Z-INDEX BALANCE FIX ===== */
+@media (max-width: 991px) {
+
+  /* Lower checkout bar priority */
+  .cart-summary {
+    z-index: 20 !important;
+  }
+
+  /* Ensure main content above background */
+  .cart-section {
+    position: relative;
+    z-index: 5;
+  }
+
+  /* Footer normal layer */
+  footer {
+    position: relative;
+    z-index: 1;
+  }
+}
 
 /* EXTRA SMALL */
 @media (max-width: 480px) {
