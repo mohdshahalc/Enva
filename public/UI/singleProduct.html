@@ -1015,10 +1015,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const desktopSizes = document.getElementById("sizeOptions");
   const mobileSizes = document.getElementById("mobileSizeOptions");
 
-  if (desktopSizes && mobileSizes) {
+  // ✅ Only clone sizes on MOBILE
+  if (window.innerWidth <= 576 && desktopSizes && mobileSizes) {
     mobileSizes.innerHTML = desktopSizes.innerHTML;
   }
 });
+
 </script>
 
 <div id="drawerBackdrop"></div>
