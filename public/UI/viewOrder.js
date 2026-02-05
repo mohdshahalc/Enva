@@ -267,7 +267,36 @@ document.getElementById("orderItems").innerHTML =
 </div>
 
 
-   
+      <div class="mt-1 d-flex gap-2 align-items-center">
+
+  ${
+    item.status === "cancelled"
+      ? `<span class="badge bg-danger">Cancelled</span>`
+      : item.status === "returned"
+      ? `<span class="badge bg-warning text-dark">Returned</span>`
+      : item.status === "delivered"
+      ? `<span class="badge bg-success">Delivered</span>`
+      : item.status === "shipped"
+      ? `<span class="badge bg-info text-dark">Shipped</span>`
+      : item.status === "confirmed"
+      ? `<span class="badge bg-primary">Confirmed</span>`
+      : `<span class="badge bg-secondary">Pending</span>`
+  }
+
+
+
+  ${
+    item.status === "delivered"
+      ? `
+        <button class="btn btn-sm btn-outline-warning"
+          onclick="openReturnModal('${item._id}')">
+          Return
+        </button>
+      `
+      : ""
+  }
+
+</div>
 
 
       </div>
