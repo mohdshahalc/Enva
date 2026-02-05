@@ -285,6 +285,74 @@
     box-shadow: 0 -6px 20px rgba(0,0,0,.15);
   }
 }
+/* =========================================
+   FIX MOBILE CART COLLAPSE + BOTTOM BAR
+========================================= */
+@media (max-width: 991px) {
+
+  /* Stack layout */
+  .cart-container {
+    display: block !important;
+  }
+
+  /* FORCE cart items visible */
+  .cart-items {
+    width: 100%;
+    min-height: 60vh;
+    padding-bottom: 220px !important; /* space for sticky bar */
+  }
+
+  /* Remove right panel behavior */
+  .cart-summary {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    width: 100% !important;
+    max-width: 100% !important;
+
+    border-radius: 18px 18px 0 0;
+    margin: 0 !important;
+
+    background: #fff;
+    z-index: 9999;
+
+    box-shadow: 0 -6px 22px rgba(0,0,0,.18);
+  }
+
+  /* Hide summary heading (Flipkart style) */
+  .cart-summary h3 {
+    display: none;
+  }
+
+  /* Compact rows */
+  .summary-line {
+    font-size: 13px;
+    padding: 3px 0;
+  }
+
+  .summary-total {
+    font-size: 16px;
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+
+  /* Buttons full width */
+  .cart-summary button {
+    width: 100%;
+  }
+
+  /* Reduce second button height */
+  .checkout-btn.secondary {
+    padding: 12px;
+  }
+
+  /* Remove big white gap */
+  body {
+    padding-bottom: 200px;
+  }
+}
 
 /* =====================================================
    PRO MOBILE UX — FINAL POLISH (≤ 768px)
