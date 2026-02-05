@@ -496,28 +496,36 @@
 }
 
 /* =====================================================
-   CLEAN MOBILE CART (≤991px)
+   FINAL MOBILE VISIBILITY FIX (≤991px)
 ===================================================== */
 @media (max-width: 991px) {
 
+  /* Push content below navbar + sub bar */
+  .body-spacer {
+    height: 128px !important;
+  }
+
+  /* Remove section margin (causing white screen) */
   .cart-section {
     margin: 0 !important;
   }
 
+  /* Stack layout */
   .cart-container {
     display: block;
-    margin-top: 64px;
+    margin-top: 0 !important;
     padding: 0 10px;
   }
 
-  /* Products */
+  /* FORCE product area visible */
   .cart-items {
     width: 100%;
-    min-height: 60vh;
-    padding-bottom: 200px;
+    min-height: calc(100vh - 260px);
+    padding-top: 10px;
+    padding-bottom: 220px;
   }
 
-  /* Bottom summary bar */
+  /* Bottom checkout bar */
   .cart-summary {
     position: fixed;
     bottom: 0;
@@ -525,7 +533,6 @@
     right: 0;
 
     width: 100%;
-    max-width: 100%;
     margin: 0;
 
     border-radius: 18px 18px 0 0;
@@ -533,7 +540,8 @@
 
     background: #fff;
     z-index: 9999;
-    box-shadow: 0 -6px 20px rgba(0,0,0,.18);
+
+    box-shadow: 0 -6px 18px rgba(0,0,0,.18);
   }
 
   /* Hide title */
@@ -552,15 +560,16 @@
     padding-top: 6px;
   }
 
-  /* Buttons */
   .cart-summary button {
     width: 100%;
   }
 
+  /* Prevent page cutoff */
   body {
-    padding-bottom: 200px;
+    padding-bottom: 220px;
   }
 }
+
 
 /* EXTRA SMALL PHONES */
 
