@@ -419,6 +419,24 @@
 }
 
 
+/* ===== FIX DELETE BUTTON ESCAPING CARD ===== */
+@media (max-width: 768px) {
+
+  /* Make each cart card positioning context */
+  .cart-item {
+    position: relative !important;
+  }
+
+  /* Keep delete button inside card */
+  .remove-btn {
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    z-index: 2 !important;
+  }
+}
+
+
 /* EXTRA SMALL */
 @media (max-width: 480px) {
   .cart-item {
