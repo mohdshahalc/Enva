@@ -13,12 +13,21 @@ const couponSchema = new mongoose.Schema(
       match: /^[A-Z0-9]+$/
     },
 
-    discountPercent: {
-      type: Number,
-      required: true,
-      min: 1,
-      max: 90
-    },
+   discountPercent: {
+  type: Number,
+  default: 0
+},
+
+flatAmount: {
+  type: Number,
+  default: 0
+},
+
+type: {
+  type: String,
+  enum: ["percentage", "flat"],
+  required: true
+},
 
     minPurchase: {
       type: Number,
@@ -28,8 +37,7 @@ const couponSchema = new mongoose.Schema(
 
     maxPurchase: {
       type: Number,
-      required: true,
-      min: 1
+      default: null // null = unlimited
     },
 
     usageLimit: {
@@ -39,6 +47,11 @@ const couponSchema = new mongoose.Schema(
     },
 
     usedCount: {
+      type: Number,
+      default: 0
+    },
+
+    totalDiscountAmount: {
       type: Number,
       default: 0
     },
@@ -60,7 +73,6 @@ const couponSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      
       trim: true,
       maxlength: 200
     },

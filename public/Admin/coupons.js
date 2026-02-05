@@ -1,118 +1,178 @@
-const couponForm = document.getElementById("couponForm");
-document.addEventListener("DOMContentLoaded", () => {
-  loadCoupons();
-   loadCouponStats();
-});
 
 let allCoupons = [];
 
 document.addEventListener("DOMContentLoaded", () => {
+  const couponType = document.getElementById("couponType");
+  const percentageWrapper = document.getElementById("percentageWrapper");
+  const flatWrapper = document.getElementById("flatAmountWrapper");
+  const maxWrapper = document.getElementById("maxPurchaseWrapper");
+  const maxPurchase = document.getElementById("maxPurchase");
+
+  if (!couponType) return;
+
+  function toggleCouponFields() {
+    if (couponType.value === "flat") {
+      percentageWrapper.classList.add("d-none");
+      flatWrapper.classList.remove("d-none");
+      maxWrapper.classList.add("d-none");
+      maxPurchase.value = "";
+    } else {
+      percentageWrapper.classList.remove("d-none");
+      flatWrapper.classList.add("d-none");
+      maxWrapper.classList.remove("d-none");
+    }
+  }
+
+  couponType.addEventListener("change", toggleCouponFields);
+
+  // Run once on page load
+  toggleCouponFields();
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  
+  loadCoupons();
+  loadCouponStats();
 
   const couponForm = document.getElementById("couponForm");
   if (!couponForm) return;
 
   couponForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const token = localStorage.getItem("adminToken");
-    if (!token) {
-      showToast("Unauthorized. Please login again.", "error");
-      return;
-    }
+  const token = localStorage.getItem("adminToken");
+  if (!token) {
+    showToast("Unauthorized. Please login again.", "error");
+    return;
+  }
 
-    // SAFE READ
-    const maxPurchaseEl = document.getElementById("maxPurchase");
+  const couponType = document.getElementById("couponType").value;
+  const flatAmount = Number(document.getElementById("flatAmount")?.value || 0);
+  const discountPercent = Number(document.getElementById("discount")?.value || 0);
+  const minPurchase = Number(document.getElementById("minPurchase").value);
+  const maxPurchaseEl = document.getElementById("maxPurchase");
 
-    if (!maxPurchaseEl || maxPurchaseEl.value.trim() === "") {
-      showToast("Max purchase amount is required", "error");
-      return;
-    }
+  /* ======================
+     BASE DATA
+  ====================== */
 
-    const couponData = {
-      code: document.getElementById("code").value.trim().toUpperCase(),
-      discountPercent: Number(document.getElementById("discount").value),
-      usageLimit: Number(document.getElementById("usageLimit").value),
-      minPurchase: Number(document.getElementById("minPurchase").value),
-      maxPurchase: Number(maxPurchaseEl.value),
-      startDate: document.getElementById("startDate").value,
-      endDate: document.getElementById("endDate").value,
-      description: document.getElementById("description")?.value.trim() || ""
-    };
+  const couponData = {
+    code: document.getElementById("code").value.trim().toUpperCase(),
+    type: couponType,
+    discountPercent: couponType === "percentage" ? discountPercent : 0,
+    flatAmount: couponType === "flat" ? flatAmount : 0,
+    usageLimit: Number(document.getElementById("usageLimit").value),
+    minPurchase,
+    maxPurchase: couponType === "percentage" ? Number(maxPurchaseEl.value) : null,
+    startDate: document.getElementById("startDate").value,
+    endDate: document.getElementById("endDate").value,
+    description: document.getElementById("description")?.value.trim() || ""
+  };
 
-    /* ======================
+  /* ======================
        VALIDATIONS
-    ====================== */
+  ====================== */
 
-    if (!/^[A-Z0-9]{4,20}$/.test(couponData.code)) {
-      showToast("Coupon code must be 4–20 uppercase letters or numbers", "error");
-      return;
-    }
+  if (!/^[A-Z0-9]{4,20}$/.test(couponData.code)) {
+    showToast("Coupon code must be 4–20 uppercase letters or numbers", "error");
+    return;
+  }
 
-    if (couponData.discountPercent < 1 || couponData.discountPercent > 90) {
+  if (couponData.usageLimit < 1) {
+    showToast("Usage limit must be at least 1", "error");
+    return;
+  }
+
+  if (minPurchase < 0) {
+    showToast("Minimum purchase cannot be negative", "error");
+    return;
+  }
+
+  /* ===== PERCENTAGE COUPON ===== */
+  if (couponType === "percentage") {
+
+    if (discountPercent < 1 || discountPercent > 90) {
       showToast("Discount must be between 1% and 90%", "error");
       return;
     }
 
-    if (couponData.usageLimit < 1) {
-      showToast("Usage limit must be at least 1", "error");
+    if (!maxPurchaseEl.value) {
+      showToast("Max purchase amount is required for percentage coupons", "error");
       return;
     }
 
-    if (couponData.minPurchase < 0) {
-      showToast("Minimum purchase cannot be negative", "error");
+    if (couponData.maxPurchase <= minPurchase) {
+      showToast("Max purchase must be greater than minimum purchase", "error");
+      return;
+    }
+  }
+
+  /* ===== FLAT COUPON ===== */
+  if (couponType === "flat") {
+
+    if (flatAmount <= 99) {
+      showToast("Flat amount must be ₹100", "error");
       return;
     }
 
-    if (couponData.maxPurchase <= couponData.minPurchase) {
+    const requiredMin = flatAmount * 3;
+
+    if (minPurchase < requiredMin) {
       showToast(
-        "Max purchase must be greater than minimum purchase",
+        `For flat coupons, minimum purchase must be at least ₹${requiredMin}`,
         "error"
       );
       return;
     }
+  }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  /* ===== DATE VALIDATION ===== */
 
-    if (new Date(couponData.startDate) < today) {
-      showToast("Start date cannot be in the past", "error");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (new Date(couponData.startDate) < today) {
+    showToast("Start date cannot be in the past", "error");
+    return;
+  }
+
+  if (new Date(couponData.startDate) >= new Date(couponData.endDate)) {
+    showToast("End date must be after start date", "error");
+    return;
+  }
+
+  console.log("FINAL COUPON DATA:", couponData);
+
+  try {
+    const res = await apiFetch("http://localhost:5000/api/admin/coupons", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(couponData)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showToast(data.message || "Failed to create coupon", "error");
       return;
     }
 
-    if (new Date(couponData.startDate) >= new Date(couponData.endDate)) {
-      showToast("End date must be after start date", "error");
-      return;
-    }
+    showToast("Coupon created successfully", "success");
+    couponForm.reset();
+    loadCoupons();
+    loadCouponStats();
 
-    console.log("FINAL COUPON DATA:", couponData);
+  } catch (err) {
+    console.error(err);
+    showToast("Server error", "error");
+  }
+});
 
-    try {
-      const res = await apiFetch("/api/admin/coupons", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(couponData)
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        showToast(data.message || "Failed to create coupon", "error");
-        return;
-      }
-
-      showToast("Coupon created successfully", "success");
-      couponForm.reset();
-      loadCoupons();
-      loadCouponStats();
-
-    } catch (err) {
-      console.error(err);
-      showToast("Server error", "error");
-    }
-  });
 });
 
 
@@ -120,7 +180,7 @@ async function loadCoupons() {
   const token =localStorage.getItem("adminToken")
 
   try {
-    const res = await apiFetch("/api/admin/coupons", {
+    const res = await apiFetch("http://localhost:5000/api/admin/coupons", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -157,20 +217,30 @@ function renderCoupons(coupons) {
 
   coupons.forEach((coupon, index) => {
     const status = getCouponStatus(coupon);
-
+          console.log(coupon.type);
+          
     tbody.innerHTML += `
       <tr>
         <td>${index + 1}</td>
 
         <td><strong>${coupon.code}</strong></td>
 
-        <td>${coupon.discountPercent}%</td>
+        <td>
+  ${coupon.type === "flat"
+    ? "₹" + coupon.flatAmount
+    : coupon.discountPercent + "%"}
+</td>
+
 
         <!-- ✅ MIN PURCHASE -->
         <td>₹${coupon.minPurchase}</td>
 
-        <!-- ✅ MAX DISCOUNT -->
-        <td>₹${coupon.maxPurchase}</td>
+        <td>
+        
+  ${coupon.type === "flat"
+    ? "—"
+    : "₹" + coupon.maxPurchase}
+</td>
 
         <!-- ✅ USAGE -->
         <td>${coupon.usedCount} / ${coupon.usageLimit}</td>
@@ -230,7 +300,7 @@ async function deleteCoupon(id) {
   const token = localStorage.getItem("adminToken");
 
   try {
-    await apiFetch(`/api/admin/coupons/${id}`, {
+    await apiFetch(`http://localhost:5000/api/admin/coupons/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -248,7 +318,7 @@ async function loadCouponStats() {
 
   try {
     const res = await apiFetch(
-      "/api/admin/coupons/stats",
+      "http://localhost:5000/api/admin/coupons/stats",
       {
         headers: {
           Authorization: `Bearer ${token}`

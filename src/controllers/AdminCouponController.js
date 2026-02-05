@@ -3,33 +3,41 @@ const Coupon = require("../models/coupon");
 exports.createCoupon = async (req, res) => {
   try {
     const {
-      code,
-      discountPercent,
-      minPurchase,
-      maxPurchase,
-      usageLimit,
-      startDate,
-      endDate,
-      description
-    } = req.body;
-   console.log(maxPurchase);
-   
+  code,
+  type,
+  discountPercent,
+  flatAmount,
+  minPurchase,
+  maxPurchase,
+  usageLimit,
+  startDate,
+  endDate,
+  description
+} = req.body;
+
+
+   // Normalize maxPurchase (empty = unlimited)
+const parsedMaxPurchase =
+  maxPurchase === "" || maxPurchase === undefined
+    ? null
+    : Number(maxPurchase);
+
     /* ======================
        REQUIRED FIELDS
     ====================== */
-    if (
-      !code ||
-      discountPercent == null ||
-      minPurchase == null ||
-      maxPurchase == null ||
-      usageLimit == null ||
-      !startDate ||
-      !endDate 
-    ) {
-      return res.status(400).json({
-        message: "All required fields must be filled"
-      });
-    }
+   if (
+  !code ||
+  !type ||
+  minPurchase == null ||  
+  usageLimit == null ||
+  !startDate ||
+  !endDate 
+) {
+  return res.status(400).json({
+    message: "All required fields must be filled"
+  });
+}
+
 
     /* ======================
        VALIDATIONS
@@ -41,11 +49,30 @@ exports.createCoupon = async (req, res) => {
       });
     }
 
-    if (discountPercent < 1 || discountPercent > 90) {
-      return res.status(400).json({
-        message: "Discount must be between 1% and 90%"
-      });
-    }
+    if (type === "percentage") {
+  if (discountPercent < 1 || discountPercent > 90) {
+    return res.status(400).json({
+      message: "Discount must be between 1% and 90%"
+    });
+  }
+}
+
+if (type === "flat") {
+  if (!flatAmount || flatAmount <= 0) {
+    return res.status(400).json({
+      message: "Flat amount must be greater than 0"
+    });
+  }
+
+  const requiredMin = flatAmount * 3;
+
+  if (minPurchase < requiredMin) {
+    return res.status(400).json({
+      message: `For flat coupons, minimum purchase must be at least ₹${requiredMin}`
+    });
+  }
+}
+
 
     if (usageLimit < 1) {
       return res.status(400).json({
@@ -59,11 +86,14 @@ exports.createCoupon = async (req, res) => {
       });
     }
 
-    if (maxPurchase <= minPurchase) {
-      return res.status(400).json({
-        message: "Max purchase must be greater than minimum purchase"
-      });
-    }
+    if (type === "percentage" && parsedMaxPurchase <= minPurchase) {
+  return res.status(400).json({
+    message: "Max purchase must be greater than minimum purchase"
+  });
+}
+
+
+
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -87,17 +117,21 @@ exports.createCoupon = async (req, res) => {
       });
     }
 
-    const coupon = await Coupon.create({
-      code,
-      discountPercent,
-      minPurchase,
-      maxPurchase,
-      usageLimit,
-      startDate,
-      endDate,
-      description,
-      isActive: true
-    });
+   const coupon = await Coupon.create({
+  code,
+  type,
+  discountPercent: type === "percentage" ? discountPercent : 0,
+  flatAmount: type === "flat" ? flatAmount : 0,
+  minPurchase,
+  maxPurchase: type === "percentage" ? parsedMaxPurchase : null,
+  usageLimit,
+  startDate,
+  endDate,
+  description,
+  isActive: true
+});
+
+
 
     res.status(201).json({
       message: "Coupon created successfully",
@@ -145,8 +179,11 @@ exports.getCouponStats = async (req, res) => {
 
     const maxDiscount =
       coupons.length > 0
-        ? Math.max(...coupons.map(c => c.discountPercent))
-        : 0;
+        ? Math.max(
+  ...coupons.map(c =>
+    c.type === "percentage" ? c.discountPercent : 0
+  )
+)       : 0;
 
     // Used today (basic logic)
     const today = new Date().toDateString();

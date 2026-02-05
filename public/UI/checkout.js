@@ -201,7 +201,14 @@ function renderCouponList(containerId, coupons, type) {
         <div>
           <div class="coupon-code">${c.code}</div>
           <div class="coupon-desc">
-           ${c.discountPercent}% OFF • ₹${c.minPurchase} – ₹${c.maxPurchase}
+         ${
+  c.type === "flat"
+    ? `Flat ₹${c.flatAmount} OFF`
+    : `${c.discountPercent}% OFF`
+}
+ • Min ₹${c.minPurchase}
+${c.type === "percentage" && c.maxPurchase ? ` – Max ₹${c.maxPurchase}` : ""}
+
             ${
               type === "used"
                 ? `<br><span class="text-danger">Already used</span>`
@@ -215,7 +222,7 @@ function renderCouponList(containerId, coupons, type) {
         ${
           type === "available"
             ? `<button class="apply-mini-btn"
-                onclick="applyCouponFromCard('${c.code}', ${c.discountPercent})">
+                onclick="applyCouponFromCard('${c.code}')">
                 Apply
               </button>`
             : ""
@@ -284,23 +291,27 @@ function applyCouponFromInput() {
     return;
   }
 
-  // 🔴 MAX PURCHASE CHECK (🔥 THIS WAS MISSING)
-  if (coupon.maxPurchase && currentSubtotal > coupon.maxPurchase) {
-    feedback.textContent =
-      `Coupon valid only up to ₹${coupon.maxPurchase}`;
-    feedback.classList.add("error");
-    return;
-  }
+  // MAX ONLY FOR PERCENTAGE
+if (coupon.type === "percentage" && coupon.maxPurchase && currentSubtotal > coupon.maxPurchase) {
+  feedback.textContent =
+    `Coupon valid only up to ₹${coupon.maxPurchase}`;
+  feedback.classList.add("error");
+  return;
+}
+
+
+
 
   // ✅ APPLY COUPON
-  applyCoupon(coupon.code, coupon.discountPercent);
+  applyCoupon();
 }
 
 
-function applyCouponFromCard(code, discountPercent) {
+function applyCouponFromCard(code) {
   document.getElementById("couponInput").value = code;
-  applyCoupon(code, discountPercent);
+  applyCoupon();
 }
+
 
 async function applyCoupon() {
   const code = document.getElementById("couponInput").value.trim();
@@ -334,13 +345,26 @@ async function applyCoupon() {
     }
 
     // ✅ VALID COUPON
-    appliedCoupon = {
-      code: data.code,
-      discountPercent: data.discountPercent
-    };
+    appliedCoupon = data;
 
-    couponDiscountAmount =
-      (currentSubtotal * data.discountPercent) / 100;
+// 🔥 CALCULATE DISCOUNT
+// 🔥 CALCULATE DISCOUNT
+if (data.type === "flat") {
+  // ✅ Prevent flat discount from exceeding subtotal
+  couponDiscountAmount = Math.min(data.flatAmount, currentSubtotal);
+} else {
+  couponDiscountAmount =
+    (currentSubtotal * data.discountPercent) / 100;
+
+  if (data.maxPurchase) {
+    couponDiscountAmount = Math.min(
+      couponDiscountAmount,
+      data.maxPurchase
+    );
+  }
+}
+
+
 
     document.getElementById("couponRow").classList.remove("d-none");
     document.getElementById("couponLabel").textContent =
@@ -349,7 +373,12 @@ async function applyCoupon() {
       `- ₹${couponDiscountAmount.toFixed(2)}`;
 
     showCouponMessage(
-      `Coupon ${data.code} applied (${data.discountPercent}% OFF)
+      `Coupon ${data.code} applied (${
+  data.type === "flat"
+    ? `₹${data.flatAmount} OFF`
+    : `${data.discountPercent}% OFF`
+})
+
        <span style="color:#c62828; cursor:pointer; margin-left:8px;"
          onclick="removeCoupon()">Remove</span>`,
       "success"
@@ -391,8 +420,11 @@ function updateSummaryTotals(subtotal) {
   const shipping = selectedShipping ? Number(selectedShipping.value) : 0;
   const tax = subtotal * 0.07;
 
-  const total =
-    subtotal + shipping + tax - couponDiscountAmount;
+ let total =
+  subtotal + shipping + tax - couponDiscountAmount;
+
+if (total < 0) total = 0;
+
 
   document.getElementById("subtotal").textContent =
     `₹${subtotal.toFixed(2)}`;
@@ -465,10 +497,10 @@ async function loadSavedAddresses() {
 
 window.loadAddress = function (addressId) {
   if (!addressId) return;
-
+  
   const addr = addressMap[addressId];
   if (!addr) return;
-console.log(addr.state);
+
 
   document.getElementById("email").value = addr.email || "";
   document.getElementById("firstName").value = addr.firstName || "";
