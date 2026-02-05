@@ -253,28 +253,29 @@ function handleAddToWishlist() {
   const size = selectedSize.label.trim().toUpperCase(); // ✅ normalize once
   const encodedSize = encodeURIComponent(size);
 
-  // ❤️ REMOVE from wishlist
-  if (isWishlisted) {
-    fetch(`https://envastore.online/api/user/wishlist/remove/${productId}`, {
-  method: "DELETE",
-  headers: {
-    Authorization: `Bearer ${token}`
-  }
-})
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === "removed") {
-          isWishlisted = false;
-          toggleWishlistIcon(false);
-          showToast("Removed from wishlist", "info");
-        } else {
-          showToast(data.message || "Failed to remove", "error");
-        }
-      })
-      .catch(() => showToast("Server error", "error"));
+ // ❤️ REMOVE from wishlist
+if (isWishlisted) {
+  fetch(`https://envastore.online/api/user/wishlist/remove/${productId}/${encodedSize}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "removed") {
+        isWishlisted = false;
+        toggleWishlistIcon(false);
+        showToast("Removed from wishlist", "info");
+      } else {
+        showToast(data.message || "Failed to remove", "error");
+      }
+    })
+    .catch(() => showToast("Server error", "error"));
 
-    return;
-  }
+  return;
+}
+
 
   // 🤍 ADD to wishlist
   fetch("https://envastore.online/api/user/wishlist/add", {
