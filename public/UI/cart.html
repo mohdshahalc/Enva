@@ -240,76 +240,52 @@
    MOBILE & TABLET (≤ 991px)
 ===================================================== */
 
+/* =========================================
+   REMOVE SIDE CONTAINER ON MOBILE/TABLET
+========================================= */
 @media (max-width: 991px) {
 
-  .cart-container {
-    flex-direction: column;
-    margin-top: 75px;
-  }
-
+  /* Kill desktop sidebar sizing */
   .cart-summary {
-    width: 100%;
-    position: sticky;
-    bottom: 0;
-    top: auto;
-    border-radius: 24px 24px 0 0;
-    z-index: 1000;
-    box-shadow: 0 -10px 25px rgba(0,0,0,0.08);
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border-radius: 18px 18px 0 0;
   }
 
-  .item-price {
+  /* Make it behave like bottom bar */
+  .cartRight,
+  #cartRight {
+    width: 100%;
+  }
+
+  /* Remove "boxed" look */
+  .cart-summary h3 {
     display: none;
   }
 
-  .item-price-mobile {
+  /* Tighten summary spacing */
+  .summary-line {
+    padding: 2px 0;
+  }
+
+  /* Make totals row compact */
+  .summary-total {
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+
+  /* Buttons stacked clean */
+  .cart-summary a {
     display: block;
-    font-weight: 700;
   }
 
-  /* MOBILE CARD DESIGN */
-  .cart-item {
-    display: grid;
-    grid-template-columns: 90px 1fr;
-    gap: 15px;
-    background: #fff;
-    padding: 12px;
-    border-radius: 16px;
-    position: relative;
-    overflow: visible;
-  }
-
-  .item-details {
-    display: contents;
-  }
-
-  .item-image {
-    width: 90px;
-    height: 115px;
-  }
-
-  .item-info {
-    padding-right: 32px;
-  }
-
-  .item-actions {
-    grid-column: 2;
-    justify-content: space-between;
-  }
-
-  /* ✅ DELETE BUTTON — ALWAYS VISIBLE */
-  .remove-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 32px;
-    height: 32px;
-    z-index: 999;
-    background: #fff5f5;
-    color: #e74c3c;
-    visibility: visible;
-    opacity: 1;
+  /* Remove side shadows */
+  .cart-summary {
+    box-shadow: 0 -6px 20px rgba(0,0,0,.15);
   }
 }
+
 /* =====================================================
    PRO MOBILE UX — FINAL POLISH (≤ 768px)
 ===================================================== */
