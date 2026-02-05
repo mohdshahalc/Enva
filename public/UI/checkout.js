@@ -3,6 +3,7 @@ let couponDiscountAmount = 0;
 let allCoupons = [];
 let appliedCoupon = null;
 let walletBalance = 0;
+window.currentAddresses = [];
 
 let stripe;
 let elements;
@@ -462,17 +463,71 @@ async function loadSavedAddresses() {
   });
 
   const addresses = await res.json();
+  window.currentAddresses = addresses;
 
-  // 🚨 NO ADDRESS → REDIRECT
+
+  // 🚨 none → redirect
   if (!addresses.length) {
     window.location.href = "address.html";
     return;
   }
 
-  // ✅ Use FIRST address automatically
-  const addr = addresses[0];
+  const box = document.getElementById("addressList");
+  box.innerHTML = "";
 
-  // Fill hidden inputs (backend compatibility)
+  // ✅ pick default OR first
+  let selected = addresses.find(a => a.isDefault) || addresses[0];
+
+  addresses.forEach(addr => {
+    const div = document.createElement("div");
+    div.className = "address-card";
+    if (addr._id === selected._id) div.classList.add("active");
+
+    div.innerHTML = `
+      <div class="address-top">
+        <div class="address-name">${addr.firstName} ${addr.lastName}</div>
+        ${addr.isDefault ? `<span class="default-badge">Default</span>` : ""}
+      </div>
+
+      <div class="address-body">
+        ${addr.street}<br>
+        ${addr.city}, ${addr.state} ${addr.postcode}<br>
+        ${addr.email}
+      </div>
+
+      <div class="address-actions">
+        <button class="btn btn-sm btn-outline-dark"
+          onclick="event.stopPropagation(); window.location.href='address.html'">
+          Change
+        </button>
+      </div>
+    `;
+
+    div.onclick = () => selectAddress(addr._id);
+
+    box.appendChild(div);
+  });
+
+  // preload selected
+  fillHiddenAddress(selected);
+}
+
+function selectAddress(id){
+  document.querySelectorAll(".address-card").forEach(c => c.classList.remove("active"));
+
+  const addr = [...document.querySelectorAll(".address-card")]
+    .find(c => c.innerHTML.includes(id));
+
+  const selected = window.currentAddresses.find(a => a._id === id);
+  fillHiddenAddress(selected);
+
+  // highlight
+  event.currentTarget.classList.add("active");
+}
+
+function fillHiddenAddress(addr){
+  if(!addr) return;
+
   email.value = addr.email || "";
   firstName.value = addr.firstName || "";
   lastName.value = addr.lastName || "";
@@ -480,15 +535,8 @@ async function loadSavedAddresses() {
   city.value = addr.city || "";
   state.value = addr.state || "";
   zip.value = addr.postcode || "";
-
-  // Render UI card
-  document.getElementById("savedAddressContent").innerHTML = `
-    <div class="address-name">${addr.firstName} ${addr.lastName}</div>
-    <div>${addr.street}</div>
-    <div>${addr.city}, ${addr.state} ${addr.postcode}</div>
-    <div class="address-muted">${addr.email}</div>
-  `;
 }
+
 
 
 window.loadAddress = function (addressId) {

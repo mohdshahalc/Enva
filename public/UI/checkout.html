@@ -1505,6 +1505,74 @@ p { color: var(--text-muted); font-size: 1rem; }
 .saved-address-card:hover {
   box-shadow: 0 12px 28px rgba(0,0,0,.08);
 }
+/* ===========================
+   📦 MULTI ADDRESS UI
+=========================== */
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.address-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.address-card:hover {
+  border-color: #c9404d;
+}
+
+.address-card.active {
+  border-color: #c9404d;
+  background: #fff5f6;
+}
+
+.address-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.address-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.default-badge {
+  background: #c9404d;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.address-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.address-actions {
+  margin-top: 8px;
+  text-align: right;
+}
+
+.address-actions button {
+  font-size: 12px;
+}
+
+/* Mobile */
+@media(max-width:768px){
+  .address-card { padding: 12px; }
+  .address-body { font-size: 12px; }
+}
 
 </style>
 </head>
@@ -1621,25 +1689,8 @@ p { color: var(--text-muted); font-size: 1rem; }
   </div>
 
 <!-- SAVED ADDRESS CARD -->
-<div id="savedAddressCard" class="saved-address-card">
+<div id="addressList" class="address-list"></div>
 
-  <div class="address-header">
-    <span class="fw-semibold">Delivering to</span>
-
-    <button
-      type="button"
-      class="btn btn-sm btn-outline-dark"
-      onclick="window.location.href='address.html'"
-    >
-      Change
-    </button>
-  </div>
-
-  <div id="savedAddressContent" class="address-content">
-    Loading address…
-  </div>
-
-</div>
 
 
 </div>
