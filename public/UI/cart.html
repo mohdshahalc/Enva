@@ -632,6 +632,49 @@
   }
 }
 
+/* ===== MOBILE CARD ACTION FIX ===== */
+@media (max-width: 768px) {
+
+  /* Make action row tight */
+  .item-actions {
+    margin-top: 6px !important;
+    gap: 10px !important;
+  }
+
+  /* Hide desktop price */
+  .item-price {
+    display: none !important;
+  }
+
+  /* Use mobile price inline */
+  .item-price-mobile {
+    display: block !important;
+    margin: 0 !important;
+    font-size: 15px !important;
+    font-weight: 700;
+  }
+
+  /* Move price next to qty */
+  .item-actions {
+    justify-content: space-between !important;
+  }
+
+  /* Fix delete button position */
+  .remove-btn {
+    top: 8px !important;
+    right: 8px !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+  }
+
+  /* Prevent card overflow */
+  .cart-item {
+    overflow: hidden;
+  }
+}
+
+
 
  </style>
 </head>
