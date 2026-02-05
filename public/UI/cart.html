@@ -240,120 +240,6 @@
    MOBILE & TABLET (≤ 991px)
 ===================================================== */
 
-/* =========================================
-   REMOVE SIDE CONTAINER ON MOBILE/TABLET
-========================================= */
-@media (max-width: 991px) {
-
-  /* Kill desktop sidebar sizing */
-  .cart-summary {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    border-radius: 18px 18px 0 0;
-  }
-
-  /* Make it behave like bottom bar */
-  .cartRight,
-  #cartRight {
-    width: 100%;
-  }
-
-  /* Remove "boxed" look */
-  .cart-summary h3 {
-    display: none;
-  }
-
-  /* Tighten summary spacing */
-  .summary-line {
-    padding: 2px 0;
-  }
-
-  /* Make totals row compact */
-  .summary-total {
-    margin-top: 6px;
-    padding-top: 6px;
-  }
-
-  /* Buttons stacked clean */
-  .cart-summary a {
-    display: block;
-  }
-
-  /* Remove side shadows */
-  .cart-summary {
-    box-shadow: 0 -6px 20px rgba(0,0,0,.15);
-  }
-}
-/* =========================================
-   FIX MOBILE CART COLLAPSE + BOTTOM BAR
-========================================= */
-@media (max-width: 991px) {
-
-  /* Stack layout */
-  .cart-container {
-    display: block !important;
-  }
-
-  /* FORCE cart items visible */
-  .cart-items {
-    width: 100%;
-    min-height: 60vh;
-    padding-bottom: 220px !important; /* space for sticky bar */
-  }
-
-  /* Remove right panel behavior */
-  .cart-summary {
-    position: fixed !important;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    width: 100% !important;
-    max-width: 100% !important;
-
-    border-radius: 18px 18px 0 0;
-    margin: 0 !important;
-
-    background: #fff;
-    z-index: 9999;
-
-    box-shadow: 0 -6px 22px rgba(0,0,0,.18);
-  }
-
-  /* Hide summary heading (Flipkart style) */
-  .cart-summary h3 {
-    display: none;
-  }
-
-  /* Compact rows */
-  .summary-line {
-    font-size: 13px;
-    padding: 3px 0;
-  }
-
-  .summary-total {
-    font-size: 16px;
-    margin-top: 6px;
-    padding-top: 6px;
-  }
-
-  /* Buttons full width */
-  .cart-summary button {
-    width: 100%;
-  }
-
-  /* Reduce second button height */
-  .checkout-btn.secondary {
-    padding: 12px;
-  }
-
-  /* Remove big white gap */
-  body {
-    padding-bottom: 200px;
-  }
-}
-
 /* =====================================================
    PRO MOBILE UX — FINAL POLISH (≤ 768px)
 ===================================================== */
@@ -609,145 +495,72 @@
   border:1px solid #000;
 }
 
-
 /* =====================================================
-   FLIPKART-STYLE MOBILE + TABLET UX
-   (Desktop untouched)
+   CLEAN MOBILE CART (≤991px)
 ===================================================== */
-
 @media (max-width: 991px) {
 
-  /* Page spacing */
   .cart-section {
     margin: 0 !important;
   }
 
   .cart-container {
+    display: block;
     margin-top: 64px;
     padding: 0 10px;
-    gap: 14px;
   }
 
-  /* Cart title */
-  .cart-items h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    padding-left: 4px;
+  /* Products */
+  .cart-items {
+    width: 100%;
+    min-height: 60vh;
+    padding-bottom: 200px;
   }
 
-  /* =====================
-     PRODUCT CARD
-  ====================== */
-
-  .cart-item {
-    background: #fff;
-    border-radius: 14px;
-    padding: 12px;
-    display: grid;
-    grid-template-columns: 82px 1fr;
-    gap: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,.05);
-  }
-
-  .item-image {
-    width: 82px;
-    height: 104px;
-    border-radius: 10px;
-  }
-
-  .item-info h3 {
-    font-size: 14px;
-    line-height: 1.3;
-  }
-
-  .item-meta {
-    font-size: 12px;
-  }
-
-  /* =====================
-     ACTION ROW
-  ====================== */
-
-  .item-actions {
-    margin-top: 6px;
-    align-items: center;
-  }
-
-  /* Quantity like Flipkart pill */
-  .quantity-control {
-    background: #f3f3f3;
-    border-radius: 999px;
-    height: 32px;
-  }
-
-  .qty-btn {
-    width: 30px;
-    height: 32px;
-  }
-
-  .qty-input {
-    width: 32px;
-    font-size: 13px;
-  }
-
-  /* Price stronger */
-  .item-price-mobile {
-    font-size: 15px;
-    font-weight: 700;
-  }
-
-  /* Remove icon tighter */
-  .remove-btn {
-    top: 8px;
-    right: 8px;
-    width: 28px;
-    height: 28px;
-  }
-
-  /* =====================
-     STICKY SUMMARY BAR
-  ====================== */
-
+  /* Bottom summary bar */
   .cart-summary {
     position: fixed;
     bottom: 0;
     left: 0;
+    right: 0;
+
     width: 100%;
+    max-width: 100%;
+    margin: 0;
+
     border-radius: 18px 18px 0 0;
-    padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
-    box-shadow: 0 -6px 20px rgba(0,0,0,.18);
+    padding: 14px;
+
+    background: #fff;
     z-index: 9999;
+    box-shadow: 0 -6px 20px rgba(0,0,0,.18);
+  }
+
+  /* Hide title */
+  .cart-summary h3 {
+    display: none;
   }
 
   .summary-line {
     font-size: 13px;
+    padding: 3px 0;
   }
 
   .summary-total {
     font-size: 16px;
-    margin-top: 8px;
-    padding-top: 8px;
+    margin-top: 6px;
+    padding-top: 6px;
   }
 
-  /* Primary checkout */
-  .checkout-btn {
-    margin-top: 10px;
-    padding: 14px;
-    font-size: 15px;
-    border-radius: 10px;
+  /* Buttons */
+  .cart-summary button {
+    width: 100%;
   }
 
-  /* Secondary button */
-  .checkout-btn.secondary {
-    padding: 12px;
-  }
-
-  /* Push content above sticky bar */
-  .cart-items {
-    padding-bottom: 180px;
+  body {
+    padding-bottom: 200px;
   }
 }
-
 
 /* EXTRA SMALL PHONES */
 
