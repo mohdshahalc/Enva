@@ -249,11 +249,23 @@ document.getElementById("orderItems").innerHTML =
         <p class="mb-1">Qty: ${item.quantity}</p>
         <p class="mb-1">Size: ${item.size}</p>
 
-        <div class="d-flex justify-content-between align-items-center mt-2">
-          <strong>₹${(item.price * item.quantity).toFixed(2)}</strong>
+        <div class="d-flex justify-content-between align-items-start mt-2">
 
-        
-        </div>
+  <strong>₹${(item.price * item.quantity).toFixed(2)}</strong>
+
+  ${
+    ["pending","confirmed"].includes(item.status)
+      ? `
+        <button class="btn btn-sm btn-outline-danger"
+          onclick="openCancelModal('${item._id}')">
+          Cancel
+        </button>
+      `
+      : ""
+  }
+
+</div>
+
 
       <div class="mt-1 d-flex gap-2 align-items-center">
 
