@@ -77,6 +77,8 @@ function setupSizeButtons() {
         qtyInput.value = 1;
       }
         checkWishlistStatus();
+        checkCartStatus(); // ✅ auto toggle button
+
       // 🔴 LOW STOCK WARNING
       if (stock < 7) {
         stockText.textContent = `Only ${stock} left in size ${size}!`;
@@ -207,14 +209,14 @@ async function handleAddToCart() {
 
     const data = await res.json();
 
-    if (data.status === "exists") {
-      showToast(
-        "Item already in cart. <a href='cart.html' style='color:#fff;text-decoration:underline'>View Cart</a>",
-        "info"
-      );
-    } else if (res.ok) {
-      showToast("Added to cart successfully", "success");
-    } else {
+   if (data.status === "exists") {
+  showToast("Item already in cart", "info");
+  setViewCartMode();   // ✅ switch button
+} else if (res.ok) {
+  showToast("Added to cart successfully", "success");
+  setViewCartMode();   // ✅ switch button after add
+} else {
+
       showToast(data.message || "Failed to add to cart", "error");
     }
 
@@ -388,3 +390,50 @@ function redirectToLogin() {
   window.location.href = "login.html";
 }
 
+function setViewCartMode() {
+  const btn = document.getElementById("addToCartBtn");
+  if (!btn) return;
+
+  btn.textContent = "View Cart";
+  btn.classList.remove("btn-danger");
+  btn.classList.add("btn-dark");
+
+  // remove old handler
+  btn.onclick = null;
+
+  // redirect to cart
+  btn.addEventListener("click", () => {
+    window.location.href = "cart.html";
+  });
+}
+
+async function checkCartStatus() {
+  const token = localStorage.getItem("userToken");
+  if (!token || !selectedSize) return;
+
+  const productId = new URLSearchParams(window.location.search).get("id");
+
+  try {
+    const res = await fetch("https://envastore.online/api/user/cart", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const cart = await res.json();
+
+    const exists = cart.items?.some(
+      item =>
+        item.product &&
+        item.product._id === productId &&
+        item.size === selectedSize.label
+    );
+
+    if (exists) {
+      setViewCartMode();
+    }
+
+  } catch (err) {
+    console.error("Cart check failed", err);
+  }
+}
