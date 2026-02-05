@@ -352,84 +352,121 @@ exports.getOrderById = async (req, res) => {
   }
 };
 
+
 exports.cancelOrderItem = async (req, res) => {
   try {
     const userId = req.user.id;
     const { orderId, itemId } = req.params;
     const { reason } = req.body;
 
-    const order = await Order.findOne({
-      _id: orderId,
-      user: userId
-    });
-
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
-    }
+    const order = await Order.findOne({ _id: orderId, user: userId });
+    if (!order) return res.status(404).json({ message: "Order not found" });
 
     const item = order.items.id(itemId);
-    if (!item) {
-      return res.status(404).json({ message: "Item not found" });
-    }
+    if (!item) return res.status(404).json({ message: "Item not found" });
 
-    // 🔒 ADD THIS HERE ⬇️
     if (["cancelled", "returned"].includes(item.status)) {
-      return res.status(400).json({
-        message: "This item is already processed"
-      });
+      return res.status(400).json({ message: "Item already processed" });
     }
 
-    // ✅ Allow cancel only before shipping
     if (!["pending", "confirmed"].includes(item.status)) {
-      return res.status(400).json({
-        message: "This item cannot be cancelled"
-      });
+      return res.status(400).json({ message: "Item cannot be cancelled" });
     }
 
-    // 🔁 Restock ONLY this item
-    await restockSingleProduct(
-      item.product,
-      item.size,
-      item.quantity
-    );
+    // Restock
+    await restockSingleProduct(item.product, item.size, item.quantity);
 
-    // 💰 Refund if needed
-    const itemTotal = item.price * item.quantity;
+    // Old total
+    const oldTotal = order.total;
 
-    if (
-      order.paymentStatus === "paid" &&
-      ["wallet", "stripe", "razorpay"].includes(order.paymentMethod)
-    ) {
-      await creditWallet(
-        userId,
-        itemTotal,
-        `Refund for cancelled item in order #${order._id}`
-      );
-    }
-
+    // Mark cancelled ONCE
     item.status = "cancelled";
     item.cancelReason = reason || "User cancelled";
     item.cancelledAt = new Date();
 
-    // Update order status if needed
+    // Active items
     const activeItems = order.items.filter(
       i => !["cancelled", "returned"].includes(i.status)
     );
 
+    // New subtotal
+    let newSubtotal = activeItems.reduce(
+      (s, i) => s + i.price * i.quantity,
+      0
+    );
+
+    // Coupon revalidation
+    let newDiscount = 0;
+
+    if (order.coupon?.code) {
+      const coupon = await Coupon.findOne({
+        code: order.coupon.code,
+        isActive: true
+      });
+
+      if (coupon && newSubtotal >= coupon.minPurchase) {
+        if (coupon.type === "flat") {
+          newDiscount = Math.min(coupon.flatAmount, newSubtotal);
+        } else {
+          newDiscount = (newSubtotal * coupon.discountPercent) / 100;
+          if (coupon.maxPurchase) {
+            newDiscount = Math.min(newDiscount, coupon.maxPurchase);
+          }
+        }
+
+        newDiscount = +newDiscount.toFixed(2);
+        order.discountAmount = newDiscount;
+        order.coupon.discountAmount = newDiscount;
+      } else {
+        order.coupon = null;
+        order.discountAmount = 0;
+      }
+    }
+
+    // Tax + total
+    const newTax = +(newSubtotal * 0.07).toFixed(2);
+
+    const newTotal = +(
+      newSubtotal + order.shippingPrice + newTax - (order.discountAmount || 0)
+    ).toFixed(2);
+
+    const refundAmount = +(oldTotal - newTotal).toFixed(2);
+
+    order.subtotal = newSubtotal;
+    order.tax = newTax;
+    order.total = newTotal;
+
+    // Refund (wallet for stripe + wallet)
+    if (
+      refundAmount > 0 &&
+      order.paymentStatus === "paid" &&
+      ["wallet", "stripe"].includes(order.paymentMethod)
+    ) {
+      await creditWallet(
+        userId,
+        refundAmount,
+        `Partial refund for cancelled item in order #${order._id}`
+      );
+    }
+
+    // Order status
     if (activeItems.length === 0) {
       order.status = "cancelled";
       order.paymentStatus = "refunded";
+    } else {
+      order.status = "partial";
     }
 
     await order.save();
 
-    res.json({ message: "Item cancelled successfully" });
+    res.json({ message: "Item cancelled successfully", refundAmount });
 
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Item cancel failed" });
   }
 };
+
 
 exports.returnOrderItem = async (req, res) => {
   try {
