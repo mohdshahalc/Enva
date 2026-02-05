@@ -1652,7 +1652,7 @@ p { color: var(--text-muted); font-size: 1rem; }
   /* Main container */
   .checkout-container {
     flex-direction: column !important;
-    margin-top: 120px !important;
+    margin-top:40px !important;
     padding: 0 12px !important;
     gap: 14px !important;
   }
@@ -1743,50 +1743,6 @@ p { color: var(--text-muted); font-size: 1rem; }
 
   footer {
     display: none;
-  }
-}
-/* ==========================
-   📱 SWAP ORDER SUMMARY + PLACE ORDER (MOBILE)
-==========================*/
-@media (max-width: 768px) {
-
-  /* Make main layout vertical + reorderable */
-  .checkout-container {
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  /* Order Summary FIRST */
-  .order-summary {
-    order: -1 !important;
-  }
-
-  /* Checkout form SECOND */
-  .checkout-form {
-    order: 0 !important;
-  }
-
-  /* Place Order LAST + sticky bottom */
-  #placeOrderBtn {
-    order: 2 !important;
-  }
-
-  .place-order-btn {
-    position: fixed !important;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    border-radius: 18px 18px 0 0 !important;
-    padding: 16px !important;
-    font-size: 15px !important;
-    z-index: 50 !important;
-    box-shadow: 0 -6px 18px rgba(0,0,0,.12);
-  }
-
-  /* Space so content doesn't hide under button */
-  body {
-    padding-bottom: 90px !important;
   }
 }
 
