@@ -1638,6 +1638,115 @@ p { color: var(--text-muted); font-size: 1rem; }
   }
 }
 
+/* ===============================
+   📱 FLIPKART STYLE MOBILE CHECKOUT
+================================*/
+@media (max-width: 768px) {
+
+  /* Navbar hierarchy */
+  .navbar-main,
+  .navbar-sub {
+    z-index: 100 !important;
+  }
+
+  /* Main container */
+  .checkout-container {
+    flex-direction: column !important;
+    margin-top: 120px !important;
+    padding: 0 12px !important;
+    gap: 14px !important;
+  }
+
+  /* Left form full width */
+  .checkout-form {
+    max-width: 100% !important;
+    flex: 1 !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Summary becomes compact card */
+  .order-summary {
+    max-width: 100% !important;
+    flex: 1 !important;
+    padding: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Hide coupon right column */
+  .summary-right {
+    display: none !important;
+  }
+
+  /* Smaller titles */
+  .checkout-form h2 {
+    font-size: 18px !important;
+  }
+
+  .order-summary h3 {
+    font-size: 16px !important;
+  }
+
+  /* Products tighter */
+  .summary-item {
+    padding: 6px 0 !important;
+  }
+
+  .summary-item-image {
+    width: 44px !important;
+    height: 58px !important;
+  }
+
+  /* Totals */
+  .summary-line {
+    font-size: 13px !important;
+    padding: 3px 0 !important;
+  }
+
+  .summary-total {
+    font-size: 16px !important;
+    padding-top: 6px !important;
+    margin-top: 6px !important;
+  }
+
+  /* ==========================
+     STICKY PLACE ORDER BAR
+  ===========================*/
+  .place-order-btn {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 18px 18px 0 0 !important;
+    padding: 16px !important;
+    font-size: 16px !important;
+    z-index: 50 !important;
+  }
+
+  /* Space for sticky bar */
+  body {
+    padding-bottom: 90px !important;
+  }
+
+  /* Overlays */
+  .payment-loader,
+  .wallet-overlay,
+  .status-overlay {
+    z-index: 200 !important;
+  }
+
+  /* Toast highest */
+  #toastBox {
+    z-index: 99999 !important;
+  }
+
+  footer {
+    display: none;
+  }
+}
+
+
 </style>
 </head>
 
