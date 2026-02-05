@@ -739,6 +739,54 @@ confirmLogoutBtn?.addEventListener("click", () => {
     min-height: 60px;
   }
 }
+/* =========================
+   📱 Address Card Buttons – Mobile Pro UI
+========================= */
+@media (max-width: 575px) {
+
+  /* Address card container */
+  .address-card,
+  .saved-address-card {
+    padding: 14px !important;
+  }
+
+  /* Button wrapper */
+  .address-actions,
+  .saved-address-card .d-flex {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+  }
+
+  /* All buttons full width */
+  .address-actions button,
+  .saved-address-card button {
+    width: 100% !important;
+    font-size: 13px !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Delete button softer */
+  .saved-address-card .btn-danger,
+  .address-actions .btn-danger {
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+  }
+
+  /* Default / Edit buttons */
+  .saved-address-card .btn-outline-primary,
+  .saved-address-card .btn-outline-secondary {
+    border-radius: 10px !important;
+  }
+
+  /* Default badge spacing */
+  .default-badge {
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+}
 
 </style>
 
