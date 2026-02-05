@@ -454,7 +454,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let addressMap = {};
 
-
 async function loadSavedAddresses() {
   const token = localStorage.getItem("userToken");
   if (!token) return;
@@ -471,10 +470,10 @@ async function loadSavedAddresses() {
     return;
   }
 
-  // ✅ Find default OR fallback to first
+  // ✅ Find default OR first
   const addr = addresses.find(a => a.isDefault) || addresses[0];
 
-  // Fill hidden fields (backend compatibility)
+  // Fill hidden inputs
   email.value = addr.email || "";
   firstName.value = addr.firstName || "";
   lastName.value = addr.lastName || "";
@@ -483,23 +482,27 @@ async function loadSavedAddresses() {
   state.value = addr.state || "";
   zip.value = addr.postcode || "";
 
-  // Render UI
-document.getElementById("defaultAddressContent").innerHTML = `
-  ${addr.firstName || addr.lastName ? `
-    <div><strong>Name:</strong> ${addr.firstName || ""} ${addr.lastName || ""}</div>
-  ` : ""}
+  // ✅ Render labelled UI
+  document.getElementById("addressList").innerHTML = `
+    <div class="saved-address-card">
 
-  ${addr.email ? `
-    <div><strong>Email:</strong> ${addr.email}</div>
-  ` : ""}
+      ${addr.firstName || addr.lastName ? `
+        <div><strong>Name:</strong> ${addr.firstName || ""} ${addr.lastName || ""}</div>
+      ` : ""}
 
-  <div>
-    <strong>Address:</strong>
-    ${addr.street}, ${addr.city}, ${addr.state} ${addr.postcode}
-  </div>
-`;
+      ${addr.email ? `
+        <div><strong>Email:</strong> ${addr.email}</div>
+      ` : ""}
 
+      <div>
+        <strong>Address:</strong>
+        ${addr.street}, ${addr.city}, ${addr.state} ${addr.postcode}
+      </div>
+
+    </div>
+  `;
 }
+
 
 
 function selectAddress(id){
