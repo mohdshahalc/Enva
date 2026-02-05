@@ -255,7 +255,8 @@ document.getElementById("orderItems").innerHTML =
         
         </div>
 
-       <div class="mt-1">
+      <div class="mt-1 d-flex gap-2 align-items-center">
+
   ${
     item.status === "cancelled"
       ? `<span class="badge bg-danger">Cancelled</span>`
@@ -269,7 +270,31 @@ document.getElementById("orderItems").innerHTML =
       ? `<span class="badge bg-primary">Confirmed</span>`
       : `<span class="badge bg-secondary">Pending</span>`
   }
+
+  ${
+    ["pending","confirmed"].includes(item.status)
+      ? `
+        <button class="btn btn-sm btn-outline-danger"
+          onclick="openCancelModal('${item._id}')">
+          Cancel
+        </button>
+      `
+      : ""
+  }
+
+  ${
+    item.status === "delivered"
+      ? `
+        <button class="btn btn-sm btn-outline-warning"
+          onclick="openReturnModal('${item._id}')">
+          Return
+        </button>
+      `
+      : ""
+  }
+
 </div>
+
 
       </div>
     </div>
