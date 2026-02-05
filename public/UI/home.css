@@ -1,21 +1,20 @@
-
-
-
 .choose-image-box {
-    position: relative;
-    height: 350px;
-    overflow: hidden;
+  position: relative;
+  height: 350px;
+  overflow: hidden;
 }
 
 .choose-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.7);
-}.hero-text {
-    position: relative;
-    z-index: 9999 !important;
-    pointer-events: auto !important;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7);
+}
+
+.hero-text {
+  position: relative;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
 }
 
 /* REMOVE ALL BLOCKING OVERLAYS */
@@ -25,32 +24,35 @@
 .carousel,
 .hero-text,
 .hero-text * {
-    pointer-events: auto !important;
+  pointer-events: auto !important;
 }
 
 
 .carousel-item::before,
 .carousel-item::after {
-    pointer-events: none !important;
-    z-index: 0 !important;
-}/* 🔥 FINAL FIX — REMOVE THE SLIDER OVERLAY COMPLETELY */
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* 🔥 FINAL FIX — REMOVE THE SLIDER OVERLAY COMPLETELY */
 .hero-slide::before {
-    
-    pointer-events: none !important;
-    display: none !important;
+
+  pointer-events: none !important;
+  display: none !important;
 }
 
 
 /* MAKE BUTTON ALWAYS CLICKABLE */
 .hero-text a,
 .hero-text button {
-    position: relative !important;
-    z-index: 999999 !important;
-    pointer-events: auto !important;
+  position: relative !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
 }
+
 .carousel-inner {
-    position: relative !important;
-    z-index: 1 !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 
@@ -60,64 +62,104 @@
 
 
 .choose-logo {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    font-weight: 600;
-    color: #6b4f32;
-    letter-spacing: 2px;
-    z-index: 2;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 600;
+  color: #6b4f32;
+  letter-spacing: 2px;
+  z-index: 2;
 }
 
 /* Feature Cards */
 .choose-card {
-    border: 1px solid #f1f1f1;
-    transition: 0.3s ease;
+  border: 1px solid #f1f1f1;
+  transition: 0.3s ease;
 }
 
 .choose-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0px 12px 25px rgba(0,0,0,0.08);
+  transform: translateY(-4px);
+  box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.08);
 }
 
 /* Icon Circle */
 .choose-icon {
-    width: 55px;
-    height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    color: #ff9800;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  color: #ff9800;
 }
 
 .bg-light-orange {
-    background: #fff4e2;
+  background: #fff4e2;
+}
+
+:root {
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  /* Fluid scale: Mobile (14px) to Desktop (16px) */
+  --text-base: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);
+  --text-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --h1-size: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+  --h2-size: clamp(1.75rem, 1.35rem + 2vw, 2.5rem);
+  --h3-size: clamp(1.5rem, 1.25rem + 1.25vw, 2rem);
+  --container-padding: clamp(1rem, 5vw, 2rem);
+  --primary-color: #d10000;
 }
 
 body {
-    /* padding-top: 180px !important; */
-    background: #fff;
-    font-family: Arial, sans-serif;
+  background: #fff;
+  font-family: var(--font-body) !important;
+  font-size: var(--text-base);
+  color: #333;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll */
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: #111;
+}
+
+h1 {
+  font-size: var(--h1-size) !important;
+}
+
+h2 {
+  font-size: var(--h2-size) !important;
+}
+
+h3 {
+  font-size: var(--h3-size) !important;
+}
 
 .custom-container-lg {
-    max-width: 1400px;
+  max-width: 1400px;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
 }
 
 nav {
-    height: 80px !important;
-    display: flex !important;
-    align-items: center !important;
+  height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .hover-black:hover {
-    color: #000 !important;
+  color: #000 !important;
 }
 
 
@@ -126,139 +168,173 @@ nav {
 /* ========================================================= */
 
 .feature-box {
-    background: #ffffff;
-    padding: 20px 10px;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    transition: all 0.3s ease;
-    height: 100%;
-    border: 1px solid #f1f1f1;
+  background: #ffffff;
+  padding: 20px 10px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  height: 100%;
+  border: 1px solid #f1f1f1;
 }
 
 .feature-box:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 22px rgba(0,0,0,0.12);
-     border-color: #0d6efd;
+  transform: translateY(-6px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+  border-color: #0d6efd;
 }
 
 .feature-icon {
-    width: 45px;
-    height: 45px;
-    object-fit: contain;
-    transition: transform 0.3s ease;
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
 }
 
 .feature-box:hover .feature-icon {
-    transform: scale(1.18) rotate(4deg);
+  transform: scale(1.18) rotate(4deg);
 }
 
 .feature-box h6 {
-    font-size: 0.95rem;
+  font-size: 0.95rem;
 }
 
 .feature-box p {
-    font-size: 0.8rem;
+  font-size: 0.8rem;
 }
 
 /* Target the container of the hero slider */
 .hero-slide {
-    /* If the gap is 20px, try overriding it with a negative margin */
-    margin-top: -20px !important; 
-    
-    /* Also ensure its own top padding is zero */
-    padding-top: 0 !important;
-    
-    position: relative;
-    height: 90vh;
-    min-height: 520px;
-    background-size: cover;
-    background-position: center;
+  /* If the gap is 20px, try overriding it with a negative margin */
+  margin-top: -20px !important;
+
+  /* Also ensure its own top padding is zero */
+  padding-top: 0 !important;
+
+  position: relative;
+  height: 90vh;
+  min-height: 520px;
+  background-size: cover;
+  background-position: center;
 }
 
 /* Zooming background image */
 .hero-slide::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: inherit;
-    background-size: cover;
-    background-position: center;
-    animation: zoomImage 8s ease-in-out infinite;
-    z-index: 1;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+  animation: zoomImage 8s ease-in-out infinite;
+  z-index: 1;
 }
 
 /* Text stays above image */
-.hero-slide > .hero-text {
-    position: absolute;
-    bottom: 12%;
-    left: 5%;
-    z-index: 2 !important;
-    color: white;
-    max-width: 600px;
+.hero-slide>.hero-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 2 !important;
+  color: white;
+  width: 100%;
+  padding: var(--container-padding);
+  padding-bottom: clamp(3rem, 10vh, 15rem);
+  /* Flexible bottom spacing */
+  max-width: 800px;
+  /* Wider on desktop */
+}
+
+/* Ensure paragraph is readable */
+.hero-text p.lead {
+  font-size: var(--text-lg);
+  max-width: 90%;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-text .btn {
+  font-size: var(--text-lg);
+  padding: 0.75rem 2rem;
+}
+
+/* Mobile Adjustments for Hero */
+@media (max-width: 768px) {
+  .hero-slide>.hero-text {
+    bottom: 50px;
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  .hero-text h1 {
+    font-size: 2.25rem !important;
+    /* Slightly smaller on pure mobile */
+  }
 }
 
 /* Fade animation only on first slide */
 .hero-text.animate-once {
-    opacity: 0;
-    transform: translateY(25px);
-    animation: fadeUpOnce 1.2s ease-out forwards;
+  opacity: 0;
+  transform: translateY(25px);
+  animation: fadeUpOnce 1.2s ease-out forwards;
 }
 
 /* Disable animation for non-active slides */
 .carousel-item:not(.active) .hero-text.animate-once {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: translateY(0) !important;
+  animation: none !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 @keyframes fadeUpOnce {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes zoomImage {
-    0% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(1.06);
-    }
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.06);
+  }
 }
 
 .style-card {
-    transition: all 0.3s ease;
-    border-radius: 20px;
+  transition: all 0.3s ease;
+  border-radius: 20px;
 }
 
 .style-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0px 10px 25px rgba(0,0,0,0.15);
+  transform: translateY(-6px);
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .img-wrapper {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .standout-img {
-    transition: transform 0.4s ease;
+  transition: transform 0.4s ease;
 }
 
 .style-card:hover .standout-img {
-    transform: scale(1.08);
+  transform: scale(1.08);
 }
 
 .style-text h6 {
-    font-size: 1rem;
-    letter-spacing: 0.3px;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
 }
 
 .heading-accent {
-    width: 80px;
-    height: 4px;
-    background-color: #dc3545;
-    border-radius: 5px;
+  width: 80px;
+  height: 4px;
+  background-color: #dc3545;
+  border-radius: 5px;
 }
 
 
@@ -267,38 +343,39 @@ nav {
 /* ========================================================= */
 
 .carousel-indicators button {
-    width: 14px;
-    height: 14px;
-    margin: 6px;
-    border: none;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.5);
-    transition: .3s;
-    position: relative;
+  width: 14px;
+  height: 14px;
+  margin: 6px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: .3s;
+  position: relative;
 }
 
 .carousel-indicators .active {
-    width: 34px !important;
-    border-radius: 20px !important;
+  width: 34px !important;
+  border-radius: 20px !important;
 }
 
 .carousel-indicators .active::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: white;
-    opacity: 0.25;
-    width: 0%;
-    animation: fillBar 2s linear forwards;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0.25;
+  width: 0%;
+  animation: fillBar 2s linear forwards;
 }
 
 @keyframes fillBar {
-    from {
-        width: 0%;
-    }
-    to {
-        width: 100%;
-    }
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
 }
 
 
@@ -307,11 +384,11 @@ nav {
 /* ========================================================= */
 
 .category-icon img {
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-    border: 2px solid #eee;
-    object-fit: cover;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  border: 2px solid #eee;
+  object-fit: cover;
 }
 
 
@@ -320,123 +397,136 @@ nav {
 /* ========================================================= */
 
 .daily-card {
-    border: 1px solid #eee;
-    background: white;
-    border-radius: 12px;
-    transition: 0.3s;
-    position: relative;
-}
-
-.bg-gradient-6 {
-    background: linear-gradient(135deg, #9ec5ff, #0d6efd);
+  border: 1px solid #f0f0f0;
+  background: white;
+  border-radius: 12px;
+  transition: 0.3s;
+  position: relative;
+  /* Ensure cards don't shrink too much on mobile */
+  min-width: 260px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .daily-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary-color);
 }
 
 .daily-product-img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 8px 8px 0 0;
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 12px 12px 0 0;
 }
 
-/* Hide scrollbar in horizontal scrolling */
+/* Scroll Container */
 .daily-sells-scroller {
-    scrollbar-width: none;
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding-bottom: 1rem;
+  padding-left: 2px;
+  /* Prevent chop on left */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .daily-sells-scroller::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .deal-card {
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
-    overflow: hidden;
-    position: relative;
-    transition: all 0.35s ease;
-    height: 100%;
-    padding-bottom: 12px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+  position: relative;
+  transition: all 0.35s ease;
+  height: 100%;
+  padding-bottom: 12px;
 }
 
 .deal-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
 .deal-badge {
-    background: #ff3b3b;
-    color: #fff;
-    font-size: 0.75rem;
-    padding: 5px 12px;
-    border-radius: 30px;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 3;
-    font-weight: bold;
-    letter-spacing: 0.3px;
+  background: #ff3b3b;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 5px 12px;
+  border-radius: 30px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+  font-weight: bold;
+  letter-spacing: 0.3px;
 }
 
 .deal-img {
-    height: 220px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .deal-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform 0.4s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s ease;
 }
 
 .deal-card:hover img {
-    transform: scale(1.08);
+  transform: scale(1.08);
 }
 
 .deal-body {
-    text-align: center;
-    padding: 10px 15px;
+  text-align: center;
+  padding: 10px 15px;
 }
 
 .category {
-    color: gray;
-    font-size: 0.85rem;
-    margin-bottom: 4px;
+  color: gray;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
 }
 
 .title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #222;
-    margin-bottom: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 6px;
 }
 
 .rating {
-    color: #ffc107;
-    font-size: 1rem;
-    margin-bottom: 6px;
-    letter-spacing: 2px;
+  color: #ffc107;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  letter-spacing: 2px;
 }
 
 .price-box .old {
-    color: #777;
-    text-decoration: line-through;
-    margin-right: 5px;
-    font-size: 0.9rem;
+  color: #777;
+  text-decoration: line-through;
+  margin-right: 5px;
+  font-size: 0.9rem;
 }
 
 .price-box .new {
-    color: #d10000;
-    font-size: 1.25rem;
-    font-weight: 700;
+  color: #d10000;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 
@@ -445,78 +535,80 @@ nav {
 /* ========================================================= */
 
 .creative-feature {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 15px 18px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.06);
-    min-height: 110px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 15px 18px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+  min-height: 110px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .creative-feature:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
 .icon-wrap {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    background-size: 150% 150%;
-    animation: gradientMove 4s ease infinite;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background-size: 150% 150%;
+  animation: gradientMove 4s ease infinite;
 }
 
 .bg-gradient-1 {
-    background: linear-gradient(135deg, #59f39f, #2ecc71);
+  background: linear-gradient(135deg, #59f39f, #2ecc71);
 }
 
 .bg-gradient-2 {
-    background: linear-gradient(135deg, #74d0ff, #3498db);
+  background: linear-gradient(135deg, #74d0ff, #3498db);
 }
 
 .bg-gradient-3 {
-    background: linear-gradient(135deg, #ffe082, #fbc02d);
+  background: linear-gradient(135deg, #ffe082, #fbc02d);
 }
 
 .bg-gradient-4 {
-    background: linear-gradient(135deg, #cbbdff, #8e44ad);
+  background: linear-gradient(135deg, #cbbdff, #8e44ad);
 }
 
 .bg-gradient-5 {
-    background: linear-gradient(135deg, #ff9f9f, #e74c3c);
+  background: linear-gradient(135deg, #ff9f9f, #e74c3c);
 }
 
 .f-icon {
-    width: 28px;
-    height: 28px;
-    filter: brightness(0) invert(1);
+  width: 28px;
+  height: 28px;
+  filter: brightness(0) invert(1);
 }
 
 .creative-feature h6 {
-    font-size: 0.95rem;
+  font-size: 0.95rem;
 }
 
 .creative-feature p {
-    font-size: 0.78rem;
-    color: #7a8b97 !important;
+  font-size: 0.78rem;
+  color: #7a8b97 !important;
 }
 
 @keyframes gradientMove {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 
@@ -525,111 +617,111 @@ nav {
 /* ========================================================= */
 
 .daily-sells-banner {
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
 }
 
 .daily-sells-banner .banner-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
-    z-index: 1;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1;
 }
 
 .hero-title {
-    font-size: 2rem;
-    line-height: 1.3;
+  font-size: 2rem;
+  line-height: 1.3;
 }
 
 .hero-text {
-    font-size: 0.95rem;
-    color: #d1d1d1;
-    line-height: 1.5;
+  font-size: 0.95rem;
+  color: #d1d1d1;
+  line-height: 1.5;
 }
 
 
 /* Subscribe Container */
 .subscribe-box {
-    background: #ffffff;
-    border-radius: 50px;
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    max-width: 380px;
-    overflow: hidden;
+  background: #ffffff;
+  border-radius: 50px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  max-width: 380px;
+  overflow: hidden;
 }
 
 .icon-wrap {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    background-size: 150% 150%;
-    animation: gradientMove 4s ease infinite;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background-size: 150% 150%;
+  animation: gradientMove 4s ease infinite;
 }
 
 .bg-gradient-1 {
-    background: linear-gradient(135deg, #59f39f, #2ecc71);
+  background: linear-gradient(135deg, #59f39f, #2ecc71);
 }
 
 .bg-gradient-2 {
-    background: linear-gradient(135deg, #74d0ff, #3498db);
+  background: linear-gradient(135deg, #74d0ff, #3498db);
 }
 
 .bg-gradient-3 {
-    background: linear-gradient(135deg, #ffe082, #fbc02d);
+  background: linear-gradient(135deg, #ffe082, #fbc02d);
 }
 
 .bg-gradient-4 {
-    background: linear-gradient(135deg, #cbbdff, #8e44ad);
+  background: linear-gradient(135deg, #cbbdff, #8e44ad);
 }
 
 .bg-gradient-5 {
-    background: linear-gradient(135deg, #ff9f9f, #e74c3c);
+  background: linear-gradient(135deg, #ff9f9f, #e74c3c);
 }
 
 .f-icon {
-    font-size: 22px;
-    color: #fff;
+  font-size: 22px;
+  color: #fff;
 }
 
 .subscribe-box .icon {
-    padding: 0 14px;
-    color: #888;
-    font-size: 1rem;
+  padding: 0 14px;
+  color: #888;
+  font-size: 1rem;
 }
 
 .subscribe-box input {
-    border: none;
-    outline: none;
-    flex: 1;
-    font-size: 0.9rem;
-    color: #555;
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.9rem;
+  color: #555;
 }
 
 .subscribe-box input::placeholder {
-    color: #bfbfbf;
-    font-weight: 500;
+  color: #bfbfbf;
+  font-weight: 500;
 }
 
 .subscribe-btn {
-    background: #ff3d2f;
-    border: none;
-    color: #fff;
-    padding: 9px 24px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: 0.3s ease;
+  background: #ff3d2f;
+  border: none;
+  color: #fff;
+  padding: 9px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.3s ease;
 }
 
 .subscribe-btn:hover {
-    background: #e62f22;
+  background: #e62f22;
 }
 
 
@@ -638,47 +730,47 @@ nav {
 /* ========================================================= */
 
 .style-card {
-    position: relative;
-    overflow: hidden;
-    background-color: white;
-    cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background-color: white;
+  cursor: pointer;
 }
 
 .style-card .standout-img {
-    height: 400px;
-    object-fit: cover;
-    border-radius: 12px 12px 0 0;
-    transition: transform 0.5s ease-in-out;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  transition: transform 0.5s ease-in-out;
 }
 
 .style-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    height: 400px;
-    background: rgba(0,0,0,0);
-    border-radius: 12px 12px 0 0;
-    transition: background .5s;
-    z-index: 10;
+  content: '';
+  position: absolute;
+  inset: 0;
+  height: 400px;
+  background: rgba(0, 0, 0, 0);
+  border-radius: 12px 12px 0 0;
+  transition: background .5s;
+  z-index: 10;
 }
 
 .style-card:hover .standout-img {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .style-card:hover::before {
-    background: rgba(0,0,0,0.15);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .style-card .style-text {
-    padding: 10px 0 15px;
+  padding: 10px 0 15px;
 }
 
 .heading-accent {
-    width: 60px;
-    height: 3px;
-    background: #dc3545;
-    margin-top: 10px;
+  width: 60px;
+  height: 3px;
+  background: #dc3545;
+  margin-top: 10px;
 }
 
 
@@ -688,451 +780,395 @@ nav {
 
 
 
-.social-icon-box {
-    width: 32px;
-    height: 32px;
-    background: #e9ecef;
-    color: #6c757d;
-}
-
-.social-icon-box:hover {
-    color: black;
-}
 
 
 /* 1. Define the custom color used in the HTML */
 .bg-light-orange {
-    background-color: #ffe4c4; /* Light peach/orange background */
-    color: #ff8c00;           /* Darker orange icon color */
+  background-color: #ffe4c4;
+  /* Light peach/orange background */
+  color: #ff8c00;
+  /* Darker orange icon color */
 }
 
 /* 2. Styling for the Image Container */
 .choose-image-box {
-    /* Set a fixed aspect ratio for visual balance */
-    height: 480px; 
-    position: relative;
-    /* Hide the default image border */
-    border: none !important; 
+  /* Set a fixed aspect ratio for visual balance */
+  height: 500px;
+  position: relative;
+  /* Hide the default image border */
+  border: none !important;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.choose-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.choose-image-box:hover .choose-img {
+  transform: scale(1.05);
+}
+
+/* Mobile Adjustments for Choose Us */
+@media (max-width: 768px) {
+  .choose-image-box {
+    height: 300px;
+    /* Smaller on mobile */
+    margin-bottom: 2rem;
+  }
 }
 
 /* 1. Heading Accent Line */
 .heading-accent {
-    width: 80px;
-    height: 4px;
-    background-color: #dc3545; /* Bootstrap Red/Danger color */
-    border-radius: 2px;
+  width: 80px;
+  height: 4px;
+  background-color: #dc3545;
+  /* Bootstrap Red/Danger color */
+  border-radius: 2px;
 }
 
 /* 2. Styling for the Style Card Container */
 .style-card {
-    background-color: #fff;
-    border: 1px solid #f0f0f0;
-    transition: all 0.3s ease-in-out;
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease-in-out;
 }
 
 /* 3. Image Wrapper and Image Styling */
 .img-wrapper {
-    height: 300px; /* Standardize image height for grid consistency */
-    overflow: hidden;
-    background-color: #f8f8f8; /* Light background for images with transparency */
+  height: 300px;
+  /* Standardize image height for grid consistency */
+  overflow: hidden;
+  background-color: #f8f8f8;
+  /* Light background for images with transparency */
 }
 
 .standout-img {
-    height: 100%;
-    width: 100%;
-    object-fit: contain; /* Ensures the whole product image is visible */
-    transition: transform 0.4s ease-in-out; /* Smooth transition for hover */
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  /* Ensures the whole product image is visible */
+  transition: transform 0.4s ease-in-out;
+  /* Smooth transition for hover */
 }
 
 /* 4. Attractive Hover Effect */
 .style-card:hover {
-    /* Subtle lift effect */
-    transform: translateY(-5px);
-    /* Make the shadow slightly more prominent */
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
-    border-color: #0d6efd;
+  /* Subtle lift effect */
+  transform: translateY(-5px);
+  /* Make the shadow slightly more prominent */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+  border-color: #0d6efd;
 }
 
 /* Image zoom on card hover */
 .style-card:hover .standout-img {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 /* Style Text Block */
 .style-text {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 /* Ensure the image fills the container */
 .choose-img {
-    object-fit: cover;
-    border-radius: 1rem;
+  object-fit: cover;
+  border-radius: 1rem;
 }
 
 /* 3. Styling for the Overlaid Brand Logo */
 .choose-logo {
-    top: 20px;
-    left: 20px;
-    padding: 8px 15px;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-    border-radius: 5px;
-    z-index: 10;
-}/* FLASH TIMER */
+  top: 20px;
+  left: 20px;
+  padding: 8px 15px;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black background */
+  border-radius: 5px;
+  z-index: 10;
+}
+
+/* FLASH TIMER */
 .flash-timer {
-    background: linear-gradient(90deg, #ff4d4d, #ff1a1a);
-    color: #fff;
-    width: fit-content;
-    padding: 8px 28px;
-    border-radius: 50px;
-    font-size: 1rem;
-    box-shadow: 0 6px 18px rgba(255,0,0,0.2);
+  background: linear-gradient(90deg, #ff4d4d, #ff1a1a);
+  color: #fff;
+  width: fit-content;
+  padding: 8px 28px;
+  border-radius: 50px;
+  font-size: 1rem;
+  box-shadow: 0 6px 18px rgba(255, 0, 0, 0.2);
 }
 
 /* DEAL CARDS */
 .upgraded-card {
-    border-radius: 18px;
-    overflow: hidden;
-    background: #fff;
-    transition: 0.35s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  transition: 0.35s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
 }
 
 .upgraded-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+  transform: translateY(-10px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
 }
 
 /* DISCOUNT BADGE */
 .deal-badge-new {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    padding: 6px 14px;
-    color: #fff;
-    font-weight: bold;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    z-index: 5;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 14px;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  z-index: 5;
 }
 
 /* IMAGE BOX */
 .deal-img {
-    height: 230px;
-    overflow: hidden;
-    position: relative;
+  height: 230px;
+  overflow: hidden;
+  position: relative;
 }
 
 .deal-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform 0.4s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s ease;
 }
 
 .upgraded-card:hover .deal-img img {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 /* OVERLAY QUICK VIEW */
 .deal-hover {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
-    opacity: 0;
-    transition: 0.35s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: 0.35s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .upgraded-card:hover .deal-hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 .quick-view-btn {
-    border: none;
-    background: white;
-    padding: 8px 18px;
-    border-radius: 25px;
-    font-weight: 600;
-    transition: 0.3s ease;
+  border: none;
+  background: white;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: 0.3s ease;
 }
 
 .quick-view-btn:hover {
-    background: #f8f8f8;
+  background: #f8f8f8;
 }
 
 /* TEXT AREA */
 .stars i {
-    color: #ffc107;
-    font-size: 0.9rem;
-}/* Icon Circle */
-.deal-icon-box {
-    width: 55px;
-    height: 55px;
-    background: linear-gradient(135deg, #ff7070, #ff2e2e);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.4rem;
-    box-shadow: 0 6px 15px rgba(255,0,0,0.25);
+  color: #ffc107;
+  font-size: 0.9rem;
 }
+
+/* Icon Circle */
+.deal-icon-box {
+  width: 55px;
+  height: 55px;
+  background: linear-gradient(135deg, #ff7070, #ff2e2e);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.4rem;
+  box-shadow: 0 6px 15px rgba(255, 0, 0, 0.25);
+}
+
 /* MAIN CONTAINER */
 .deal-heading-pro {
-    background: linear-gradient(135deg, #ff5f6d, #ff3d48);
-    color: #fff;
-    border-radius: 1.7rem;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-shadow: 0 12px 32px rgba(255, 61, 72, 0.35);
+  background: linear-gradient(135deg, #ff5f6d, #ff3d48);
+  color: #fff;
+  border-radius: 1.7rem;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0 12px 32px rgba(255, 61, 72, 0.35);
 }
 
 /* ICON WRAPPER */
 .deal-icon-wrapper {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    color: #ffe066;
-    box-shadow: 0 5px 14px rgba(0,0,0,0.15);
-    animation: softGlow 2.5s infinite ease-in-out;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #ffe066;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
+  animation: softGlow 2.5s infinite ease-in-out;
 }
 
 /* ICON GLOW ANIMATION */
 @keyframes softGlow {
-    0%   { box-shadow: 0 0 12px rgba(255,255,255,0.3); }
-    50%  { box-shadow: 0 0 20px rgba(255,255,255,0.6); }
-    100% { box-shadow: 0 0 12px rgba(255,255,255,0.3); }
+  0% {
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  }
+
+  100% {
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+  }
 }
 
 /* TITLE - GRADIENT GOLD */
 .deal-title-pro {
-    font-size: 2.7rem;
-    letter-spacing: 1px;
-    background: linear-gradient(90deg, #fffac2, #ffffff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  font-size: 2.7rem;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #fffac2, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* TIMER BOX */
 .deal-timer-box {
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(4px);
-    color: #fff;
-    width: fit-content;
-    border: 1px solid rgba(255,255,255,0.25);
-    animation: pulseBox 1.8s infinite ease-in-out;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  width: fit-content;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  animation: pulseBox 1.8s infinite ease-in-out;
 }
 
 /* Timer Label + Value */
 .deal-timer-box .label {
-    color: #ffe066;
-    font-size: 0.9rem;
+  color: #ffe066;
+  font-size: 0.9rem;
 }
 
 .deal-timer-box .time {
-    color: #ffffff;
-    font-weight: 700;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 /* Pulse animation for timer box */
 @keyframes pulseBox {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.035); }
-    100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.035);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Note */
 .deal-note {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
 /* Heading Text */
 .deal-title {
-    font-size: 2.2rem;
-    color: #111;
-    letter-spacing: 0.5px;
-    margin-bottom: 5px;
+  font-size: 2.2rem;
+  color: #111;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
 }
 
 /* Subtext */
 .deal-sub {
-    font-size: 1rem;
-    color: #e63946;
-    margin-top: -4px;
-    font-weight: 600;
+  font-size: 1rem;
+  color: #e63946;
+  margin-top: -4px;
+  font-weight: 600;
 }
+
 .deal-header-box {
-            /* Deep Blue Gradient Background */
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
-            border-radius: 1.5rem;
-            color: white;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            /* Negative margin to pull the product grid slightly over the header */
-            margin-bottom: -50px !important; 
-            position: relative;
-            z-index: 2;
-        }
-
-        .deal-icon {
-            font-size: 2rem;
-            color: #ffc107; /* Yellow for visibility/warning */
-            animation: bounce 1s infinite; /* Attention-grabbing icon */
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .deal-main-title {
-            font-size: 2.5rem;
-            letter-spacing: 1px;
-        }
-
-        .deal-timer-pill {
-            background-color: #dc3545; /* Red for Urgency */
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50rem;
-            width: fit-content;
-            font-size: 1.1rem;
-            border: 3px solid #ffdd00; /* Yellow border accent */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        /* -------------------------------------- */
-        /* 2. Product Card Styling (pro-card) */
-        /* -------------------------------------- */
-        .deal-product-grid {
-            padding-top: 50px; /* Space created by negative margin on header */
-            position: relative;
-            z-index: 1;
-        }
-
-        .pro-card {
-            background-color: white;
-            border: 1px solid #e9ecef;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease-in-out;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        .pro-card:hover {
-            transform: translateY(-5px); 
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
-            border-color: #0d6efd; /* Primary blue border on hover */
-        }
-
-        /* 3. Deal Tag/Badge */
-        .deal-tag {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background-color: #dc3545; 
-            color: white;
-            padding: 0.2rem 0.6rem;
-            border-radius: 50rem;
-            font-size: 0.8rem;
-            font-weight: bold;
-            z-index: 5;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        /* 4. Image Wrapper and Hover Overlay */
-        .pro-img {
-            height: 250px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f8f8f8;
-            overflow: hidden;
-        }
-
-        .pro-img img {
-            max-height: 100%;
-            width: 100%;
-            object-fit: contain;
-            transition: transform 0.4s ease;
-        }
-
-        .pro-card:hover .pro-img img {
-            transform: scale(1.05);
-        }
-
-        .pro-img-overlay {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.3s ease;
-        }
-
-        .pro-card:hover .pro-img-overlay {
-            opacity: 1; /* Show overlay on hover */
-        }
-
-        .view-btn {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s ease;
-            background-color: white !important;
-            color: #2a5298 !important;
-            border: none;
-        }
-
-        .pro-card:hover .view-btn {
-            opacity: 1;
-            transform: translateY(0); /* Move button up into view */
-        }
-
-        /* 5. Body and Price Styling */
-        .pro-body {
-            padding: 1rem;
-        }
-        .pro-category {
-            letter-spacing: 0.5px;
-            font-size: 0.85rem;
-        }
-        .pro-title {
-            font-size: 1.15rem;
-        }
-
-       .pro-stars {
-  margin: 6px 0;
+  /* Deep Blue Gradient Background */
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  border-radius: 1.5rem;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  /* Negative margin to pull the product grid slightly over the header */
+  margin-bottom: -50px !important;
+  position: relative;
+  z-index: 2;
 }
 
-        .pro-price .old {
-            text-decoration: line-through;
-        }
-
-.price-box .old {
-    color: gray;
-    text-decoration: line-through;
-    margin-right: 6px;
+.deal-icon {
+  font-size: 2rem;
+  color: #ffc107;
+  /* Yellow for visibility/warning */
+  animation: bounce 1s infinite;
+  /* Attention-grabbing icon */
 }
 
-.price-box .new {
-    font-weight: bold;
-    font-size: 1.2r
+@keyframes bounce {
 
-}/* ================================
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.deal-main-title {
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+}
+
+.deal-timer-pill {
+  background-color: #dc3545;
+  /* Red for Urgency */
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50rem;
+  width: fit-content;
+  font-size: 1.1rem;
+  border: 3px solid #ffdd00;
+  /* Yellow border accent */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* -------------------------------------- */
+/* 2. Product Card Styling (pro-card) */
+/* -------------------------------------- */
+.deal-product-grid {
+  padding-top: 50px;
+  /* Space created by negative margin on header */
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ================================
    FLASH DEAL HEADER (TOP SECTION)
 ===================================*/
 
@@ -1140,69 +1176,69 @@ nav {
 
 /* Reduce spacing between header items */
 .deal-icon {
-    margin-bottom: 10px !important;
+  margin-bottom: 10px !important;
 }
 
 .deal-main-title {
-    margin-bottom: 10px !important;
-    font-size: 2rem;
+  margin-bottom: 10px !important;
+  font-size: 2rem;
 }
 
 .deal-timer-pill {
-    margin-bottom: 5px !important;
+  margin-bottom: 5px !important;
 }
 
 /* Glow effect */
 .deal-header-box::after {
-    content: "";
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    background: rgba(255, 255, 255, 0.15);
-    filter: blur(60px);
-    border-radius: 50%;
-    top: -40px;
-    right: -40px;
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: rgba(255, 255, 255, 0.15);
+  filter: blur(60px);
+  border-radius: 50%;
+  top: -40px;
+  right: -40px;
 }
 
 .deal-icon {
-    width: 70px;
-    height: 70px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2rem;
-    box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+  width: 70px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .deal-main-title {
-    font-size: 2.4rem;
-    letter-spacing: 1px;
-    color: #fff;
-    text-transform: uppercase;
+  font-size: 2.4rem;
+  letter-spacing: 1px;
+  color: #fff;
+  text-transform: uppercase;
 }
 
 .deal-timer-pill {
-    background: rgba(255,255,255,0.2);
-    padding: 10px 25px;
-    border-radius: 40px;
-    color: #fff;
-    font-size: 1rem;
-    backdrop-filter: blur(5px);
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 25px;
+  border-radius: 40px;
+  color: #fff;
+  font-size: 1rem;
+  backdrop-filter: blur(5px);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .deal-timer-pill strong {
-    font-size: 1.2rem;
-    color: #fff;
+  font-size: 1.2rem;
+  color: #fff;
 }
 
 .deal-subtext {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
 
@@ -1210,221 +1246,231 @@ nav {
    PRODUCT CARD DESIGN
 ===================================*/
 .pro-card {
-    background: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-    padding-bottom: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    transition: all 0.35s ease;
-    position: relative;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  padding-bottom: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: all 0.35s ease;
+  position: relative;
 }
 
 .pro-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.15);
 }
 
 /* Discount Tag */
 .deal-tag {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: #ff3b3b;
-    color: #fff;
-    padding: 6px 12px;
-    font-size: 0.75rem;
-    border-radius: 20px;
-    font-weight: bold;
-    z-index: 3;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #ff3b3b;
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  border-radius: 20px;
+  font-weight: bold;
+  z-index: 3;
 }
 
 /* Image Box */
 .pro-img {
-    height: 230px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
+  height: 230px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
 }
 
 .pro-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: 0.4s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: 0.4s ease;
 }
 
 .pro-card:hover img {
-    transform: scale(1.10);
+  transform: scale(1.10);
 }
 
 /* Hover overlay */
 .pro-img-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.25);
-    opacity: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.35s ease;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.35s ease;
 }
 
 .pro-card:hover .pro-img-overlay {
-    opacity: 1;
+  opacity: 1;
 }
 
 .view-btn {
-    background: #fff;
-    border: none;
-    padding: 7px 18px;
-    border-radius: 25px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    transition: 0.3s ease;
+  background: #fff;
+  border: none;
+  padding: 7px 18px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: 0.3s ease;
 }
 
 .view-btn:hover {
-    background: #ff3d3d;
-    color: #fff;
+  background: #ff3d3d;
+  color: #fff;
 }
 
 /* Card Body */
 .pro-body {
-    padding: 15px 12px;
-    text-align: center;
+  padding: 15px 12px;
+  text-align: center;
 }
 
 .pro-category {
-    font-size: 0.85rem;
-    color: gray;
-    margin-bottom: 4px;
+  font-size: 0.85rem;
+  color: gray;
+  margin-bottom: 4px;
 }
 
 .pro-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #222;
-    margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 8px;
 }
 
 /* Stars */
 .pro-stars i {
-    color: #ffc107;
-    margin-right: 2px;
-    font-size: 0.9rem;
+  color: #ffc107;
+  margin-right: 2px;
+  font-size: 0.9rem;
 }
 
 /* Price Box */
 .pro-price .old {
-    font-size: 0.9rem;
-    color: #777;
-    text-decoration: line-through;
-    margin-right: 6px;
+  font-size: 0.9rem;
+  color: #777;
+  text-decoration: line-through;
+  margin-right: 6px;
 }
 
 .pro-price .new {
-    font-size: 1.25rem;
-    color: #d10000;
-    font-weight: 700;
+  font-size: 1.25rem;
+  color: #d10000;
+  font-weight: 700;
 }
 
 /* 4. Styling for the Feature Icons */
 .choose-icon {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    font-size: 1.3rem;
-    margin-right: 15px;
-    /* Add subtle shadow to the icon background */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
-}.hero-heading {
-    font-family: 'Playfair Display', serif;
-    font-weight: 300;
-    font-size: rem;
-    line-height: 1.15;
-    color: #ffffff;
-    letter-spacing: 1px;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  margin-right: 15px;
+  /* Add subtle shadow to the icon background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.hero-heading {
+  font-family: 'Playfair Display', serif;
+  font-weight: 300;
+  font-size: rem;
+  line-height: 1.15;
+  color: #ffffff;
+  letter-spacing: 1px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* Ensure all cards align perfectly */
 .pro-card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Make image container fixed height */
 .pro-img {
-    height: 230px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+  height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .pro-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}/* Check your nav heights (based on your original CSS) */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Check your nav heights (based on your original CSS) */
 nav {
-    /* Check this height and make sure it matches the actual rendered height of your two nav bars */
-    height: 80px !important; 
-    display: flex !important;
-    align-items: center !important;
-    z-index: 1;
+  /* Check this height and make sure it matches the actual rendered height of your two nav bars */
+  height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+  z-index: 1;
 }
 
 /* Try setting body padding equal to the combined height of the two navigation bars */
 
 .flash-deals-wrapper {
-    /* Ensure it behaves like normal flow content, not a full-screen overlay */
-    position: relative; /* Default or relative is usually fine */
-    margin-top: 0; 
-    /* The large blue box should not have a massive z-index */
-    z-index: 1; 
+  /* Ensure it behaves like normal flow content, not a full-screen overlay */
+  position: relative;
+  /* Default or relative is usually fine */
+  margin-top: 0;
+  /* The large blue box should not have a massive z-index */
+  z-index: 1;
 }
+
 /* Ensures overlay covers correctly */
 .pro-img-overlay {
-    position: absolute;
-    inset: 0;
+  position: absolute;
+  inset: 0;
 }
 
 /* Makes the bottom content align evenly */
 .pro-body {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* Fix spacing inside the info */
 .pro-title {
-    min-height: 42px; /* Same title height for all cards */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+  min-height: 42px;
+  /* Same title height for all cards */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 /* Fix star alignment */
 .pro-stars {
-    margin: 6px 0;
+  margin: 6px 0;
 }
 
 /* Price box formatting */
 .pro-price {
   margin-bottom: 10px;
 }
+
 .add-cart-btn {
   margin-top: auto;
-}.add-cart-btn {
+}
+
+.add-cart-btn {
   width: 100%;
   height: 44px;
   border-radius: 10px;
@@ -1441,20 +1487,21 @@ nav {
 }
 
 /* Equal spacing between grid items */
-.flash-deals-wrapper .row > div {
-    display: flex;
+.flash-deals-wrapper .row>div {
+  display: flex;
 }
 
 .flash-deals-wrapper .pro-card {
-    width: 50%;
+  width: 50%;
 }
 
 /* Improve alignment at small screens */
 @media (max-width: 576px) {
-    .pro-img {
-        height: 180px;
-    }
+  .pro-img {
+    height: 180px;
+  }
 }
+
 /* ==========================================
    FIX ALL ALIGNMENT ISSUES
 ========================================== */
@@ -1463,71 +1510,72 @@ nav {
 .flash-deals-wrapper .col-6,
 .flash-deals-wrapper .col-md-4,
 .flash-deals-wrapper .col-lg-3 {
-    display: flex;
+  display: flex;
 }
 
 /* Ensure card fills full height */
 .pro-card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Fix image box height */
 .pro-img {
-    height: 230px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
+  height: 230px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
 }
 
 /* Keep images equal and centered */
 .pro-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* Overlay fix */
 .pro-img-overlay {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    background: rgba(0,0,0,0.25);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.35s ease;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.35s ease;
 }
 
 .pro-card:hover .pro-img-overlay {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* Card body equal spacing */
 .pro-body {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* Make title heights equal */
 .pro-title {
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Mobile adjustments */
 @media (max-width: 576px) {
-    .pro-img {
-        height: 180px;
-    }
+  .pro-img {
+    height: 180px;
+  }
 }
+
 /* ==========================================
    FIX ALL ALIGNMENT ISSUES
 ========================================== */
@@ -1536,7 +1584,7 @@ nav {
 .flash-deals-wrapper .col-6,
 .flash-deals-wrapper .col-md-4,
 .flash-deals-wrapper .col-lg-3 {
-    display: flex;
+  display: flex;
 }
 
 
@@ -1550,35 +1598,35 @@ nav {
 
 /* Fix image box height */
 .pro-img {
-    height: 230px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
+  height: 230px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
 }
 
 /* Keep images equal and centered */
 .pro-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* Overlay fix */
 .pro-img-overlay {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    background: rgba(0,0,0,0.25);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.35s ease;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.35s ease;
 }
 
 .pro-card:hover .pro-img-overlay {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* Card body equal spacing */
@@ -1600,169 +1648,181 @@ nav {
 
 /* Mobile adjustments */
 @media (max-width: 576px) {
-    .pro-img {
-        height: 180px;
-    }
+  .pro-img {
+    height: 180px;
+  }
 }
 
 /* 5. Styling for the Feature Cards */
 .choose-card {
-    transition: all 0.3s ease-in-out;
-    border: 1px solid #f0f0f0 !important;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid #f0f0f0 !important;
 }
 
 .choose-card:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
-    transform: translateY(-2px);
-    border-color: #ff8c00 !important; /* Highlight border on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-2px);
+  border-color: #ff8c00 !important;
+  /* Highlight border on hover */
 }
+
 /* Reduce HEADER height only */
 .deal-header-box {
-    padding-top: 35px !important;
-    padding-bottom: 35px !important;
-    margin-bottom: -25px !important; /* Pull cards closer */
+  padding-top: 35px !important;
+  padding-bottom: 35px !important;
+  margin-bottom: -25px !important;
+  /* Pull cards closer */
 }
 
 /* Reduce gap between header items */
 .deal-icon {
-    margin-bottom: 8px !important;
+  margin-bottom: 8px !important;
 }
 
 .deal-main-title {
-    margin-bottom: 8px !important;
+  margin-bottom: 8px !important;
 }
 
 .deal-timer-pill {
-    margin-bottom: 5px !important;
+  margin-bottom: 5px !important;
 }
 
 /* Reduce product grid top spacing */
 .flash-deals-wrapper .row {
-    margin-top: 25px !important;
+  margin-top: 25px !important;
 }
 
 /* Slightly reduce product image box height */
 .pro-img {
-    height: 200px !important;
+  height: 200px !important;
 }
 
 /* Reduce empty space inside cards */
 .pro-body {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
 }
 
 /* Reduce title height */
 .pro-title {
-    min-height: 32px !important;
+  min-height: 32px !important;
 }
+
 /* ==========================================================
    FLASH DEAL ALERT — SAFE ADD-ON (NO OVERRIDES)
    ========================================================== */
 
 /* Flash Deal Wrapper */
 .flash-deals-wrapper {
-    background: #ffffff;
-    border-radius: 22px;
-    overflow: hidden;
-    margin-top: 60px;
-    padding-bottom: 2.2rem;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  background: #ffffff;
+  border-radius: 22px;
+  overflow: hidden;
+  margin-top: 60px;
+  padding-bottom: 2.2rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
 /* Flash Deal Header */
 .flash-deals-wrapper .deal-header-box {
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    padding: 35px 20px !important;
-    color: #fff;
-    text-align: center;
-    border-radius: 22px 22px 0 0;
-    margin-bottom: -25px !important;
-    position: relative;
-    z-index: 4;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  padding: 35px 20px !important;
+  color: #fff;
+  text-align: center;
+  border-radius: 22px 22px 0 0;
+  margin-bottom: -25px !important;
+  position: relative;
+  z-index: 4;
 }
 
 /* Icon */
 .flash-deals-wrapper .deal-icon {
-    width: 45px;
-    height: 65px;
-    border-radius: 16px;
-    background: rgba(255,255,255,0.18);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #ffeb3b;
-    font-size: 1.8rem;
-    margin: 0 auto 8px;
-    animation: fd-icon-pulse 1.5s infinite ease-in-out;
+  width: 45px;
+  height: 65px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffeb3b;
+  font-size: 1.8rem;
+  margin: 0 auto 8px;
+  animation: fd-icon-pulse 1.5s infinite ease-in-out;
 }
 
 @keyframes fd-icon-pulse {
-    0%,100% { transform: scale(1); }
-    50%     { transform: scale(1.10); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.10);
+  }
 }
 
 /* Title */
 .flash-deals-wrapper .deal-main-title {
-    font-size: 2.1rem;
-    margin-bottom: 8px !important;
-    font-weight: 700;
+  font-size: 2.1rem;
+  margin-bottom: 8px !important;
+  font-weight: 700;
 }
 
 /* Timer Box */
 .flash-deals-wrapper .deal-timer-pill {
-    padding: 8px 22px;
-    border-radius: 40px;
-    background: rgba(255,255,255,0.22);
-    backdrop-filter: blur(5px);
-    color: #fff;
-    font-size: 1rem;
-    display: inline-flex;
-    gap: 6px;
-    border: 1px solid rgba(255,255,255,0.35);
+  padding: 8px 22px;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(5px);
+  color: #fff;
+  font-size: 1rem;
+  display: inline-flex;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 /* Subtext */
 .flash-deals-wrapper .deal-subtext {
-    font-size: 0.9rem;
-    opacity: 0.85;
+  font-size: 0.9rem;
+  opacity: 0.85;
 }
 
 /* Product Grid Alignment */
 .flash-deals-wrapper .row {
-    margin-top: 25px !important;
+  margin-top: 25px !important;
 }
 
 /* Product Cards */
 .flash-deals-wrapper .pro-card {
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    transition: 0.35s ease;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: 0.35s ease;
 }
 
 .flash-deals-wrapper .pro-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 26px rgba(0,0,0,0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.15);
 }
 
 /* Image Fix */
 .flash-deals-wrapper .pro-img {
-    height: 200px !important;
+  height: 200px !important;
 }
 
 /* Product Body Padding */
 .flash-deals-wrapper .pro-body {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
 }
 
 /* Title Height Reduced */
 .flash-deals-wrapper .pro-title {
-    min-height: 32px !important;
+  min-height: 32px !important;
 }
+
 .deal-header-box {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 
@@ -1779,7 +1839,8 @@ nav {
 ========================================= */
 
 /* 1️⃣ Stop any horizontal overflow */
-html, body {
+html,
+body {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden !important;
@@ -1803,10 +1864,14 @@ html, body {
 section {
   max-width: 100%;
   overflow-x: hidden;
-}#deal-timer {
+}
+
+#deal-timer {
   transition: opacity 0.15s ease;
-}.flash-deals-wrapper{
-    max-width: 82%;
+}
+
+.flash-deals-wrapper {
+  max-width: 82%;
   overflow-x: hidden;
 }
 
@@ -1864,6 +1929,7 @@ section {
   opacity: 0.85;
   margin-right: 10px;
 }
+
 @media (max-width: 992px) {
   .deal-timer {
     font-size: 1.4rem;
@@ -1874,6 +1940,7 @@ section {
     font-size: 0.8rem;
   }
 }
+
 @media (max-width: 576px) {
   .deal-timer {
     font-size: 1.15rem;
@@ -1882,7 +1949,8 @@ section {
   }
 
   .deal-timer span {
-    width: 2ch; /* tighter */
+    width: 2ch;
+    /* tighter */
   }
 
   .deal-timer small {
@@ -1900,7 +1968,8 @@ section {
    PROFESSIONAL FOOTER STYLES
 ===================================================== */
 .footer-bg {
-  background-color: #f8f9fa; /* Lighter, cleaner professional gray */
+  background-color: #f8f9fa;
+  /* Lighter, cleaner professional gray */
   border-top: 1px solid #eaeaea;
 }
 
@@ -1952,7 +2021,7 @@ section {
   background-color: #000;
   color: #fff !important;
   transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* About/Gallery Images */
@@ -1978,108 +2047,116 @@ section {
    MOBILE PROFESSIONAL OPTIMIZATION (max-width: 768px)
 ========================================== */
 @media (max-width: 768px) {
-    /* 1. Hero Section Adjustments */
-    .hero-slide {
-        height: 60vh; /* Shorter on mobile */
-        min-height: 400px;
-    }
 
-    .hero-heading {
-        font-size: 1.8rem !important; /* Scale down title */
-        line-height: 1.2;
-    }
+  /* 1. Hero Section Adjustments */
+  .hero-slide {
+    height: 60vh;
+    /* Shorter on mobile */
+    min-height: 400px;
+  }
 
-    .hero-text {
-        bottom: 10% !important;
-        left: 5% !important;
-        right: 5% !important;
-        max-width: 100% !important;
-    }
+  .hero-heading {
+    font-size: 1.8rem !important;
+    /* Scale down title */
+    line-height: 1.2;
+  }
 
-    /* 2. Flash Deal Header - Compact for Mobile */
-    .deal-header-box {
-        padding: 20px 15px !important;
-        margin-bottom: -30px !important;
-    }
+  .hero-text {
+    bottom: 10% !important;
+    left: 5% !important;
+    right: 5% !important;
+    max-width: 100% !important;
+  }
 
-    .deal-main-title {
-        font-size: 1.5rem !important;
-        text-align: center;
-    }
+  /* 2. Flash Deal Header - Compact for Mobile */
+  .deal-header-box {
+    padding: 20px 15px !important;
+    margin-bottom: -30px !important;
+  }
 
-    .deal-timer-pill {
-        font-size: 0.85rem !important;
-        padding: 6px 15px !important;
-        justify-content: center;
-        width: 100%; /* Full width for easier reading */
-    }
+  .deal-main-title {
+    font-size: 1.5rem !important;
+    text-align: center;
+  }
 
-    /* 3. Product Grid - 2 Column Layout */
-    .flash-deals-wrapper .row {
-        margin-left: -5px;
-        margin-right: -5px;
-    }
+  .deal-timer-pill {
+    font-size: 0.85rem !important;
+    padding: 6px 15px !important;
+    justify-content: center;
+    width: 100%;
+    /* Full width for easier reading */
+  }
 
-    .flash-deals-wrapper .col-6 {
-        padding: 5px !important; /* Tighter gutters */
-    }
+  /* 3. Product Grid - 2 Column Layout */
+  .flash-deals-wrapper .row {
+    margin-left: -5px;
+    margin-right: -5px;
+  }
 
-    /* 4. Professional Card Refinement */
-    .pro-card {
-        border-radius: 12px; /* Softer corners */
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
+  .flash-deals-wrapper .col-6 {
+    padding: 5px !important;
+    /* Tighter gutters */
+  }
 
-    .pro-img {
-        height: 160px; /* Consistent height for smaller screens */
-    }
+  /* 4. Professional Card Refinement */
+  .pro-card {
+    border-radius: 12px;
+    /* Softer corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
 
-    .pro-img img {
-        padding: 10px; /* Prevent image from touching card edges */
-    }
+  .pro-img {
+    height: 160px;
+    /* Consistent height for smaller screens */
+  }
 
-    /* Disable hover overlays on touch devices (improves UX) */
-    .pro-img-overlay {
-        display: none !important; 
-    }
+  .pro-img img {
+    padding: 10px;
+    /* Prevent image from touching card edges */
+  }
 
-    /* 5. Typography & Buttons */
-    .pro-title {
-        font-size: 0.9rem !important;
-        min-height: 38px;
-        line-height: 1.3;
-    }
+  /* Disable hover overlays on touch devices (improves UX) */
+  .pro-img-overlay {
+    display: none !important;
+  }
 
-    .pro-price .new {
-        font-size: 1.1rem !important;
-    }
+  /* 5. Typography & Buttons */
+  .pro-title {
+    font-size: 0.9rem !important;
+    min-height: 38px;
+    line-height: 1.3;
+  }
 
-    .add-cart-btn {
-        height: 38px;
-        font-size: 0.85rem;
-        border-radius: 8px;
-        margin-top: 8px;
-    }
+  .pro-price .new {
+    font-size: 1.1rem !important;
+  }
 
-    /* 6. Horizontal Scrolling Categories (Optional but Professional) */
-    .daily-sells-scroller {
-        display: flex;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        gap: 15px;
-        padding-bottom: 15px;
-    }
-    
-    .daily-sells-scroller::-webkit-scrollbar {
-        display: none;
-    }
+  .add-cart-btn {
+    height: 38px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
 
-    /* 7. Icon adjustments */
-    .deal-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
-    }
+  /* 6. Horizontal Scrolling Categories (Optional but Professional) */
+  .daily-sells-scroller {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 15px;
+    padding-bottom: 15px;
+  }
+
+  .daily-sells-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 7. Icon adjustments */
+  .deal-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
 }
 
 /* =====================================================
@@ -2136,7 +2213,7 @@ section {
 
   .pro-card {
     border-radius: 10px !important;
-    box-shadow: 0 1px 6px rgba(0,0,0,.08) !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .08) !important;
   }
 
   .pro-img {
@@ -2160,7 +2237,8 @@ section {
   }
 
   .pro-stars {
-    display: none; /* Amazon hides stars in tight grids */
+    display: none;
+    /* Amazon hides stars in tight grids */
   }
 
   /* ---------- PRICE ---------- */
@@ -2293,7 +2371,7 @@ section {
 
   .pro-card {
     border-radius: 10px !important;
-    box-shadow: 0 1px 6px rgba(0,0,0,.08) !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .08) !important;
   }
 
   .pro-img {
@@ -2317,7 +2395,8 @@ section {
   }
 
   .pro-stars {
-    display: none; /* Amazon hides stars in tight grids */
+    display: none;
+    /* Amazon hides stars in tight grids */
   }
 
   /* ---------- PRICE ---------- */
@@ -2430,7 +2509,7 @@ section {
     box-shadow: none !important;
   }
 
-  .choose-card + .choose-card {
+  .choose-card+.choose-card {
     margin-top: 8px;
   }
 
@@ -2451,15 +2530,15 @@ section {
 
   /* ================= PROMO BLACK BOX ================= */
 
-  .container > .rounded-4.p-5 {
+  .container>.rounded-4.p-5 {
     padding: 18px !important;
     border-radius: 14px !important;
     text-align: center;
   }
 
   /* Stack content */
-  .container > .rounded-4.p-5 .col-md-6,
-  .container > .rounded-4.p-5 .col-md-5 {
+  .container>.rounded-4.p-5 .col-md-6,
+  .container>.rounded-4.p-5 .col-md-5 {
     width: 100%;
     text-align: center;
   }
@@ -2486,7 +2565,7 @@ section {
   }
 
   /* Promo image smaller */
-  .container > .rounded-4.p-5 img {
+  .container>.rounded-4.p-5 img {
     max-height: 160px !important;
     margin-top: 12px;
   }
@@ -2583,13 +2662,15 @@ section {
     max-height: 150px !important;
   }
 }
+
 /* ================================
    HERO / CAROUSEL HEIGHT (DESKTOP)
 ================================ */
 
 .hero-slide {
   height: 80vh;
-  min-height: 730px;   /* 820 was fighting with max-height */
+  min-height: 730px;
+  /* 820 was fighting with max-height */
   max-height: 730px;
 }
 
@@ -2625,9 +2706,9 @@ section {
    HERO / CAROUSEL HEIGHT (EXTRA SMALL PHONES)
 ================================ */
 
-@media (max-width: 380px){
+@media (max-width: 380px) {
 
-  .hero-slide{
+  .hero-slide {
     height: 48vh !important;
     min-height: 300px !important;
     max-height: 420px !important;
@@ -2639,160 +2720,167 @@ section {
    PREMIUM FLASH DEAL OFFER BOX (FINAL)
 ========================================= */
 
-.flash-deals-wrapper{
-  background:#fff;
-  border-radius:24px;
-  overflow:hidden;
-  box-shadow:0 18px 40px rgba(0,0,0,.08);
-  margin-top:60px;
+.flash-deals-wrapper {
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .08);
+  margin-top: 60px;
 }
 
 /* HEADER */
-.flash-deals-wrapper .deal-header-box{
+.flash-deals-wrapper .deal-header-box {
   background:
-    linear-gradient(135deg,rgba(0,0,0,.45),rgba(0,0,0,.2)),
+    linear-gradient(135deg, rgba(0, 0, 0, .45), rgba(0, 0, 0, .2)),
     url("/Images/cart.png");
-  background-size:cover;
-  background-position:right center;
-  padding:42px 20px!important;
-  text-align:center;
-  position:relative;
+  background-size: cover;
+  background-position: right center;
+  padding: 42px 20px !important;
+  text-align: center;
+  position: relative;
 }
 
 /* Soft glow */
-.flash-deals-wrapper .deal-header-box::after{
-  content:"";
-  position:absolute;
-  width:240px;
-  height:240px;
-  background:rgba(255,255,255,.2);
-  filter:blur(80px);
-  border-radius:50%;
-  top:-70px;
-  right:-70px;
+.flash-deals-wrapper .deal-header-box::after {
+  content: "";
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  background: rgba(255, 255, 255, .2);
+  filter: blur(80px);
+  border-radius: 50%;
+  top: -70px;
+  right: -70px;
 }
 
 /* Icon */
-.flash-deals-wrapper .deal-icon{
-  width:64px;
-  height:64px;
-  border-radius:18px;
-  background:rgba(255,255,255,.25);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.8rem;
-  color:#ffd54f;
-  margin:0 auto 12px;
-  box-shadow:0 6px 18px rgba(0,0,0,.25);
-  animation:pulseGlow 1.8s infinite ease-in-out;
+.flash-deals-wrapper .deal-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: #ffd54f;
+  margin: 0 auto 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+  animation: pulseGlow 1.8s infinite ease-in-out;
 }
 
-@keyframes pulseGlow{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.12)}
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    transform: scale(1)
+  }
+
+  50% {
+    transform: scale(1.12)
+  }
 }
 
 /* Title */
-.flash-deals-wrapper .deal-main-title{
-  font-size:2.2rem;
-  font-weight:800;
-  color:#fff;
-  letter-spacing:.6px;
-  margin-bottom:10px;
+.flash-deals-wrapper .deal-main-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: .6px;
+  margin-bottom: 10px;
 }
 
 /* TIMER PILL */
-.flash-deals-wrapper .deal-timer-pill{
-  background:rgba(255,255,255,.22);
-  border:1px solid rgba(255,255,255,.4);
-  padding:10px 24px;
-  border-radius:999px;
-  backdrop-filter:blur(8px);
-  display:flex;
-  justify-content:center;
+.flash-deals-wrapper .deal-timer-pill {
+  background: rgba(255, 255, 255, .22);
+  border: 1px solid rgba(255, 255, 255, .4);
+  padding: 10px 24px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
 }
 
 /* TIMER */
-.deal-timer{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  font-size:1.4rem;
-  font-weight:700;
+.deal-timer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.4rem;
+  font-weight: 700;
 }
 
 /* IMPORTANT: allow backend updates */
-.deal-timer span{
-  width:auto!important;
-  min-width:auto!important;
+.deal-timer span {
+  width: auto !important;
+  min-width: auto !important;
 }
 
-.deal-timer small{
-  opacity:.85;
-  margin-right:8px;
+.deal-timer small {
+  opacity: .85;
+  margin-right: 8px;
 }
 
 /* Subtitle */
-.flash-deals-wrapper .deal-subtext{
-  font-size:.9rem;
-  opacity:.85;
+.flash-deals-wrapper .deal-subtext {
+  font-size: .9rem;
+  opacity: .85;
 }
 
 /* Product grid spacing */
-#flashDealsGrid{
-  margin-top:28px;
+#flashDealsGrid {
+  margin-top: 28px;
 }
 
 /* =========================================
    MOBILE PREMIUM VERSION
 ========================================= */
 
-@media(max-width:576px){
+@media(max-width:576px) {
 
-.flash-deals-wrapper{
-  border-radius:16px;
-  margin-top:30px;
-}
+  .flash-deals-wrapper {
+    border-radius: 16px;
+    margin-top: 30px;
+  }
 
-/* Header */
-.flash-deals-wrapper .deal-header-box{
-  padding:22px 14px!important;
-  background-position:center;
-}
+  /* Header */
+  .flash-deals-wrapper .deal-header-box {
+    padding: 22px 14px !important;
+    background-position: center;
+  }
 
-/* Icon */
-.flash-deals-wrapper .deal-icon{
-  width:46px;
-  height:46px;
-  font-size:1.3rem;
-}
+  /* Icon */
+  .flash-deals-wrapper .deal-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 1.3rem;
+  }
 
-/* Title */
-.flash-deals-wrapper .deal-main-title{
-  font-size:1.35rem;
-}
+  /* Title */
+  .flash-deals-wrapper .deal-main-title {
+    font-size: 1.35rem;
+  }
 
-/* Timer pill */
-.flash-deals-wrapper .deal-timer-pill{
-  width:100%;
-  padding:6px 14px;
-}
+  /* Timer pill */
+  .flash-deals-wrapper .deal-timer-pill {
+    width: 100%;
+    padding: 6px 14px;
+  }
 
-/* Timer text */
-.deal-timer{
-  font-size:1.05rem;
-  gap:5px;
-}
+  /* Timer text */
+  .deal-timer {
+    font-size: 1.05rem;
+    gap: 5px;
+  }
 
-.deal-timer small{
-  font-size:.7rem;
-  margin-right:6px;
-}
+  .deal-timer small {
+    font-size: .7rem;
+    margin-right: 6px;
+  }
 
-/* Grid tighter */
-#flashDealsGrid{
-  padding:8px!important;
-}
+  /* Grid tighter */
+  #flashDealsGrid {
+    padding: 8px !important;
+  }
 
 }
