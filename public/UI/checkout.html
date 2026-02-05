@@ -1752,6 +1752,59 @@ p { color: var(--text-muted); font-size: 1rem; }
   }
 }
 
+/* =========================
+   📱 Professional Sticky Place Order (Mobile)
+========================= */
+@media (max-width: 768px) {
+
+  .place-order-btn {
+    position: fixed !important;
+    bottom: 12px !important;
+    left: 12px !important;
+    right: 12px !important;
+
+    width: auto !important;
+
+    border-radius: 14px !important;
+    padding: 14px 16px !important;
+
+    font-size: 15px !important;
+    font-weight: 700;
+
+    box-shadow: 0 12px 25px rgba(201,64,77,.35) !important;
+    z-index: 120 !important;
+  }
+
+  body {
+    padding-bottom: 120px !important;
+  }
+}
+.summary-right {
+  display: none !important;
+}
+
+/* Show ONLY available coupons on mobile */
+@media (max-width: 768px) {
+
+  .summary-right {
+    display: block !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-top: 12px;
+  }
+
+  /* Hide upcoming / invalid / used */
+  #upcomingCouponList,
+  #invalidCouponList,
+  #usedCouponList {
+    display: none !important;
+  }
+
+  .coupon-title:not(.text-success) {
+    display: none !important;
+  }
+}
+
 
 </style>
 </head>
