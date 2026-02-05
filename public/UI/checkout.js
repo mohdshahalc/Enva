@@ -454,6 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let addressMap = {};
 
+
 async function loadSavedAddresses() {
   const token = localStorage.getItem("userToken");
   if (!token) return;
@@ -463,54 +464,43 @@ async function loadSavedAddresses() {
   });
 
   const addresses = await res.json();
-  window.currentAddresses = addresses;
 
-
-  // 🚨 none → redirect
+  // 🚨 No address → redirect
   if (!addresses.length) {
     window.location.href = "address.html";
     return;
   }
 
-  const box = document.getElementById("addressList");
-  box.innerHTML = "";
+  // ✅ Find default OR fallback to first
+  const addr = addresses.find(a => a.isDefault) || addresses[0];
 
-  // ✅ pick default OR first
-  let selected = addresses.find(a => a.isDefault) || addresses[0];
+  // Fill hidden fields (backend compatibility)
+  email.value = addr.email || "";
+  firstName.value = addr.firstName || "";
+  lastName.value = addr.lastName || "";
+  address.value = addr.street || "";
+  city.value = addr.city || "";
+  state.value = addr.state || "";
+  zip.value = addr.postcode || "";
 
-  addresses.forEach(addr => {
-    const div = document.createElement("div");
-    div.className = "address-card";
-    if (addr._id === selected._id) div.classList.add("active");
+  // Render UI
+document.getElementById("defaultAddressContent").innerHTML = `
+  ${addr.firstName || addr.lastName ? `
+    <div><strong>Name:</strong> ${addr.firstName || ""} ${addr.lastName || ""}</div>
+  ` : ""}
 
-    div.innerHTML = `
-      <div class="address-top">
-        <div class="address-name">${addr.firstName} ${addr.lastName}</div>
-        ${addr.isDefault ? `<span class="default-badge">Default</span>` : ""}
-      </div>
+  ${addr.email ? `
+    <div><strong>Email:</strong> ${addr.email}</div>
+  ` : ""}
 
-      <div class="address-body">
-        ${addr.street}<br>
-        ${addr.city}, ${addr.state} ${addr.postcode}<br>
-        ${addr.email}
-      </div>
+  <div>
+    <strong>Address:</strong>
+    ${addr.street}, ${addr.city}, ${addr.state} ${addr.postcode}
+  </div>
+`;
 
-      <div class="address-actions">
-        <button class="btn btn-sm btn-outline-dark"
-          onclick="event.stopPropagation(); window.location.href='address.html'">
-          Change
-        </button>
-      </div>
-    `;
-
-    div.onclick = () => selectAddress(addr._id);
-
-    box.appendChild(div);
-  });
-
-  // preload selected
-  fillHiddenAddress(selected);
 }
+
 
 function selectAddress(id){
   document.querySelectorAll(".address-card").forEach(c => c.classList.remove("active"));
