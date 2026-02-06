@@ -5,9 +5,7 @@ let categoryToastShown = false;
 
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadUserProducts();
-});
+
 
 async function loadUserProducts() {
   try {
