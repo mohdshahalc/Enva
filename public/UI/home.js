@@ -1,7 +1,8 @@
 let allProducts = [];
 let filteredProducts = [];
 let homeProducts = [];
-let flashDealInterval = null;
+let activeFlashOffer = null;
+
 let timerStarted = false;
 
 
@@ -77,6 +78,7 @@ async function loadPopularCategories() {
     })
     .join("");
 }
+
 
 function loadRandomDailyBestSells() {
 
@@ -174,6 +176,23 @@ function loadRandomDailyBestSells() {
 }
 
 
+function setDealDateRange(start, end) {
+  const el = document.getElementById("dealDateRange");
+  if (!el) return;
+
+  const s = new Date(start);
+  const e = new Date(end);
+
+  const opts = { month: "short", day: "numeric" };
+
+  const startText = s.toLocaleDateString("en-US", opts);
+  const endText = e.toLocaleDateString("en-US", opts);
+
+  el.textContent = `${startText.toUpperCase()} – ${endText.toUpperCase()}`;
+}
+
+
+
 function loadFlashDealProducts() {
   const grid = document.getElementById("flashDealsGrid");
   if (!grid || !allProducts.length || !activeFlashOffer) return;
@@ -251,8 +270,9 @@ async function loadActiveFlashOffer() {
     document.querySelector(".deal-main-title").textContent =
       offer.name.toUpperCase();
 
-    // TIMER
-    startFlashDealTimer(offer.endDate);
+    // DATE RANGE
+setDealDateRange(offer.startDate, offer.endDate);
+
 
     // CATEGORY NAME (AWAITED!)
     if (offer.offerType === "category") {
@@ -273,42 +293,6 @@ async function loadActiveFlashOffer() {
 
 
 
-function startFlashDealTimer(endDate) {
-  if (flashDealInterval) clearInterval(flashDealInterval);
-
-  const endTime = new Date(endDate).getTime();
-
-  const dEl = document.getElementById("d");
-  const hEl = document.getElementById("h");
-  const mEl = document.getElementById("m");
-  const sEl = document.getElementById("s");
-
-  function update() {
-    const diff = endTime - Date.now();
-
-    if (diff <= 0) {
-      dEl.textContent = "00";
-      hEl.textContent = "00";
-      mEl.textContent = "00";
-      sEl.textContent = "00";
-      clearInterval(flashDealInterval);
-      return;
-    }
-
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
-
-    dEl.textContent = String(d).padStart(2, "0");
-    hEl.textContent = String(h).padStart(2, "0");
-    mEl.textContent = String(m).padStart(2, "0");
-    sEl.textContent = String(s).padStart(2, "0");
-  }
-
-  update();
-  flashDealInterval = setInterval(update, 1000);
-}
 
 
 document.addEventListener("DOMContentLoaded", async () => {
