@@ -5,28 +5,52 @@ let categoryToastShown = false;
 
 
 
+function showSkeleton(){
+  const skel = document.getElementById("skeletonGrid");
+  if(!skel) return;
+
+  skel.innerHTML = Array(8).fill(0).map(()=>`
+    <div class="skeleton-card">
+      <div class="skeleton-img"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line long"></div>
+        <div class="skeleton-btn"></div>
+      </div>
+    </div>
+  `).join("");
+}
 
 
 async function loadUserProducts() {
+
+  showSkeleton();   // 🔥 show loader
+
+  document.getElementById("productGrid").style.display="none";
+  document.getElementById("skeletonGrid").style.display="grid";
+
   try {
     const res = await fetch("https://envastore.online/api/user/products/shop");
     const products = await res.json();
-console.log(products);
 
-   allProducts = products;
-filteredProducts = [...products];
+    allProducts = products;
+    filteredProducts = [...products];
 
-// 🔥 APPLY CATEGORY FILTER IF COMING FROM HOME
-applyCategoryFromURL();
+    document.getElementById("skeletonGrid").style.display="none";
+    document.getElementById("productGrid").style.display="grid";
 
-// If NO category in URL → show all products
-if (!window.location.search.includes("category")) {
-  renderUserProducts(filteredProducts);
-}
-  } catch (err) {
-    console.error("Failed to load products", err);
+    applyCategoryFromURL();
+
+    if (!window.location.search.includes("category")) {
+      renderUserProducts(filteredProducts);
+    }
+
+  } catch(err){
+    console.error(err);
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", loadUserProducts);
 
