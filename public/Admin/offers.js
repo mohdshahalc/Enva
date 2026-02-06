@@ -340,7 +340,7 @@ async function createOffer(e) {
       .replace(/\b\w/g, c => c.toUpperCase()), // nice formatting
     offerType,
     discountPercent,
-    product: offerType === "product" ? productId : null,
+    productId: offerType === "product" ? productId : null,
     category: offerType === "category" ? category : null,
     startDate,
     endDate
