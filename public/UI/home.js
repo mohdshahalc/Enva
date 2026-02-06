@@ -236,7 +236,8 @@ function loadFlashDealProducts() {
 
 
 
-let activeFlashOffer = null;
+let activeOfferCategoryName = null;
+
 async function loadActiveFlashOffer() {
   try {
     const offerRes = await fetch("https://envastore.online/api/admin/offers/active");
@@ -246,14 +247,14 @@ async function loadActiveFlashOffer() {
 
     activeFlashOffer = offer;
 
-    // 🔥 SET OFFER TITLE
+    // TITLE
     document.querySelector(".deal-main-title").textContent =
       offer.name.toUpperCase();
 
-    // 🔥 START TIMER (THIS WAS MISSING)
+    // TIMER
     startFlashDealTimer(offer.endDate);
 
-    // 🔥 LOAD CATEGORY NAME
+    // CATEGORY NAME (AWAITED!)
     if (offer.offerType === "category") {
       const catRes = await fetch("https://envastore.online/api/admin/categories");
       const categories = await catRes.json();
@@ -271,8 +272,9 @@ async function loadActiveFlashOffer() {
 }
 
 
+
 function startFlashDealTimer(endDate) {
-  if (flashDealInterval) return;
+  if (flashDealInterval) clearInterval(flashDealInterval);
 
   const endTime = new Date(endDate).getTime();
 
@@ -285,8 +287,10 @@ function startFlashDealTimer(endDate) {
     const diff = endTime - Date.now();
 
     if (diff <= 0) {
-      dEl.textContent = hEl.textContent =
-      mEl.textContent = sEl.textContent = "00";
+      dEl.textContent = "00";
+      hEl.textContent = "00";
+      mEl.textContent = "00";
+      sEl.textContent = "00";
       clearInterval(flashDealInterval);
       return;
     }
@@ -305,6 +309,7 @@ function startFlashDealTimer(endDate) {
   update();
   flashDealInterval = setInterval(update, 1000);
 }
+
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadHomeProducts();
