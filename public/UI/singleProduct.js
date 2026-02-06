@@ -423,18 +423,35 @@ async function checkCartStatus() {
 
     const cart = await res.json();
 
-    const exists = cart.items?.some(
-      item =>
-        item.product &&
-        item.product._id === productId &&
-        item.size === selectedSize.label
-    );
+    const exists = cart.items?.some(item => {
+      const id =
+        typeof item.product === "object"
+          ? item.product._id
+          : item.product;
+
+      return id === productId && item.size === selectedSize.label;
+    });
 
     if (exists) {
-      setViewCartMode();
+      setViewCartMode();          // ✅ already in cart
+    } else {
+      resetAddToCartButton();    // ✅ not in cart
     }
 
   } catch (err) {
     console.error("Cart check failed", err);
   }
 }
+
+
+function resetAddToCartButton() {
+  const btn = document.getElementById("addToCartBtn");
+  if (!btn) return;
+
+  btn.textContent = "Add To Cart";
+  btn.classList.remove("btn-dark");
+  btn.classList.add("btn-danger");
+
+  btn.onclick = handleAddToCart;
+}
+
