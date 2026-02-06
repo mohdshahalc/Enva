@@ -94,12 +94,17 @@ exports.updateProduct = async (req, res) => {
 };
 
 
-// GET ALL PRODUCTS
+// GET ALL PRODUCTS (OPTIMIZED – no logic change)
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
+    const products = await Product.find({ isActive: true, isDeleted: false })
+      .select("name price stock category images")
+      .sort({ createdAt: -1 })
+      .lean();
+
     res.json(products);
-  } catch {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };

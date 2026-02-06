@@ -87,6 +87,46 @@ exports.getUserCart = async (req, res) => {
 
     const now = new Date();
 
+    // 🔹 Collect productIds & categories
+    const productIds = cart.items.map(i => i.product._id);
+    const categories = cart.items
+      .map(i => i.product.category)
+      .filter(Boolean);
+
+    // 🔹 Fetch ALL offers in parallel
+    const [productOffers, categoryDocs] = await Promise.all([
+      Offer.find({
+        offerType: "product",
+        product: { $in: productIds },
+        isActive: true,
+        startDate: { $lte: now },
+        endDate: { $gte: now }
+      }).lean(),
+
+      Category.find({ name: { $in: categories } }).lean()
+    ]);
+
+    const categoryIds = categoryDocs.map(c => c._id);
+
+    const categoryOffers = await Offer.find({
+      offerType: "category",
+      category: { $in: categoryIds },
+      isActive: true,
+      startDate: { $lte: now },
+      endDate: { $gte: now }
+    }).lean();
+
+    // 🔹 Maps for instant lookup
+    const productOfferMap = {};
+    productOffers.forEach(o => productOfferMap[o.product.toString()] = o);
+
+    const categoryMap = {};
+    categoryDocs.forEach(c => categoryMap[c.name] = c._id.toString());
+
+    const categoryOfferMap = {};
+    categoryOffers.forEach(o => categoryOfferMap[o.category.toString()] = o);
+
+    // 🔹 Apply pricing
     for (const item of cart.items) {
       const product = item.product;
 
@@ -94,33 +134,13 @@ exports.getUserCart = async (req, res) => {
       let oldPrice = null;
       let discountPercent = null;
 
-      // 🔥 PRODUCT OFFER (priority)
-      let offer = await Offer.findOne({
-        offerType: "product",
-        product: product._id,
-        isActive: true,
-        startDate: { $lte: now },
-        endDate: { $gte: now }
-      }).lean();
+      let offer = productOfferMap[product._id.toString()];
 
-      // 🔁 CATEGORY OFFER (fallback)
       if (!offer && product.category) {
-        const categoryDoc = await Category.findOne({
-          name: product.category
-        }).lean();
-
-        if (categoryDoc) {
-          offer = await Offer.findOne({
-            offerType: "category",
-            category: categoryDoc._id,
-            isActive: true,
-            startDate: { $lte: now },
-            endDate: { $gte: now }
-          }).lean();
-        }
+        const catId = categoryMap[product.category];
+        offer = categoryOfferMap[catId];
       }
 
-      // ✅ APPLY OFFER IF ACTIVE
       if (offer) {
         oldPrice = product.price;
         discountPercent = offer.discountPercent;
@@ -129,7 +149,6 @@ exports.getUserCart = async (req, res) => {
         );
       }
 
-      // Attach calculated prices to item
       item.finalPrice = finalPrice;
       item.oldPrice = oldPrice;
       item.discountPercent = discountPercent;
@@ -142,6 +161,7 @@ exports.getUserCart = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 exports.updateCartQuantity = async (req, res) => {
   try {
