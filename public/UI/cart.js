@@ -75,85 +75,101 @@ function renderCart(cart) {
     const quantity = item.quantity;
     const size = item.size;
 
-    // ✅ USE OFFER PRICE
     const unitPrice = item.finalPrice ?? product.price;
     const itemTotal = unitPrice * quantity;
-
     subtotal += itemTotal;
 
-    const availableStock = product.sizes?.[size] || 0;
-const isMax = quantity >= availableStock;
+    const availableStock = product.sizes?.[size] ?? 0;
+    const isMax = quantity >= availableStock;
 
-   return `
-  <div class="cart-item">
-    <div class="item-details">
-      <img src="/uploads/${product.images[0]}" class="item-image">
-
-      <div class="item-info">
-        <h3>${product.name}</h3>
-
-        <p class="item-meta">
-          Size: <strong>${size}</strong>
+    /* 🔔 STOCK MESSAGE UI */
+    let stockMessage = "";
+    if (availableStock === 0) {
+      stockMessage = `
+        <p class="stock-msg out">
+          Out of stock for selected size
         </p>
-
-        ${
-          item.discountPercent
-            ? `
-              <div class="cart-price-box">
-                <span class="cart-price-current">
-                  ₹${unitPrice.toFixed(2)}
-                </span>
-
-                <div class="cart-price-old-line">
-                  <span class="cart-price-old">
-                    ₹${item.oldPrice.toFixed(2)}
-                  </span>
-                  <span class="cart-offer-badge">
-                    ${item.discountPercent}% OFF
-                  </span>
-                </div>
-              </div>
-            `
-            : `
-              <p class="item-meta">
-                Price: ₹${unitPrice.toFixed(2)}
-              </p>
-            `
-        }
-
-        <p class="item-price-mobile">
-          ₹${itemTotal.toFixed(2)}
+      `;
+    } else if (availableStock <= 5) {
+      stockMessage = `
+        <p class="stock-msg low">
+          Only ${availableStock} left in stock
         </p>
+      `;
+    }
+
+    return `
+      <div class="cart-item">
+        <div class="item-details">
+          <img src="/uploads/${product.images[0]}" class="item-image">
+
+          <div class="item-info">
+            <h3>${product.name}</h3>
+
+            <p class="item-meta">
+              Size: <strong>${size}</strong>
+            </p>
+
+            ${stockMessage}
+
+            ${
+              item.discountPercent
+                ? `
+                  <div class="cart-price-box">
+                    <span class="cart-price-current">
+                      ₹${unitPrice.toFixed(2)}
+                    </span>
+
+                    <div class="cart-price-old-line">
+                      <span class="cart-price-old">
+                        ₹${item.oldPrice.toFixed(2)}
+                      </span>
+                      <span class="cart-offer-badge">
+                        ${item.discountPercent}% OFF
+                      </span>
+                    </div>
+                  </div>
+                `
+                : `
+                  <p class="item-meta">
+                    Price: ₹${unitPrice.toFixed(2)}
+                  </p>
+                `
+            }
+
+            <p class="item-price-mobile">
+              ₹${itemTotal.toFixed(2)}
+            </p>
+          </div>
+        </div>
+
+        <div class="item-actions">
+          <div class="quantity-control">
+            <button class="qty-btn"
+              onclick="updateQuantity('${product._id}', '${size}', ${quantity - 1})">
+              −
+            </button>
+
+            <input type="text" class="qty-input" value="${quantity}" readonly>
+
+            <button class="qty-btn"
+              ${isMax ? "disabled" : ""}
+              onclick="updateQuantity('${product._id}', '${size}', ${quantity + 1})">
+              +
+            </button>
+          </div>
+
+          <p class="item-price">
+            ₹${itemTotal.toFixed(2)}
+          </p>
+
+          <button class="remove-btn"
+            onclick="removeFromCart('${product._id}', '${size}')">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
       </div>
-    </div>
-
-    <div class="item-actions">
-      <div class="quantity-control">
-        <button class="qty-btn"
-          onclick="updateQuantity('${product._id}', '${size}', ${quantity - 1})">−</button>
-
-        <input type="text" class="qty-input" value="${quantity}" readonly>
-
-        <button class="qty-btn"
-  ${isMax ? "disabled" : ""}
-  onclick="updateQuantity('${product._id}', '${size}', ${quantity + 1})">
-  +
-</button>
-
-      </div>
-
-      <p class="item-price">
-        ₹${itemTotal.toFixed(2)}
-      </p>
-
-      <button class="remove-btn"
-        onclick="removeFromCart('${product._id}', '${size}')">
-        <i class="fas fa-trash-alt"></i>
-      </button>
-    </div>
-  </div>
-`;
-
+    `;
   }).join("");
 
   updateSummary(subtotal);
