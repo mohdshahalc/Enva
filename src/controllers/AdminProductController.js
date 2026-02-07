@@ -65,18 +65,24 @@ exports.updateProduct = async (req, res) => {
       );
     }
 
-    // 🖼️ Images (optional)
-   let images = product.images || [];
+   // 🖼️ Images (handle delete + append)
+let images = product.images || [];
 
+// 🔴 REMOVE images deleted in frontend
+if (req.body.removedImages) {
+  const removedImages = JSON.parse(req.body.removedImages);
+  images = images.filter(img => !removedImages.includes(img));
+}
+
+// 🟢 APPEND new images
 if (req.files && req.files.length > 0) {
   const newImages = req.files.map(file => file.filename);
-
-  // 🔥 append, not replace
   images = [...images, ...newImages];
-
-  // 🔒 enforce max 3 images
-  images = images.slice(0, 3);
 }
+
+// 🔒 ENFORCE MAX 3 IMAGES
+images = images.slice(0, 3);
+
 
 
     // ✅ Update fields
