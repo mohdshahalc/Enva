@@ -31,9 +31,20 @@ async function loadCart() {
 
   
 
-    // ✅ SUCCESS
-    const cart = await res.json();
-    renderCart(cart);
+  const cart = await res.json();
+
+// 🔥 AUTO REMOVE OUT-OF-STOCK ITEMS
+const cleaned = await autoRemoveOutOfStockItems(cart);
+
+if (cleaned) {
+  // 🔄 Reload cart after cleanup
+  loadCart();
+  return;
+}
+
+// ✅ Render only clean cart
+renderCart(cart);
+
 
   } catch (err) {
     console.error(err);
@@ -41,6 +52,38 @@ async function loadCart() {
   }
 }
 
+async function autoRemoveOutOfStockItems(cart) {
+  const token = localStorage.getItem("userToken");
+  if (!token || !cart.items?.length) return false;
+
+  const outOfStockItems = cart.items.filter(item => {
+    const stock = item.product?.sizes?.[item.size] ?? 0;
+    return stock === 0;
+  });
+
+  if (!outOfStockItems.length) return false;
+
+  for (const item of outOfStockItems) {
+    const encodedSize = encodeURIComponent(item.size);
+
+    await apiFetch(
+      `https://envastore.online/api/user/cart/remove/${item.product._id}/${encodedSize}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+  }
+
+  showToast(
+    "Some items were removed because they are out of stock",
+    "warning"
+  );
+
+  return true; // 🔥 indicates cleanup happened
+}
 
 
 function renderCart(cart) {

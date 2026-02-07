@@ -31,6 +31,46 @@ exports.placeOrder = async (req, res) => {
     }
 
     // ============================
+// 🔒 STOCK VALIDATION (FIRST)
+// ============================
+const stockErrors = [];
+
+for (const item of cart.items) {
+  const product = await Product.findById(item.product._id);
+
+  if (!product) {
+    stockErrors.push({
+      productId: item.product._id,
+      size: item.size,
+      reason: "Product removed"
+    });
+    continue;
+  }
+
+
+  const available = product.sizes?.[item.size] ?? 0;
+
+  if (available < item.quantity) {
+    stockErrors.push({
+      productId: product._id,
+      productName: product.name,
+      size: item.size,
+      requested: item.quantity,
+      available
+    });
+  }
+}
+
+if (stockErrors.length > 0) {
+  return res.status(409).json({
+    code: "STOCK_MISMATCH",
+    message: "Some items are out of stock",
+    items: stockErrors
+  });
+}
+
+
+    // ============================
     // 🔥 CALCULATE OFFER PRICES
     // ============================
     let subtotal = 0;
@@ -169,9 +209,12 @@ appliedCoupon = {
   discountAmount
 };
 
-      coupon.usedCount += 1;
-      coupon.usedBy.push(userId);
-      await coupon.save();
+     if (paymentMethod !== "stripe") {
+  coupon.usedCount += 1;
+  coupon.usedBy.push(userId);
+  await coupon.save();
+}
+
     }
 
     // 5️⃣ FINAL TOTAL
@@ -196,46 +239,30 @@ if (paymentMethod === "wallet") {
 }
 
 
-// ============================
-// 💳 STRIPE PAYMENT VERIFICATION
-// ============================
-// ============================
+
 if (paymentMethod === "stripe") {
-  return res.status(200).json({
-    message: "Stripe payment processing via webhook"
-  });
+  paymentStatus = "pending"; // wait for webhook
 }
 
+   
 
-    // ============================
-    // 🔒 STOCK VALIDATION
-    // ============================
-    for (const item of cart.items) {
-      const product = await Product.findById(item.product._id);
+    
 
-      if (!product || product.sizes[item.size] < item.quantity) {
-        return res.status(400).json({
-          message: `Insufficient stock for ${product.name} (${item.size})`
-        });
-      }
-    }
 
-    for (const item of cart.items) {
-      const product = await Product.findById(item.product._id);
-      product.sizes[item.size] -= item.quantity;
-      product.stock -= item.quantity;
-      await product.save();
-    }
 
-    // 6️⃣ Save order
-    const order = await Order.create({
+const order = await Order.create({
   user: userId,
   items: orderItems,
   shippingAddress,
   shippingMethod,
   shippingPrice,
+
   paymentMethod,
   paymentStatus,
+
+  // 🔥 ADD THIS LINE
+  status: paymentMethod === "stripe" ? "pending" : "confirmed",
+
   paymentIntentId: paymentIntentId || null,
   subtotal,
   tax,
@@ -245,9 +272,18 @@ if (paymentMethod === "stripe") {
 });
 
 
-    // 7️⃣ Clear cart
-    cart.items = [];
-    await cart.save();
+if (paymentMethod !== "stripe") {
+  for (const item of cart.items) {
+    const product = await Product.findById(item.product._id);
+    product.sizes[item.size] -= item.quantity;
+    product.stock -= item.quantity;
+    await product.save();
+  }
+
+  cart.items = [];
+  await cart.save();
+}
+
 
     res.status(201).json({
       message: "Order placed successfully",
