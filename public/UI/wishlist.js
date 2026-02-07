@@ -60,6 +60,8 @@ function renderWishlist(items) {
 box.innerHTML = validItems.map(item => {
   const { product, size, finalPrice, oldPrice, discountPercent } = item;
 
+  const isOutOfStock = size === "ALL";
+
   return `
     <div class="wishlist-item">
       <div class="item-image-wrapper">
@@ -71,10 +73,13 @@ box.innerHTML = validItems.map(item => {
       </div>
 
       <div class="item-info-main">
-        <div class="title-row">
-          <h3>${product.name}</h3>
-          <span class="item-status">In Stock</span>
-        </div>
+       <div class="title-row">
+  <h3>${product.name}</h3>
+  <span class="item-status ${isOutOfStock ? 'out-stock' : 'in-stock'}">
+    ${isOutOfStock ? 'OUT OF STOCK' : 'IN STOCK'}
+  </span>
+</div>
+
 
         <p class="product-description">
           ${product.description || "No description available for this premium piece."}
