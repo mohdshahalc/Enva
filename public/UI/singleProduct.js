@@ -1,5 +1,7 @@
 let productSizes = {};
 let selectedSize = null;
+let isProductOutOfStock = false;
+
 
 document.addEventListener("DOMContentLoaded", async () => {
   const qtyInput = document.getElementById("qtyInput");
@@ -26,9 +28,14 @@ if (qtyInput) qtyInput.disabled = true;
     // ✅ IMPORTANT LINE (THIS FIXES THE ERROR)
     productSizes = product.sizes || {};
      console.log(product);
-     
-    renderSingleProduct(product);
-    setupSizeButtons(); // ✅ activate size logic
+
+    isProductOutOfStock =
+  product.stock === 0 ||
+  Object.values(product.sizes || {}).every(qty => qty === 0);
+
+
+   renderSingleProduct(product, isProductOutOfStock);
+setupSizeButtons(isProductOutOfStock);
 
   } catch (err) {
     console.error("Error loading product", err.message);
@@ -37,7 +44,17 @@ if (qtyInput) qtyInput.disabled = true;
 
 
 
-function setupSizeButtons() {
+function setupSizeButtons(isOutOfStock = false) {
+
+  if (isOutOfStock) {
+  document.querySelectorAll(".size-btn").forEach(btn => {
+    btn.disabled = true;
+    btn.classList.add("disabled");
+  });
+  return; // ⛔ stop further logic
+}
+
+
   const stockText = document.getElementById("sizeStockText");
   const qtyInput = document.getElementById("qtyInput");
 
@@ -94,7 +111,7 @@ function setupSizeButtons() {
 }
 
 
-function renderSingleProduct(product) {
+function renderSingleProduct(product, isOutOfStock) {
 
   /* ======================
      BASIC INFO
@@ -161,6 +178,27 @@ function renderSingleProduct(product) {
         onclick="changeImage(this)">
     `;
   });
+
+  const cartBtn = document.getElementById("addToCartBtn");
+const qtyInput = document.getElementById("qtyInput");
+
+if (isOutOfStock) {
+  cartBtn.textContent = "Out of Stock";
+  cartBtn.disabled = true;
+
+  cartBtn.classList.remove("btn-danger");
+  cartBtn.classList.add("btn-secondary");
+
+  cartBtn.style.opacity = "0.7";
+  cartBtn.style.cursor = "not-allowed";
+
+  if (qtyInput) {
+    qtyInput.disabled = true;
+    qtyInput.value = 1;
+  }
+}
+cartBtn.setAttribute("aria-disabled", "true");
+
 }
 
 
@@ -169,6 +207,12 @@ function renderSingleProduct(product) {
 
 async function handleAddToCart() {
   const token = localStorage.getItem("userToken");
+
+if (isProductOutOfStock) {
+  showToast("This product is currently out of stock", "warning");
+  return;
+}
+
 
   if (!token) {
   const modal = new bootstrap.Modal(
