@@ -85,6 +85,11 @@ function renderUserProducts(products) {
   product.oldPrice &&
   product.finalPrice;
 
+  const isOutOfStock =
+  product.stock === 0 ||
+  Object.values(product.sizes || {}).every(qty => qty === 0);
+
+
 return `
 <a href="singleProduct.html?id=${product._id}" class="product-card-premium">
   <div class="product-img-box">
@@ -127,7 +132,14 @@ return `
       </div>
     </div>
 
-    <button class="product-card-button">Quick View</button>
+    ${
+  isOutOfStock
+    ? `<button class="product-card-button" disabled style="background:#999;cursor:not-allowed;">
+         Out of Stock
+       </button>`
+    : `<button class="product-card-button">Quick View</button>`
+}
+
   </div>
 </a>
 `;
@@ -191,12 +203,12 @@ document.querySelector("#filterPopup .popup-apply")
         selectedCategories.includes(productCategory);
 
       /* SIZE MATCH (NOW WORKS) */
-      const matchSize =
-        selectedSizes.length === 0 ||
-        selectedSizes.some(size =>
-          product.sizes &&
-          product.sizes[size] > 0
-        );
+     const matchSize =
+  selectedSizes.length === 0 ||
+  selectedSizes.some(size =>
+    product.sizes && product.sizes[size] !== undefined
+  );
+
 
       /* PRICE MATCH */
       const matchPrice =

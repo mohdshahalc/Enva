@@ -343,6 +343,11 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.06);
   width: 100%;
 }
+/* DESKTOP DEFAULT – show all coupons */
+.summary-right {
+  display: block;
+}
+
 .order-summary h3 {
   min-width: 420px;
 }
@@ -1673,10 +1678,7 @@ p { color: var(--text-muted); font-size: 1rem; }
     border-radius: 16px !important;
   }
 
-  /* Hide coupon right column */
-  .summary-right {
-    display: none !important;
-  }
+  
 
   /* Smaller titles */
   .checkout-form h2 {
@@ -1753,6 +1755,27 @@ p { color: var(--text-muted); font-size: 1rem; }
 }
 
 /* =========================
+   📱 MOBILE COUPON RULES
+========================= */
+@media (max-width: 768px) {
+
+  
+  /* ❌ Hide everything except Available */
+  #upcomingCouponList,
+  #invalidCouponList,
+  #usedCouponList {
+    display: none !important;
+  }
+
+  .coupon-title.text-warning,
+  .coupon-title.text-muted,
+  .coupon-title.text-danger {
+    display: none !important;
+  }
+}
+
+
+/* =========================
    📱 Professional Sticky Place Order (Mobile)
 ========================= */
 @media (max-width: 768px) {
@@ -1779,19 +1802,11 @@ p { color: var(--text-muted); font-size: 1rem; }
     padding-bottom: 120px !important;
   }
 }
-.summary-right {
-  display: none !important;
-}
 
 /* Show ONLY available coupons on mobile */
 @media (max-width: 768px) {
 
-  .summary-right {
-    display: block !important;
-    border: none !important;
-    padding: 0 !important;
-    margin-top: -34px;
-  }
+
 
   /* Hide upcoming / invalid / used */
   #upcomingCouponList,
@@ -1804,6 +1819,30 @@ p { color: var(--text-muted); font-size: 1rem; }
     display: none !important;
   }
 }
+/* =========================
+   📱 MOBILE – SHOW ONLY AVAILABLE COUPONS
+========================= */
+@media (max-width: 768px) {
+
+  .summary-right {
+    display: block !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-top: -24px;
+  }
+
+  /* Hide all except Available */
+  #upcomingCouponList,
+  #invalidCouponList,
+  #usedCouponList {
+    display: none !important;
+  }
+
+  .coupon-title:not(.text-success) {
+    display: none !important;
+  }
+}
+
 
 
 </style>
