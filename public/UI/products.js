@@ -205,9 +205,8 @@ document.querySelector("#filterPopup .popup-apply")
       /* SIZE MATCH (NOW WORKS) */
      const matchSize =
   selectedSizes.length === 0 ||
-  selectedSizes.some(size =>
-    product.sizes && product.sizes[size] !== undefined
-  );
+  !product.sizes ||
+  selectedSizes.some(size => size in product.sizes);
 
 
       /* PRICE MATCH */
