@@ -2,6 +2,8 @@
 let allProducts = [];
 let editingProductId = null;
   let selectedFiles = [];
+  let removedImages = [];
+
 
 async function loadCategoriesForProduct() {
   const res = await apiFetch("/api/admin/categories", {
@@ -192,17 +194,26 @@ document.addEventListener("DOMContentLoaded", () => {
 imageInput.addEventListener("change", () => {
   const newFiles = Array.from(imageInput.files);
 
-  // append instead of replace
-  selectedFiles.push(...newFiles);
+  const existingCount = selectedFiles.filter(f => f.existing).length;
+  const availableSlots = 3 - existingCount;
 
-  // max 3 images total
-  if (selectedFiles.length > 3) {
-    showToast("Maximum 3 images allowed", "warning");
-    selectedFiles = selectedFiles.slice(0, 3);
+  if (availableSlots <= 0) {
+    showToast("You already have 3 images", "warning");
+    imageInput.value = "";
+    return;
+  }
+
+  const filesToAdd = newFiles.slice(0, availableSlots);
+  selectedFiles.push(...filesToAdd);
+
+  if (newFiles.length > availableSlots) {
+    showToast(`Only ${availableSlots} more image(s) allowed`, "warning");
   }
 
   renderPreview();
+  imageInput.value = "";
 });
+
 
 
 
@@ -440,6 +451,10 @@ if (images.length > 3) {
   .slice(0, 3)
   .forEach(img => formData.append("images", img));
 
+  if (editingProductId && removedImages.length > 0) {
+  formData.append("removedImages", JSON.stringify(removedImages));
+}
+
 
   try {
    const url = editingProductId
@@ -466,6 +481,7 @@ const res = await apiFetch(url, {
   );
 
   editingProductId = null;
+   removedImages = [];
  form.reset();
 selectedFiles = [];
 document.getElementById("imagePreview").innerHTML = "";
@@ -508,10 +524,17 @@ function renderPreview() {
     close.innerHTML = "×";
     close.className = "preview-close";
 
-    close.onclick = () => {
-      selectedFiles.splice(index, 1);
-      renderPreview();
-    };
+   close.onclick = () => {
+  const removed = selectedFiles[index];
+
+  if (removed.existing) {
+    removedImages.push(removed.name);
+  }
+
+  selectedFiles.splice(index, 1);
+  renderPreview();
+};
+
 
     wrap.appendChild(img);
     wrap.appendChild(close);
@@ -555,6 +578,7 @@ async function openDeleteModal(id) {
 }
 
 function openEditProduct(id) {
+  removedImages = [];
   const product = allProducts.find(p => p._id === id);
   if (!product) {
     showToast("Product not found", "error");

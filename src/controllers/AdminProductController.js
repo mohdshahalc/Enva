@@ -66,10 +66,18 @@ exports.updateProduct = async (req, res) => {
     }
 
     // 🖼️ Images (optional)
-    let images = product.images;
-    if (req.files && req.files.length > 0) {
-      images = req.files.map(file => file.filename);
-    }
+   let images = product.images || [];
+
+if (req.files && req.files.length > 0) {
+  const newImages = req.files.map(file => file.filename);
+
+  // 🔥 append, not replace
+  images = [...images, ...newImages];
+
+  // 🔒 enforce max 3 images
+  images = images.slice(0, 3);
+}
+
 
     // ✅ Update fields
     product.name = name ?? product.name;
@@ -98,7 +106,7 @@ exports.updateProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.find({ isActive: true, isDeleted: false })
-      .select("name price stock category images")
+      .select("name price stock category images description sizes createdAt")
       .sort({ createdAt: -1 })
       .lean();
 
@@ -108,6 +116,7 @@ exports.getProducts = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 
 
