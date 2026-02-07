@@ -287,14 +287,23 @@ function handleAddToWishlist() {
 }
 
 
-  // 🚫 SIZE REQUIRED
+ let size = null;
+
+// If product is in stock → size required
+if (!isProductOutOfStock) {
   if (!selectedSize || !selectedSize.label) {
     showToast("Please select a size first", "warning");
     return;
   }
+  size = selectedSize.label.trim().toUpperCase();
+} 
+// If product is out of stock → allow wishlist without size
+else {
+  size = "ALL"; // or "NA"
+}
+
 
   const productId = new URLSearchParams(window.location.search).get("id");
-  const size = selectedSize.label.trim().toUpperCase(); // ✅ normalize once
   const encodedSize = encodeURIComponent(size);
 
  // ❤️ REMOVE from wishlist

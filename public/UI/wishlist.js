@@ -80,9 +80,13 @@ box.innerHTML = validItems.map(item => {
           ${product.description || "No description available for this premium piece."}
         </p>
 
-        <p class="small text-muted">
-          Size: <strong>${size}</strong>
-        </p>
+       <p class="small text-muted">
+  Size: 
+  <strong>
+    ${size === "ALL" ? "Any (Out of Stock)" : size}
+  </strong>
+</p>
+
       </div>
 
       <div class="item-actions">
@@ -110,12 +114,26 @@ box.innerHTML = validItems.map(item => {
           <i class="fas fa-eye me-2"></i> View
         </a>
 
-        <button 
-          class="btn btn-dark btn-sm mb-2 w-100"
-          onclick="addWishlistItemToCart('${product._id}', '${size}')"
-        >
-          <i class="fas fa-cart-plus me-2"></i> Add to Cart
-        </button>
+       ${
+  size === "ALL"
+    ? `
+      <a 
+        href="singleProduct.html?id=${product._id}"
+        class="btn btn-outline-dark btn-sm mb-2 w-100"
+      >
+        <i class="fas fa-ruler-combined me-2"></i> Select Size
+      </a>
+    `
+    : `
+      <button 
+        class="btn btn-dark btn-sm mb-2 w-100"
+        onclick="addWishlistItemToCart('${product._id}', '${size}')"
+      >
+        <i class="fas fa-cart-plus me-2"></i> Add to Cart
+      </button>
+    `
+}
+
 
         <button 
   class="remove-btn w-100"
