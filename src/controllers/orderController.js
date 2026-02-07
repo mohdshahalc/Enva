@@ -31,46 +31,6 @@ exports.placeOrder = async (req, res) => {
     }
 
     // ============================
-// 🔒 STOCK VALIDATION (FIRST)
-// ============================
-const stockErrors = [];
-
-for (const item of cart.items) {
-  const product = await Product.findById(item.product._id);
-
-  if (!product) {
-    stockErrors.push({
-      productId: item.product._id,
-      size: item.size,
-      reason: "Product removed"
-    });
-    continue;
-  }
-
-
-  const available = product.sizes?.[item.size] ?? 0;
-
-  if (available < item.quantity) {
-    stockErrors.push({
-      productId: product._id,
-      productName: product.name,
-      size: item.size,
-      requested: item.quantity,
-      available
-    });
-  }
-}
-
-if (stockErrors.length > 0) {
-  return res.status(409).json({
-    code: "STOCK_MISMATCH",
-    message: "Some items are out of stock",
-    items: stockErrors
-  });
-}
-
-
-    // ============================
     // 🔥 CALCULATE OFFER PRICES
     // ============================
     let subtotal = 0;
@@ -189,32 +149,19 @@ if (stockErrors.length > 0) {
         });
       }
 
-      if (coupon.type === "flat") {
-  discountAmount = Math.min(coupon.flatAmount, subtotal);
-} else {
-  discountAmount = (subtotal * coupon.discountPercent) / 100;
+      discountAmount = +(
+        (subtotal * coupon.discountPercent) / 100
+      ).toFixed(2);
 
-  if (coupon.maxPurchase) {
-    discountAmount = Math.min(discountAmount, coupon.maxPurchase);
-  }
-}
+      appliedCoupon = {
+        code: coupon.code,
+        discountPercent: coupon.discountPercent,
+        discountAmount
+      };
 
-discountAmount = +discountAmount.toFixed(2);
-
-appliedCoupon = {
-  code: coupon.code,
-  type: coupon.type,
-  flatAmount: coupon.flatAmount || null,
-  discountPercent: coupon.discountPercent || null,
-  discountAmount
-};
-
-     if (paymentMethod !== "stripe") {
-  coupon.usedCount += 1;
-  coupon.usedBy.push(userId);
-  await coupon.save();
-}
-
+      coupon.usedCount += 1;
+      coupon.usedBy.push(userId);
+      await coupon.save();
     }
 
     // 5️⃣ FINAL TOTAL
@@ -239,30 +186,46 @@ if (paymentMethod === "wallet") {
 }
 
 
-
+// ============================
+// 💳 STRIPE PAYMENT VERIFICATION
+// ============================
+// ============================
 if (paymentMethod === "stripe") {
-  paymentStatus = "pending"; // wait for webhook
+  return res.status(200).json({
+    message: "Stripe payment processing via webhook"
+  });
 }
 
-   
 
-    
+    // ============================
+    // 🔒 STOCK VALIDATION
+    // ============================
+    for (const item of cart.items) {
+      const product = await Product.findById(item.product._id);
 
+      if (!product || product.sizes[item.size] < item.quantity) {
+        return res.status(400).json({
+          message: `Insufficient stock for ${product.name} (${item.size})`
+        });
+      }
+    }
 
+    for (const item of cart.items) {
+      const product = await Product.findById(item.product._id);
+      product.sizes[item.size] -= item.quantity;
+      product.stock -= item.quantity;
+      await product.save();
+    }
 
-const order = await Order.create({
+    // 6️⃣ Save order
+    const order = await Order.create({
   user: userId,
   items: orderItems,
   shippingAddress,
   shippingMethod,
   shippingPrice,
-
   paymentMethod,
   paymentStatus,
-
-  // 🔥 ADD THIS LINE
-  status: paymentMethod === "stripe" ? "pending" : "confirmed",
-
   paymentIntentId: paymentIntentId || null,
   subtotal,
   tax,
@@ -272,18 +235,9 @@ const order = await Order.create({
 });
 
 
-if (paymentMethod !== "stripe") {
-  for (const item of cart.items) {
-    const product = await Product.findById(item.product._id);
-    product.sizes[item.size] -= item.quantity;
-    product.stock -= item.quantity;
-    await product.save();
-  }
-
-  cart.items = [];
-  await cart.save();
-}
-
+    // 7️⃣ Clear cart
+    cart.items = [];
+    await cart.save();
 
     res.status(201).json({
       message: "Order placed successfully",
@@ -337,15 +291,10 @@ exports.validateCoupon = async (req, res) => {
       });
     }
 
-  return res.json({
-  code: coupon.code,
-  type: coupon.type,                 // 🔥 REQUIRED
-  flatAmount: coupon.flatAmount || 0,
-  discountPercent: coupon.discountPercent || 0,
-  minPurchase: coupon.minPurchase,
-  maxPurchase: coupon.maxPurchase || null
-});
-
+    return res.json({
+      code: coupon.code,
+      discountPercent: coupon.discountPercent
+    });
 
   } catch (err) {
     res.status(500).json({ message: "Coupon validation failed" });
@@ -388,121 +337,84 @@ exports.getOrderById = async (req, res) => {
   }
 };
 
-
 exports.cancelOrderItem = async (req, res) => {
   try {
     const userId = req.user.id;
     const { orderId, itemId } = req.params;
     const { reason } = req.body;
 
-    const order = await Order.findOne({ _id: orderId, user: userId });
-    if (!order) return res.status(404).json({ message: "Order not found" });
+    const order = await Order.findOne({
+      _id: orderId,
+      user: userId
+    });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
 
     const item = order.items.id(itemId);
-    if (!item) return res.status(404).json({ message: "Item not found" });
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
 
+    // 🔒 ADD THIS HERE ⬇️
     if (["cancelled", "returned"].includes(item.status)) {
-      return res.status(400).json({ message: "Item already processed" });
+      return res.status(400).json({
+        message: "This item is already processed"
+      });
     }
 
+    // ✅ Allow cancel only before shipping
     if (!["pending", "confirmed"].includes(item.status)) {
-      return res.status(400).json({ message: "Item cannot be cancelled" });
+      return res.status(400).json({
+        message: "This item cannot be cancelled"
+      });
     }
 
-    // Restock
-    await restockSingleProduct(item.product, item.size, item.quantity);
+    // 🔁 Restock ONLY this item
+    await restockSingleProduct(
+      item.product,
+      item.size,
+      item.quantity
+    );
 
-    // Old total
-    const oldTotal = order.total;
+    // 💰 Refund if needed
+    const itemTotal = item.price * item.quantity;
 
-    // Mark cancelled ONCE
+    if (
+      order.paymentStatus === "paid" &&
+      ["wallet", "stripe", "razorpay"].includes(order.paymentMethod)
+    ) {
+      await creditWallet(
+        userId,
+        itemTotal,
+        `Refund for cancelled item in order #${order._id}`
+      );
+    }
+
     item.status = "cancelled";
     item.cancelReason = reason || "User cancelled";
     item.cancelledAt = new Date();
 
-    // Active items
+    // Update order status if needed
     const activeItems = order.items.filter(
       i => !["cancelled", "returned"].includes(i.status)
     );
 
-    // New subtotal
-    let newSubtotal = activeItems.reduce(
-      (s, i) => s + i.price * i.quantity,
-      0
-    );
-
-    // Coupon revalidation
-    let newDiscount = 0;
-
-    if (order.coupon?.code) {
-      const coupon = await Coupon.findOne({
-        code: order.coupon.code,
-        isActive: true
-      });
-
-      if (coupon && newSubtotal >= coupon.minPurchase) {
-        if (coupon.type === "flat") {
-          newDiscount = Math.min(coupon.flatAmount, newSubtotal);
-        } else {
-          newDiscount = (newSubtotal * coupon.discountPercent) / 100;
-          if (coupon.maxPurchase) {
-            newDiscount = Math.min(newDiscount, coupon.maxPurchase);
-          }
-        }
-
-        newDiscount = +newDiscount.toFixed(2);
-        order.discountAmount = newDiscount;
-        order.coupon.discountAmount = newDiscount;
-      } else {
-        order.coupon = null;
-        order.discountAmount = 0;
-      }
-    }
-
-    // Tax + total
-    const newTax = +(newSubtotal * 0.07).toFixed(2);
-
-    const newTotal = +(
-      newSubtotal + order.shippingPrice + newTax - (order.discountAmount || 0)
-    ).toFixed(2);
-
-    const refundAmount = +(oldTotal - newTotal).toFixed(2);
-
-    order.subtotal = newSubtotal;
-    order.tax = newTax;
-    order.total = newTotal;
-
-    // Refund (wallet for stripe + wallet)
-    if (
-      refundAmount > 0 &&
-      order.paymentStatus === "paid" &&
-      ["wallet", "stripe"].includes(order.paymentMethod)
-    ) {
-      await creditWallet(
-        userId,
-        refundAmount,
-        `Partial refund for cancelled item in order #${order._id}`
-      );
-    }
-
-    // Order status
     if (activeItems.length === 0) {
       order.status = "cancelled";
       order.paymentStatus = "refunded";
-    } else {
-      order.status = "partial";
     }
 
     await order.save();
 
-    res.json({ message: "Item cancelled successfully", refundAmount });
+    res.json({ message: "Item cancelled successfully" });
 
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Item cancel failed" });
   }
 };
-
 
 exports.returnOrderItem = async (req, res) => {
   try {
