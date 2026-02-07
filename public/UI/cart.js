@@ -81,6 +81,9 @@ function renderCart(cart) {
 
     subtotal += itemTotal;
 
+    const availableStock = product.sizes?.[size] || 0;
+const isMax = quantity >= availableStock;
+
    return `
   <div class="cart-item">
     <div class="item-details">
@@ -132,7 +135,11 @@ function renderCart(cart) {
         <input type="text" class="qty-input" value="${quantity}" readonly>
 
         <button class="qty-btn"
-          onclick="updateQuantity('${product._id}', '${size}', ${quantity + 1})">+</button>
+  ${isMax ? "disabled" : ""}
+  onclick="updateQuantity('${product._id}', '${size}', ${quantity + 1})">
+  +
+</button>
+
       </div>
 
       <p class="item-price">
@@ -182,13 +189,18 @@ function updateQuantity(productId, size, quantity) {
     },
     body: JSON.stringify({ productId, size, quantity })
   })
-    .then(res => res.json())
-    .then(data => {
-      if (data.cart) {
-        renderCart(data.cart);
-      } else {
-        showToast(data.message || "Failed to update", "error");
+    .then(async res => {
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.message || "Stock limit reached", "warning");
+
+        // 🔄 IMPORTANT: refresh cart from server
+        loadCart();
+        return;
       }
+
+      renderCart(data.cart);
     })
     .catch(() => {
       showToast("Failed to update quantity", "error");

@@ -193,11 +193,13 @@ exports.updateCartQuantity = async (req, res) => {
 
     // 🔒 Stock check
     const availableStock = item.product.sizes?.[size] || 0;
-    if (quantity > availableStock) {
-      return res.status(400).json({
-        message: `Only ${availableStock} items left for size ${size}`
-      });
-    }
+   // 🔑 allow decrease always
+if (quantity > item.quantity && quantity > availableStock) {
+  return res.status(400).json({
+    message: `Only ${availableStock} items left for size ${size}`
+  });
+}
+
 
     // 2️⃣ Update qty
     item.quantity = quantity;
