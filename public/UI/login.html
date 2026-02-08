@@ -66,7 +66,7 @@
 }
 
 .card {
-  border-radius: 12px !important;
+  border-radius: 12px;
 }
 
 /* =========================
@@ -104,7 +104,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: #6c757d;
-  margin: 12px 0;
+  margin: 6px 0;
 }
 .auth-divider::before,
 .auth-divider::after {
@@ -121,63 +121,54 @@
 }
 
 /* =========================
-   GOOGLE AUTH (ADAPTIVE)
+   GOOGLE AUTH (FINAL)
 ========================= */
-
-/* Container */
 .auth-secondary {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0;
   margin: 0;
   padding: 0;
 }
 
-/* Wrapper */
-.google-auth-wrapper {
+.google-auth-wrapper,
+#googleLoginBtn,
+#googleLoginBtn > div {
   width: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* Google internal containers */
-#googleLoginBtn,
-#googleLoginBtn > div,
-#googleLoginBtn .S9gUrf-YoZ4jf {
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: block !important;
-}
-
-/* Google iframe – works for BOTH states */
 #googleLoginBtn iframe {
-  width: 100% !important;
-  min-height: 44px !important;   /* normal */
-  max-height: 64px !important;   /* "Continue as" */
-  height: auto !important;       /* 👈 KEY FIX */
-  display: block !important;
-  margin: 0 !important;
-  border-radius: 8px !important;
+  width: 100%;
+  min-height: 44px;
+  max-height: 64px;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  margin: 0;
+  padding: 0;
 }
 
 /* =========================
-   SIGNUP TEXT (LEFT)
+   SIGNUP TEXT
 ========================= */
 .signup-text-left {
-  margin-top: 6px;
+  margin-top: 2px;
   font-size: 0.85rem;
   color: #6c757d;
-  text-align: left;
+  line-height: 1.2;
 }
 
-/* Signup link hover effect */
+.signup-text-left p {
+  margin: 0;
+}
+
 .signup-text-left a {
   color: #000;
   font-weight: 600;
   text-decoration: none;
   position: relative;
-  transition: color 0.2s ease;
 }
 
 .signup-text-left a::after {
@@ -187,7 +178,7 @@
   bottom: -2px;
   width: 0;
   height: 1px;
-  background-color: #000;
+  background: #000;
   transition: width 0.25s ease;
 }
 
@@ -199,73 +190,46 @@
    OVERRIDES
 ========================= */
 .text-center {
-  text-align: left !important;
+  text-align: left;
 }
 
 .hover-black:hover {
-  color: #000 !important;
+  color: #000;
 }
-/* ===== REMOVE GAP BETWEEN GOOGLE & SIGNUP ===== */
+/* ===== HARD LOCK: NO GAP BETWEEN GOOGLE & SIGNUP ===== */
 
-/* Google container bottom cleanup */
-.auth-secondary {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-/* Kill any margin under Google button */
+/* Google button wrapper */
+.auth-secondary,
 .google-auth-wrapper,
-#googleLoginBtn,
-#googleLoginBtn iframe {
-  margin-bottom: 0 !important;
-}
-
-/* Signup text: remove default <p> spacing */
-.signup-text-left {
-  margin-top: 4px !important;   /* 👈 small, controlled */
-  padding-top: 0 !important;
-  line-height: 1.3;
-}
-
-/* If signup text is inside <p> */
-.signup-text-left p {
+#googleLoginBtn {
   margin: 0 !important;
   padding: 0 !important;
 }
 
-/* =========================
-   FINAL GAP KILL (AUTHORITATIVE)
-========================= */
-
-/* Remove divider spacing */
-.auth-divider {
-  margin: 6px 0 !important;   /* small & controlled */
-}
-
-/* Remove flex gap */
-.auth-secondary {
-  gap: 0 !important;
-}
-
-/* Remove Google bottom spacing */
-.google-auth-wrapper,
-#googleLoginBtn,
+/* Google iframe */
 #googleLoginBtn iframe {
-  margin-bottom: -23 !important;
-  padding-bottom: 0 !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 0 !important;
 }
 
-/* Signup text tight */
+/* Signup text */
 .signup-text-left {
-  margin-top: 2px !important;
+  margin-top: -27 !important;
   padding-top: 0 !important;
   line-height: 1.2;
 }
 
-/* Kill <p> default spacing */
+/* Kill paragraph spacing */
 .signup-text-left p {
   margin: 0 !important;
+  padding: 0 !important;
 }
+.signup-text-left {
+  margin-top: 2px; /* change to 3px or 4px if you prefer */
+}
+
 
 </style>
   <script src="login.js"></script>
@@ -426,27 +390,27 @@
   <span>OR</span>
 </div>
 
+<!-- Google -->
 <div class="auth-secondary">
-
   <div class="google-auth-wrapper">
     <div id="googleLoginBtn"></div>
   </div>
-
 </div>
 
-  <!-- Message -->
-  <p id="loginMessage" class="signup-message small mt-3"></p>
-
-  <!-- Sign Up -->
+<!-- Sign up -->
 <div class="signup-text-left">
-    <p class="small text-secondary mb-0">
-      Don't have an account?
-      <a href="../UI/signup.html" class="text-dark fw-medium text-decoration-none hover-black">Sign Up</a>
-    </p>
-  </div>
+  <p class="small text-secondary mb-0">
+    Don't have an account?
+    <a href="../UI/signup.html">Sign Up</a>
+  </p>
+</div>
 
-</form>
-<p id="signupMessage" class="signup-message small mt-3"></p>
+
+<!-- Messages (NO mt-3) -->
+<p id="loginMessage" class="signup-message small"></p>
+
+
+<p id="signupMessage" class="signup-message small"></p>
 
 
     </div>
