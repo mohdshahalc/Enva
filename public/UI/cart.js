@@ -371,13 +371,14 @@ async function validateStockBeforeCheckout() {
         );
       }
     });
-
-    if (issues.length) {
+if (issues.length) {
   if (!stockToastActive) {
     stockToastActive = true;
 
-    showToast("Stock issue found", "error");
-    issues.forEach(msg => showToast(msg, "warning"));
+    // 🔥 combine into ONE message
+    const message = issues.join(" • ");
+
+    showToast(message, "warning");
 
     setTimeout(() => {
       stockToastActive = false;
@@ -386,6 +387,7 @@ async function validateStockBeforeCheckout() {
 
   return false;
 }
+
 
     return true; // ✅ SAFE TO CHECKOUT
 
