@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", loadCart);
+let stockToastActive = false;
 
 async function loadCart() {
   const token = localStorage.getItem("userToken");
@@ -337,7 +338,7 @@ function redirectToProducts() {
 
 async function validateStockBeforeCheckout() {
   if (stockToastActive) return false; 
-  
+
   const token = localStorage.getItem("userToken");
   if (!token) return false;
 
@@ -372,14 +373,19 @@ async function validateStockBeforeCheckout() {
     });
 
     if (issues.length) {
-      showToast("Stock issue found", "error");
+  if (!stockToastActive) {
+    stockToastActive = true;
 
-      issues.forEach(msg => {
-        showToast(msg, "warning");
-      });
+    showToast("Stock issue found", "error");
+    issues.forEach(msg => showToast(msg, "warning"));
 
-      return false;
-    }
+    setTimeout(() => {
+      stockToastActive = false;
+    }, 3000);
+  }
+
+  return false;
+}
 
     return true; // ✅ SAFE TO CHECKOUT
 
@@ -394,40 +400,25 @@ async function validateStockBeforeCheckout() {
 document
   .getElementById("checkoutLink")
   ?.addEventListener("click", async (e) => {
-    e.preventDefault(); // ⛔ STOP DEFAULT NAVIGATION
-
-    const isValid = await validateStockBeforeCheckout();
-
-    if (!isValid) {
-      // 🚫 BLOCK CHECKOUT
-      return;
-    }
-
-    // ✅ STOCK OK → GO TO CHECKOUT
-    window.location.href = "checkout.html";
-  });
-
-
-  document
-  .getElementById("checkoutLink")
-  ?.addEventListener("click", async (e) => {
-    e.preventDefault(); // ⛔ stop <a> navigation
+    e.preventDefault();
 
     const btn = document.querySelector(".checkout-btn");
     if (!btn) return;
 
-    // 🔒 prevent double clicks
     btn.disabled = true;
     btn.innerText = "Checking stock...";
 
-    const isValid = await validateStockBeforeCheckout();
+    try {
+      const isValid = await validateStockBeforeCheckout();
 
-    // 🔓 re-enable button
-    btn.disabled = false;
-    btn.innerText = "Proceed to Checkout";
+      if (!isValid) return; // ❌ stay on cart
 
-    if (!isValid) return; // ❌ stay on cart
+      // ✅ STOCK OK
+      window.location.href = "checkout.html";
 
-    // ✅ STOCK OK → GO TO CHECKOUT
-    window.location.href = "checkout.html";
+    } finally {
+      // 🔥 ALWAYS reset button (even on early return)
+      btn.disabled = false;
+      btn.innerText = "Proceed to Checkout";
+    }
   });
