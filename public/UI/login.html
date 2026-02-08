@@ -695,89 +695,67 @@ backdrop.onclick = () => {
 </script>
 
 <script>
-  window.onload = function () {
-    if (!window.google || !google.accounts) {
-      console.error("Google SDK not loaded");
-      return;
-    }
+window.onload = function () {
+  if (!window.google || !google.accounts) return;
 
-    google.accounts.id.initialize({
-      client_id: "1007399516748-q15qbjubp2h5met0kemsb85gajruqjhq.apps.googleusercontent.com",
-      callback: handleGoogleLogin,
-      auto_select: false
-    });
+  google.accounts.id.initialize({
+    client_id: "1007399516748-q15qbjubp2h5met0kemsb85gajruqjhq.apps.googleusercontent.com",
+    callback: handleGoogleLogin,
+    auto_select: false
+  });
 
-    const btn = document.getElementById("googleLoginBtn");
-    if (btn) {
-   const card = document.querySelector(".card");
-const cardStyles = window.getComputedStyle(card);
+  renderGoogleButton();
+  window.addEventListener("resize", renderGoogleButton);
+};
 
-const paddingLeft  = parseFloat(cardStyles.paddingLeft);
-const paddingRight = parseFloat(cardStyles.paddingRight);
+function renderGoogleButton() {
+  const loginBtn = document.querySelector(".btn.btn-dark.btn-lg");
+  const googleBtn = document.getElementById("googleLoginBtn");
 
-const buttonWidth =
-  card.getBoundingClientRect().width - paddingLeft - paddingRight;
+  if (!loginBtn || !googleBtn) return;
 
-google.accounts.id.renderButton(
-  document.getElementById("googleLoginBtn"),
-  {
+  // 🔥 EXACT WIDTH of LOGIN button
+  const exactWidth = loginBtn.getBoundingClientRect().width;
+
+  googleBtn.innerHTML = ""; // clear before render
+
+  google.accounts.id.renderButton(googleBtn, {
     theme: "outline",
     size: "large",
     text: "continue_with",
     shape: "rectangular",
     logo_alignment: "left",
-    width: document
-      .querySelector(".card")
-      .getBoundingClientRect().width - 28// exact inner width
-  }
-);
+    width: Math.floor(exactWidth) // ✅ PIXEL-PERFECT
+  });
+}
 
+async function handleGoogleLogin(response) {
+  try {
+    const res = await fetch("https://envastore.online/api/auth/user/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ credential: response.credential })
+    });
 
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
 
+    const { accessToken, user } = data;
+
+    if (user.role === "admin") {
+      localStorage.setItem("adminToken", accessToken);
+      window.location.href = "../Admin/dashbord.html";
+    } else {
+      localStorage.setItem("userToken", accessToken);
+      window.location.href = "home.html";
     }
-  };
-
-  async function handleGoogleLogin(response) {
-    try {
-      const res = await fetch("https://envastore.online/api/auth/user/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          credential: response.credential
-        })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Google login failed");
-        return;
-      }
-
-      const { accessToken, user } = data;
-
-      if (!accessToken || !user?.role) {
-        throw new Error("Invalid Google login response");
-      }
-
-      // ✅ SAME logic as email/password login
-      if (user.role === "admin") {
-        localStorage.setItem("adminToken", accessToken);
-        localStorage.setItem("adminRole", "admin");
-        window.location.href = "../Admin/dashbord.html";
-      } else {
-        localStorage.setItem("userToken", accessToken);
-        localStorage.setItem("userRole", "user");
-        window.location.href = "home.html";
-      }
-
-    } catch (err) {
-      console.error(err);
-      alert("Google authentication error");
-    }
+  } catch {
+    alert("Google authentication error");
   }
+}
 </script>
+
 
 <script src="login.js"></script>
 
