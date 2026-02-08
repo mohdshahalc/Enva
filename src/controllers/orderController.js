@@ -13,25 +13,44 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 exports.placeOrder = async (req, res) => {
   try {
     const userId = req.user.id;
-
     const {
       shippingAddress,
       shippingMethod,
       paymentMethod,
       couponCode,
-      paymentIntentId  
+      paymentIntentId
     } = req.body;
 
     // 1️⃣ Get cart
     const cart = await Cart.findOne({ user: userId })
       .populate("items.product");
 
-    if (!cart || cart.items.length === 0) {
+    if (!cart || !cart.items.length) {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
     // ============================
-    // 🔥 CALCULATE OFFER PRICES
+    // 🔒 STOCK VALIDATION (BEFORE PAYMENT)
+    // ============================
+    for (const item of cart.items) {
+      const product = await Product.findById(item.product._id);
+
+      if (!product) {
+        return res.status(400).json({ message: "Product not found" });
+      }
+
+      const reserved = product.reservedStock?.get(item.size) || 0;
+      const available = (product.sizes[item.size] || 0) - reserved;
+
+      if (available < item.quantity) {
+        return res.status(400).json({
+          message: `Insufficient stock for ${product.name} (${item.size}). Only ${available} left`
+        });
+      }
+    }
+
+    // ============================
+    // 🔥 CALCULATE PRICES
     // ============================
     let subtotal = 0;
     const now = new Date();
@@ -39,38 +58,29 @@ exports.placeOrder = async (req, res) => {
 
     for (const item of cart.items) {
       const product = item.product;
-
       let finalPrice = product.price;
       let oldPrice = null;
       let discountPercent = null;
 
-      // PRODUCT OFFER
-      let offer = await Offer.findOne({
-        offerType: "product",
-        product: product._id,
-        isActive: true,
-        startDate: { $lte: now },
-        endDate: { $gte: now }
-      }).lean();
-
-      // CATEGORY OFFER
-      if (!offer && product.category) {
-        const categoryDoc = await Category.findOne({
-          name: product.category
-        }).lean();
-
-        if (categoryDoc) {
-          offer = await Offer.findOne({
+      const offer =
+        (await Offer.findOne({
+          offerType: "product",
+          product: product._id,
+          isActive: true,
+          startDate: { $lte: now },
+          endDate: { $gte: now }
+        })) ||
+        (product.category &&
+          (await Offer.findOne({
             offerType: "category",
-            category: categoryDoc._id,
+            category: (
+              await Category.findOne({ name: product.category })
+            )?._id,
             isActive: true,
             startDate: { $lte: now },
             endDate: { $gte: now }
-          }).lean();
-        }
-      }
+          })));
 
-      // APPLY OFFER
       if (offer) {
         oldPrice = product.price;
         discountPercent = offer.discountPercent;
@@ -79,8 +89,7 @@ exports.placeOrder = async (req, res) => {
         );
       }
 
-      const itemTotal = finalPrice * item.quantity;
-      subtotal += itemTotal;
+      subtotal += finalPrice * item.quantity;
 
       orderItems.push({
         product: product._id,
@@ -88,25 +97,20 @@ exports.placeOrder = async (req, res) => {
         productImage: product.images?.[0],
         size: item.size,
         quantity: item.quantity,
-
-        // 🔐 PRICE LOCK
         price: finalPrice,
         oldPrice,
         discountPercent
       });
     }
 
-    // 3️⃣ Shipping
     const shippingPrice = shippingMethod === "express" ? 35 : 15;
-
-    // 4️⃣ Tax
     const tax = +(subtotal * 0.07).toFixed(2);
 
-    // ==============================
-    // 🎟️ COUPON LOGIC
-    // ==============================
-    let appliedCoupon = null;
+    // ============================
+    // 🎟️ COUPON
+    // ============================
     let discountAmount = 0;
+    let appliedCoupon = null;
 
     if (couponCode) {
       const coupon = await Coupon.findOne({
@@ -115,37 +119,22 @@ exports.placeOrder = async (req, res) => {
       });
 
       if (!coupon) {
-        return res.status(400).json({ message: "Invalid coupon code" });
+        return res.status(400).json({ message: "Invalid coupon" });
       }
 
       if (now < coupon.startDate || now > coupon.endDate) {
-        return res.status(400).json({
-          message: "Coupon expired or inactive"
-        });
+        return res.status(400).json({ message: "Coupon expired" });
       }
 
       if (subtotal < coupon.minPurchase) {
         return res.status(400).json({
-          message: `Minimum purchase ₹${coupon.minPurchase} required`
+          message: `Minimum ₹${coupon.minPurchase} required`
         });
       }
 
-      const alreadyUsed = coupon.usedBy.some(
-        id => id.toString() === userId.toString()
-      );
-
-      if (alreadyUsed) {
+      if (coupon.usedBy.includes(userId)) {
         return res.status(400).json({
           message: "You have already used this coupon"
-        });
-      }
-
-      if (
-        coupon.usageLimit > 0 &&
-        coupon.usedCount >= coupon.usageLimit
-      ) {
-        return res.status(400).json({
-          message: "Coupon usage limit reached"
         });
       }
 
@@ -153,89 +142,71 @@ exports.placeOrder = async (req, res) => {
         (subtotal * coupon.discountPercent) / 100
       ).toFixed(2);
 
+      coupon.usedBy.push(userId);
+      coupon.usedCount += 1;
+      await coupon.save();
+
       appliedCoupon = {
         code: coupon.code,
         discountPercent: coupon.discountPercent,
         discountAmount
       };
-
-      coupon.usedCount += 1;
-      coupon.usedBy.push(userId);
-      await coupon.save();
     }
 
-    // 5️⃣ FINAL TOTAL
     const total = +(
       subtotal + shippingPrice + tax - discountAmount
     ).toFixed(2);
 
     // ============================
-// 👛 WALLET PAYMENT
-// ============================
-let paymentStatus = "pending";
+    // 👛 WALLET
+    // ============================
+    let paymentStatus = "pending";
 
-if (paymentMethod === "wallet") {
-  // 💸 Debit wallet FIRST (server-side truth)
-  await debitWallet(
-    userId,
-    total,
-    "Order payment (wallet)"
-  );
-
-  paymentStatus = "paid";
-}
-
-
-// ============================
-// 💳 STRIPE PAYMENT VERIFICATION
-// ============================
-// ============================
-if (paymentMethod === "stripe") {
-  return res.status(200).json({
-    message: "Stripe payment processing via webhook"
-  });
-}
-
+    if (paymentMethod === "wallet") {
+      await debitWallet(userId, total, "Order payment (wallet)");
+      paymentStatus = "paid";
+    }
 
     // ============================
-    // 🔒 STOCK VALIDATION
+    // 💳 STRIPE — RESERVE STOCK
     // ============================
-    for (const item of cart.items) {
-      const product = await Product.findById(item.product._id);
+    if (paymentMethod === "stripe") {
+      for (const item of cart.items) {
+        const product = await Product.findById(item.product._id);
+        const reserved = product.reservedStock?.get(item.size) || 0;
 
-      if (!product || product.sizes[item.size] < item.quantity) {
-        return res.status(400).json({
-          message: `Insufficient stock for ${product.name} (${item.size})`
-        });
+        product.reservedStock.set(
+          item.size,
+          reserved + item.quantity
+        );
+
+        await product.save();
       }
+
+      return res.json({
+        message: "Stock reserved, waiting for Stripe payment"
+      });
     }
 
-    for (const item of cart.items) {
-      const product = await Product.findById(item.product._id);
-      product.sizes[item.size] -= item.quantity;
-      product.stock -= item.quantity;
-      await product.save();
-    }
-
-    // 6️⃣ Save order
+    // ============================
+    // 📦 SAVE ORDER (wallet / COD)
+    // ============================
     const order = await Order.create({
-  user: userId,
-  items: orderItems,
-  shippingAddress,
-  shippingMethod,
-  shippingPrice,
-  paymentMethod,
-  paymentStatus,
-  paymentIntentId: paymentIntentId || null,
-  subtotal,
-  tax,
-  discountAmount,
-  coupon: appliedCoupon,
-  total
-});
+      user: userId,
+      items: orderItems,
+      shippingAddress,
+      shippingMethod,
+      shippingPrice,
+      paymentMethod,
+      paymentStatus,
+      paymentIntentId: paymentIntentId || null,
+      subtotal,
+      tax,
+      discountAmount,
+      coupon: appliedCoupon,
+      total
+    });
 
-
-    // 7️⃣ Clear cart
     cart.items = [];
     await cart.save();
 
@@ -246,11 +217,10 @@ if (paymentMethod === "stripe") {
 
   } catch (err) {
     console.error("ORDER ERROR:", err);
-    res.status(500).json({
-      message: "Order placement failed"
-    });
+    res.status(500).json({ message: "Order placement failed" });
   }
 };
+
 
 
 exports.validateCoupon = async (req, res) => {

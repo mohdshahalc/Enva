@@ -112,8 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===== FLAT COUPON ===== */
   if (couponType === "flat") {
 
-    if (flatAmount <= 99) {
-      showToast("Flat amount must be ₹100", "error");
+    if (flatAmount <= 49) {
+      showToast("Flat amount must be ₹50", "error");
       return;
     }
 

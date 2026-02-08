@@ -616,6 +616,7 @@ async function placeOrder(paymentMethod, paymentIntentId = null) {
 const orderForm = document.querySelector(".checkout-form form");
 const placeOrderBtn = document.getElementById("placeOrderBtn");
 
+
 orderForm.addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -630,7 +631,7 @@ orderForm.addEventListener("submit", async function (e) {
     return;
   }
 
-  const selectedMethod = selectedRadio.value; // ✅ use value
+  const selectedMethod = selectedRadio.value;
   const loader = document.getElementById("paymentLoader");
 
   const totalText = document.getElementById("total").textContent;
@@ -641,147 +642,128 @@ orderForm.addEventListener("submit", async function (e) {
     return;
   }
 
+  // ================================
+  // 🔒 STOCK CHECK (ADD THIS HERE)
+  // ================================
+  const stockCheck = await validateCartStockBeforeCheckout();
+
+  if (!stockCheck.valid) {
+    if (stockCheck.issues?.length) {
+      const msg = stockCheck.issues
+        .map(i => `${i.product} (${i.size}) – ${i.reason}`)
+        .join("\n");
+
+      showToast("Some items are unavailable", "error");
+
+msg.split("\n").forEach(line => {
+  showToast(line, "warning");
+});
+
+    } else {
+      alert(stockCheck.message || "Stock unavailable");
+    }
+
+    return; // ⛔ STOP PAYMENT FLOW COMPLETELY
+  }
+
+  // ✅ ONLY AFTER STOCK IS OK
   try {
     placeOrderBtn.disabled = true;
     placeOrderBtn.textContent = "Processing…";
     console.log(selectedMethod);
-    
+
     // ================================
     // 💳 STRIPE
     // ================================
     if (selectedMethod === "stripe") {
-  loader?.classList.remove("d-none");
+      loader?.classList.remove("d-none");
 
-  // ✅ GET SHIPPING METHOD
-  const selectedShipping = document.querySelector(
-    'input[name="shippingMethod"]:checked'
-  );
+      const selectedShipping = document.querySelector(
+        'input[name="shippingMethod"]:checked'
+      );
 
-  const shippingMethod =
-    selectedShipping?.id === "expressShipping" ? "express" : "standard";
+      const shippingMethod =
+        selectedShipping?.id === "expressShipping" ? "express" : "standard";
 
-  const shippingPrice = Number(selectedShipping?.value || 15);
+      const shippingPrice = Number(selectedShipping?.value || 15);
 
-  const res = await apiFetch(
-    "https://envastore.online/api/payment/create-checkout-session",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("userToken")}`
-      },
-      body: JSON.stringify({
-        amount: Math.round(total * 100),
+      const res = await apiFetch(
+        "https://envastore.online/api/payment/create-checkout-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`
+          },
+          body: JSON.stringify({
+            amount: Math.round(total * 100),
+            shippingAddress: {
+              email: email.value,
+              firstName: firstName.value,
+              lastName: lastName.value,
+              street: address.value,
+              city: city.value,
+              state: state.value,
+              zip: zip.value
+            },
+            shippingMethod,
+            shippingPrice
+          })
+        }
+      );
 
-        // 🔥 SEND SHIPPING DATA TO STRIPE
-        shippingAddress: {
-          email: email.value,
-          firstName: firstName.value,
-          lastName: lastName.value,
-          street: address.value,
-          city: city.value,
-          state: state.value,
-          zip: zip.value
-        },
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        throw new Error("Stripe session creation failed");
+      }
 
-        shippingMethod,
-        shippingPrice
-      })
+      window.location.href = data.url;
+      return;
     }
-  );
-
-  const data = await res.json();
-
-  if (!res.ok || !data.url) {
-    throw new Error("Stripe session creation failed");
-  }
-
-  setTimeout(() => {
-    window.location.href = data.url;
-  }, 400);
-
-  return;
-}
-
 
     // ================================
     // 👛 WALLET
     // ================================
     if (selectedMethod === "wallet") {
-  loader?.classList.remove("d-none");
+      loader?.classList.remove("d-none");
 
-  const walletRes = await apiFetch(
-    "https://envastore.online/api/user/wallet",
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("userToken")}`
+      const walletRes = await apiFetch(
+        "https://envastore.online/api/user/wallet",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+
+      const walletData = await walletRes.json();
+
+      if (walletData.balance < total) {
+        loader?.classList.add("d-none");
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = "Place Order";
+showToast("Insufficient wallet balance", "error");
+        return;
       }
+
+      const order = await placeOrder("wallet");
+      redirectToThankYou(order.orderId);
+      return;
     }
-  );
-
-  const walletData = await walletRes.json();
-
-  // ❌ INSUFFICIENT BALANCE
-  if (walletData.balance < total) {
-    loader?.classList.add("d-none");
-    placeOrderBtn.disabled = false;
-    placeOrderBtn.textContent = "Place Order";
-
-    const overlay = document.getElementById("walletOverlay");
-    const msg = document.getElementById("walletOverlayMsg");
-
-    msg.innerText =
-      `Your wallet balance is ₹${walletData.balance}, ` +
-      `but your order total is ₹${total}.`;
-
-    document.getElementById("rechargeWalletBtn").onclick = () => { window.location.href = "wallet.html"; }; document.getElementById("changePaymentBtn").onclick = () => { overlay.classList.add("d-none"); document.getElementById("wallet").checked = false; };
-
-    overlay.classList.remove("d-none");
-    return;
-  }
-
-  try {
-    // ⏳ ENSURE LOADER VISIBLE FOR 2 SECONDS
-    // await wait(2000);
-
-    // ✅ PLACE ORDER
-    const order = await placeOrder("wallet");
-
-loader?.classList.add("d-none");
-placeOrderBtn.textContent = "Order Placed ✓";
-placeOrderBtn.disabled = true;
-
-redirectToThankYou(order.orderId);
-
-  } catch (err) {
-    console.error(err);
-    loader?.classList.add("d-none");
-    placeOrderBtn.disabled = false;
-    placeOrderBtn.textContent = "Place Order";
-    showToast(err.message || "Wallet payment failed", "error");
-  }
-
-  return;
-}
-
-
 
     // ================================
     // 💵 CASH ON DELIVERY
     // ================================
     const order = await placeOrder("cod");
-
-    placeOrderBtn.textContent = "Order Placed ✓";
     redirectToThankYou(order.orderId);
 
   } catch (err) {
     console.error("CHECKOUT ERROR:", err);
-
     loader?.classList.add("d-none");
     placeOrderBtn.disabled = false;
     placeOrderBtn.textContent = "Place Order";
+    showToast(err.message || "Payment failed", "error");
 
-    alert("Payment failed. Please try again.");
   }
 });
 
@@ -937,3 +919,44 @@ document.getElementById("existingAddress")?.addEventListener("change", e => {
 });
 
 
+async function validateCartStockBeforeCheckout() {
+  const token = localStorage.getItem("userToken");
+
+  const res = await apiFetch("https://envastore.online/api/user/cart", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  const cart = await res.json();
+
+  if (!cart.items || !cart.items.length) {
+    return { valid: false, message: "Your cart is empty" };
+  }
+
+  const stockIssues = [];
+
+  cart.items.forEach(item => {
+    const availableStock = item.product?.sizes?.[item.size] ?? 0;
+
+    if (availableStock === 0) {
+      stockIssues.push({
+        product: item.product.name,
+        size: item.size,
+        reason: "Out of stock"
+      });
+    } else if (item.quantity > availableStock) {
+      stockIssues.push({
+        product: item.product.name,
+        size: item.size,
+        reason: `Only ${availableStock} left`
+      });
+    }
+  });
+
+  if (stockIssues.length) {
+    return { valid: false, issues: stockIssues };
+  }
+
+  return { valid: true };
+}
