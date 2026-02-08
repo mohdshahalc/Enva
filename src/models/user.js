@@ -56,7 +56,16 @@ const userSchema = new mongoose.Schema({
   refreshTokenRole: {
     type: String,
     enum: ["admin", "user"]
-  }
+  },
+  authProvider: {
+  type: String,
+  enum: ["local", "google"],
+  default: "local"
+},googleId: {
+  type: String,
+  default: null
+}
+
 
 }, { timestamps: true });
 

@@ -9,25 +9,25 @@
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="navBar.css">
-   <script src="signup.js"></script>
+ 
+   <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   /* ==========================================
-   SHARED UTILITIES & PAGE-SAFE STYLES
+   SHARED UTILITIES
 ========================================== */
 
-/* Custom container width */
 .custom-container-lg {
   max-width: 1400px;
 }
 
-/* Hover utility */
 .hover-black:hover {
   color: #000 !important;
 }
 
 /* =========================
-   SOCIAL ICONS (GENERIC)
+   SOCIAL ICONS
 ========================= */
+
 .social-icon-box {
   width: 32px;
   height: 32px;
@@ -41,14 +41,14 @@
 }
 
 /* =========================
-   SIGNUP / FORM STATUS MESSAGES
+   SIGNUP STATUS MESSAGE
 ========================= */
+
 .signup-message {
   padding: 10px 14px;
   border-radius: 6px;
   font-weight: 600;
-  display: none; /* hidden by default */
-  transition: all 0.3s ease;
+  display: none;
 }
 
 .signup-message.success {
@@ -65,7 +65,206 @@
   border: 1px solid #f5c2c7;
 }
 
+/* =========================
+   AUTH DIVIDER (OR)
+========================= */
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 16px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.auth-divider::before {
+  margin-right: 12px;
+}
+
+.auth-divider::after {
+  margin-left: 12px;
+}
+
+/* =========================
+   GOOGLE AUTH (SAFE)
+========================= */
+
+.google-auth-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+#googleSignupBtn {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#googleSignupBtn iframe {
+  width: 100% !important;
+  height: 44px !important;
+  display: block !important;
+  margin: 0 !important;
+  border-radius: 6px !important;
+}
+
+/* =========================
+   AUTH SECONDARY AREA
+========================= */
+
+.auth-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;   /* SMALL, CLEAN GAP */
+  margin: 0;
+  padding: 0;
+}
+
+/* Login link */
+.login-link-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.login-link {
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* =========================
+   MOBILE FIX
+========================= */
+
+@media (max-width: 575px) {
+  .login-link-wrap {
+    justify-content: center;
+  }
+}
+/* === FIX EXTRA SPACE UNDER GOOGLE BUTTON === */
+
+/* Kill Google internal wrapper spacing */
+#googleSignupBtn > div {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Force iframe wrapper height to content */
+#googleSignupBtn {
+  height: auto !important;
+}
+
+/* Reduce auth-secondary height naturally */
+.auth-secondary {
+  gap: 2px !important;
+}
+
+/* Pull login text closer */
+.login-link-wrap {
+  margin-top: -6px; /* 👈 key line */
+}
+/* ===== COLLAPSE GOOGLE EXTRA SPACE ===== */
+
+/* Remove spacing from Google internal wrappers */
+#googleSignupBtn,
+#googleSignupBtn > div,
+#googleSignupBtn .S9gUrf-YoZ4jf {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ensure wrapper doesn't reserve extra height */
+#googleSignupBtn .S9gUrf-YoZ4jf {
+  display: block !important;
+}
+
+/* Tighten auth container */
+.auth-secondary {
+  gap: 2px !important;
+}
+
+/* Pull login text upward slightly */
+.login-link-wrap {
+  margin-top: -8px; /* key adjustment */
+}
+/* ===== FORCE GOOGLE WRAPPER TO BUTTON HEIGHT ===== */
+
+/* Google outer wrapper */
+.google-auth-wrapper {
+  height: 54px !important;     /* 👈 key fix */
+  min-height: 44px !important;
+  max-height: 44px !important;
+  overflow: hidden;            /* safe here */
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Google container */
+#googleSignupBtn {
+  height: 44px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Google internal wrapper */
+#googleSignupBtn > div,
+#googleSignupBtn .S9gUrf-YoZ4jf {
+  height: 44px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Google iframe */
+#googleSignupBtn iframe {
+  height: 44px !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+/* Tighten overall auth section */
+.auth-secondary {
+  gap: 3px !important;
+}
+
+/* ===== FINAL TINY GAP CONTROL ===== */
+
+/* Auth container */
+.auth-secondary {
+  gap: 7px !important;   /* 👈 small, balanced gap */
+}
+
+/* Login link position */
+.login-link-wrap {
+  margin-top: 2px;      /* 👈 subtle spacing */
+}
+/* ===== MOBILE: ALIGN LOGIN LINK TO RIGHT ===== */
+@media (max-width: 575px) {
+  .login-link-wrap {
+    justify-content: flex-end !important;
+    padding-right: 4px; /* small safe spacing from edge */
+  }
+}
+
 </style>
+
 </head>
 
 <body class="bg-white text-dark">
@@ -218,18 +417,33 @@
 
             </div>
 
-            <!-- Submit + Login Link -->
-            <div class="d-flex justify-content-between align-items-center mt-3">
+         <!-- CREATE ACCOUNT -->
+<div class="signup-actions mt-3">
+  <button type="submit" class="btn btn-dark px-4 py-2 fw-bold text-uppercase w-100">
+    Create Account
+  </button>
+</div>
 
-               <button type="submit" class="btn btn-dark px-4 py-2 fw-bold text-uppercase">
-             Create Account
-              </button>
+<!-- Divider -->
+<div class="auth-divider my-3">
+  <span>OR</span>
+</div>
 
-                <a href="login.html" class="text-secondary fw-semibold text-decoration-none">
-                    Already have an account?
-                </a>
+<div class="auth-secondary">
 
-            </div>
+  <div class="google-auth-wrapper">
+    <div id="googleSignupBtn"></div>
+  </div>
+
+  <div class="login-link-wrap">
+    <a href="login.html" class="login-link">
+      Already have an account?
+    </a>
+  </div>
+
+</div>
+
+
 
         </form>
 <p id="signupMessage" class="signup-message small mt-3"></p>
@@ -407,6 +621,7 @@
   <a href="./profile.html">Account</a>
 
 </div>
+
 <script>
 const toggle = document.getElementById("menuToggle");
 const drawer = document.getElementById("mobileDrawer");
@@ -429,7 +644,60 @@ backdrop.onclick = () => {
 };
 </script>
 
-<div id="drawerBackdrop"></div>
+<script>
+  window.onload = function () {
+    if (!window.google || !google.accounts) {
+      console.error("Google SDK not loaded");
+      return;
+    }
 
+    google.accounts.id.initialize({
+      client_id: "1007399516748-q15qbjubp2h5met0kemsb85gajruqjhq.apps.googleusercontent.com",
+      callback: handleGoogleSignup
+    });
+
+    const btn = document.getElementById("googleSignupBtn");
+    if (btn) {
+      google.accounts.id.renderButton(btn, {
+  theme: "outline",
+  size: "large",
+  text: "continue_with",
+  shape: "rectangular",
+  logo_alignment: "left",
+  width: "100%"
+});
+
+    }
+  };
+
+  async function handleGoogleSignup(response) {
+    try {
+      const res = await fetch("https://envastore.online/api/auth/user/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          credential: response.credential
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Google signup failed");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      window.location.href = "profile.html";
+    } catch (err) {
+      console.error(err);
+      alert("Google authentication error");
+    }
+  }
+</script>
+
+
+<div id="drawerBackdrop"></div>
+  <script src="signup.js"></script>
 </body>
 </html>
