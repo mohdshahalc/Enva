@@ -121,56 +121,79 @@
 }
 
 /* =========================
-   GOOGLE AUTH (FINAL)
+   GOOGLE AUTH – FINAL LOCK
 ========================= */
+
 .auth-secondary {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
+/* Google wrapper */
 .google-auth-wrapper,
 #googleLoginBtn,
 #googleLoginBtn > div {
   width: 100%;
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
+/* Google iframe — force same height as LOGIN */
 #googleLoginBtn iframe {
-  width: 100%;
-  min-height: 44px;
-  max-height: 64px;
-  height: auto;
-  display: block;
-  border-radius: 8px;
-  margin: 0;
-  padding: 0;
+  width: 100% !important;
+  height: 52px !important;        /* 👈 SAME AS LOGIN */
+  min-height: 52px !important;
+  max-height: 56px !important;    /* allows "Continue as" */
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
 }
 
 /* =========================
-   SIGNUP TEXT
+   SIGNUP – FIXED POSITION
 ========================= */
+
 .signup-text-left {
-  margin-top: 2px;
+  margin-top: 4px !important;     /* 👈 tight, clean */
+  padding-top: 0 !important;
   font-size: 0.85rem;
-  color: #6c757d;
   line-height: 1.2;
 }
 
 .signup-text-left p {
-  margin: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+/* =========================
+   SIGNUP TEXT STYLE
+========================= */
+
+.signup-text-left {
+  margin-top: 4px;                 /* tight under Google */
+  font-size: 0.85rem;
+  color: #6c757d;
+  line-height: 1.3;
 }
 
+/* Remove default p spacing */
+.signup-text-left p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Signup link */
 .signup-text-left a {
   color: #000;
   font-weight: 600;
   text-decoration: none;
   position: relative;
+  transition: color 0.25s ease;
 }
 
+/* Underline animation */
 .signup-text-left a::after {
   content: "";
   position: absolute;
@@ -178,98 +201,17 @@
   bottom: -2px;
   width: 0;
   height: 1px;
-  background: #000;
+  background-color: #000;
   transition: width 0.25s ease;
+}
+
+/* Hover state */
+.signup-text-left a:hover {
+  color: #000;
 }
 
 .signup-text-left a:hover::after {
   width: 100%;
-}
-
-/* =========================
-   OVERRIDES
-========================= */
-.text-center {
-  text-align: left;
-}
-
-.hover-black:hover {
-  color: #000;
-}
-/* ===== HARD LOCK: NO GAP BETWEEN GOOGLE & SIGNUP ===== */
-
-/* Google button wrapper */
-.auth-secondary,
-.google-auth-wrapper,
-#googleLoginBtn {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Google iframe */
-#googleLoginBtn iframe {
-  display: block !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 0 !important;
-}
-
-/* Signup text */
-.signup-text-left {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  line-height: 1.2;
-}
-
-/* Kill paragraph spacing */
-.signup-text-left p {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-.signup-text-left {
-  margin-top: 2px; /* change to 3px or 4px if you prefer */
-}
-/* ===== GOOGLE AUTH FINAL FIX ===== */
-
-.auth-secondary {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  margin: 0;
-  padding: 0;
-}
-
-.google-auth-wrapper {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-#googleLoginBtn {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-/* Google iframe (Google controls height) */
-#googleLoginBtn iframe {
-  width: 100%;
-  display: block;
-  border-radius: 8px;
-  margin: 0;
-  padding: 0;
-}
-
-/* ===== SIGNUP POSITION FIX ===== */
-
-.signup-text-left {
-  margin-top: 4px;   /* 👈 exact visual balance */
-  font-size: 0.85rem;
-  line-height: 1.2;
-}
-
-.signup-text-left p {
-  margin: 0;
 }
 
 
