@@ -229,6 +229,48 @@
 .signup-text-left {
   margin-top: 2px; /* change to 3px or 4px if you prefer */
 }
+/* ===== GOOGLE AUTH FINAL FIX ===== */
+
+.auth-secondary {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+}
+
+.google-auth-wrapper {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#googleLoginBtn {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Google iframe (Google controls height) */
+#googleLoginBtn iframe {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== SIGNUP POSITION FIX ===== */
+
+.signup-text-left {
+  margin-top: 4px;   /* 👈 exact visual balance */
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+.signup-text-left p {
+  margin: 0;
+}
 
 
 </style>
@@ -575,13 +617,13 @@ backdrop.onclick = () => {
     const btn = document.getElementById("googleLoginBtn");
     if (btn) {
       google.accounts.id.renderButton(btn, {
-        theme: "outline",
-        size: "large",
-        text: "continue_with",
-        shape: "rectangular",
-        logo_alignment: "left",
-        width: "100%"
-      });
+  theme: "outline",
+  size: "medium",          // 👈 KEY FIX
+  text: "continue_with",
+  shape: "rectangular",
+  logo_alignment: "left",
+  width: "100%"
+});
     }
   };
 
