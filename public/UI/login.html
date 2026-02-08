@@ -362,6 +362,34 @@
   display: block !important;
 }
 
+/* === FORCE GOOGLE BUTTON SAME LEFT START AS LOGIN === */
+
+/* Wrapper must NOT center */
+.auth-secondary {
+  align-items: flex-start !important;
+}
+
+/* Google container */
+#googleLoginBtn {
+  width: 100% !important;
+  display: block !important;
+  text-align: left !important;
+}
+
+/* Google injected div */
+#googleLoginBtn > div,
+#googleLoginBtn .S9gUrf-YoZ4jf {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  justify-content: flex-start !important;
+}
+
+/* Google iframe */
+#googleLoginBtn iframe {
+  margin-left: 0 !important;
+  display: block !important;
+}
+
 
   </style>
   
