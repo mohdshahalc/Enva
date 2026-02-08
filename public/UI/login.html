@@ -280,6 +280,64 @@
   text-decoration: underline;
 }
 
+/* ===============================
+   INPUT CLICK FIX (FINAL)
+=============================== */
+
+/* Make sure form is on top */
+.card {
+  position: relative !important;
+  z-index: 999 !important;
+}
+
+/* Kill invisible overlay clicks */
+.body-spacer,
+.navbar-main,
+.navbar-sub {
+  pointer-events: none !important;
+}
+
+/* Re-enable navbar links only */
+.navbar-main a,
+.navbar-sub a,
+.navbar-main button {
+  pointer-events: auto !important;
+}
+
+/* ===============================
+   GOOGLE BUTTON ALIGN = LOGIN
+=============================== */
+
+/* Same wrapper as LOGIN */
+.auth-btn-wrap {
+  width: 100%;
+}
+
+/* Remove centering */
+.google-auth-wrapper {
+  display: block !important;
+}
+
+/* Google container */
+#googleLoginBtn {
+  width: 100% !important;
+}
+
+/* Google injected wrapper */
+#googleLoginBtn > div,
+#googleLoginBtn .S9gUrf-YoZ4jf {
+  width: 100% !important;
+  display: block !important;
+}
+
+/* Google iframe = LOGIN button size */
+#googleLoginBtn iframe {
+  width: 100% !important;
+  height: 52px !important;
+  border-radius: 8px !important;
+  display: block !important;
+}
+
   </style>
   
 </head>
@@ -441,10 +499,11 @@
 
 <!-- Google -->
 <div class="auth-secondary">
-  <div class="google-auth-wrapper">
+  <div class="auth-btn-wrap">
     <div id="googleLoginBtn"></div>
   </div>
 </div>
+
 
 <!-- Sign up -->
 <div class="signup-text-left">
@@ -631,9 +690,12 @@ backdrop.onclick = () => {
     text: "continue_with",
     shape: "rectangular",
     logo_alignment: "left",
-    width: 350 // 👈 MATCH CARD WIDTH (IMPORTANT)
+    width: document
+      .querySelector(".card")
+      .getBoundingClientRect().width - 32 // exact inner width
   }
 );
+
     }
   };
 
