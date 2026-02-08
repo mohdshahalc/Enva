@@ -338,6 +338,24 @@
   display: block !important;
 }
 
+/* === FORCE GOOGLE BUTTON LEFT ALIGN === */
+
+.auth-secondary {
+  align-items: flex-start !important;
+}
+
+#googleLoginBtn {
+  width: 100% !important;
+  text-align: left !important;
+}
+
+#googleLoginBtn > div,
+#googleLoginBtn iframe {
+  margin-left: 0 !important;
+  display: block !important;
+}
+
+
   </style>
   
 </head>
@@ -684,7 +702,16 @@ backdrop.onclick = () => {
 
     const btn = document.getElementById("googleLoginBtn");
     if (btn) {
-   google.accounts.id.renderButton(
+   const card = document.querySelector(".card");
+const cardStyles = window.getComputedStyle(card);
+
+const paddingLeft  = parseFloat(cardStyles.paddingLeft);
+const paddingRight = parseFloat(cardStyles.paddingRight);
+
+const buttonWidth =
+  card.getBoundingClientRect().width - paddingLeft - paddingRight;
+
+google.accounts.id.renderButton(
   document.getElementById("googleLoginBtn"),
   {
     theme: "outline",
@@ -692,11 +719,10 @@ backdrop.onclick = () => {
     text: "continue_with",
     shape: "rectangular",
     logo_alignment: "left",
-    width: document
-      .querySelector(".card")
-      .getBoundingClientRect().width - 32 // exact inner width
+    width: Math.floor(buttonWidth) // ✅ exact inner width
   }
 );
+
 
     }
   };
