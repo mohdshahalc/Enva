@@ -333,3 +333,99 @@ function redirectToLogin() {
 function redirectToProducts() {
   window.location.href = "home.html";
 }
+
+
+async function validateStockBeforeCheckout() {
+  const token = localStorage.getItem("userToken");
+  if (!token) return false;
+
+  try {
+    const res = await apiFetch("https://envastore.online/api/user/cart", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const cart = await res.json();
+
+    if (!cart.items || !cart.items.length) {
+      showToast("Your cart is empty", "warning");
+      return false;
+    }
+
+    const issues = [];
+
+    cart.items.forEach(item => {
+      const available = item.product?.sizes?.[item.size] ?? 0;
+
+      if (available === 0) {
+        issues.push(
+          `${item.product.name} (${item.size}) is out of stock`
+        );
+      } else if (item.quantity > available) {
+        issues.push(
+          `${item.product.name} (${item.size}) – only ${available} left`
+        );
+      }
+    });
+
+    if (issues.length) {
+      showToast("Stock issue found", "error");
+
+      issues.forEach(msg => {
+        showToast(msg, "warning");
+      });
+
+      return false;
+    }
+
+    return true; // ✅ SAFE TO CHECKOUT
+
+  } catch (err) {
+    console.error(err);
+    showToast("Unable to validate stock", "error");
+    return false;
+  }
+}
+
+
+document
+  .getElementById("checkoutLink")
+  ?.addEventListener("click", async (e) => {
+    e.preventDefault(); // ⛔ STOP DEFAULT NAVIGATION
+
+    const isValid = await validateStockBeforeCheckout();
+
+    if (!isValid) {
+      // 🚫 BLOCK CHECKOUT
+      return;
+    }
+
+    // ✅ STOCK OK → GO TO CHECKOUT
+    window.location.href = "checkout.html";
+  });
+
+
+  document
+  .getElementById("checkoutLink")
+  ?.addEventListener("click", async (e) => {
+    e.preventDefault(); // ⛔ stop <a> navigation
+
+    const btn = document.querySelector(".checkout-btn");
+    if (!btn) return;
+
+    // 🔒 prevent double clicks
+    btn.disabled = true;
+    btn.innerText = "Checking stock...";
+
+    const isValid = await validateStockBeforeCheckout();
+
+    // 🔓 re-enable button
+    btn.disabled = false;
+    btn.innerText = "Proceed to Checkout";
+
+    if (!isValid) return; // ❌ stay on cart
+
+    // ✅ STOCK OK → GO TO CHECKOUT
+    window.location.href = "checkout.html";
+  });
