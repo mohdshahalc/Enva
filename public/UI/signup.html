@@ -263,6 +263,17 @@
   }
 }
 
+/* FORCE GOOGLE BUTTON TO FULL WIDTH (OVERRIDE INLINE) */
+#googleSignupBtn div[role="button"] {
+  width: 100% !important;
+  max-width: none !important;   /* 🔥 THIS IS THE KEY */
+}
+
+#googleSignupBtn div[role="button"] {
+  height: 43px !important;      /* match CREATE ACCOUNT */
+  border-radius: 8px;
+}
+
 </style>
 
 </head>
@@ -645,30 +656,40 @@ backdrop.onclick = () => {
 </script>
 
 <script>
-  window.onload = function () {
-    if (!window.google || !google.accounts) {
-      console.error("Google SDK not loaded");
-      return;
-    }
+ window.onload = function () {
+  if (!window.google || !google.accounts) return;
 
-    google.accounts.id.initialize({
-      client_id: "1007399516748-q15qbjubp2h5met0kemsb85gajruqjhq.apps.googleusercontent.com",
-      callback: handleGoogleSignup
-    });
+  google.accounts.id.initialize({
+    client_id: "1007399516748-q15qbjubp2h5met0kemsb85gajruqjhq.apps.googleusercontent.com",
+    callback: handleGoogleSignup
+  });
 
-    const btn = document.getElementById("googleSignupBtn");
-    if (btn) {
-      google.accounts.id.renderButton(btn, {
-  theme: "outline",
-  size: "large",
-  text: "continue_with",
-  shape: "rectangular",
-  logo_alignment: "left",
-  width: "100%"
-});
+  renderSignupGoogleButton();
+  window.addEventListener("resize", renderSignupGoogleButton);
+};
 
-    }
-  };
+
+function renderSignupGoogleButton() {
+  const signupBtn = document.querySelector(".signup-actions");
+  const googleBtn = document.getElementById("googleSignupBtn");
+
+  if (!signupBtn || !googleBtn) return;
+
+  // ✅ Measure the SAME visual width as the black button
+  const exactWidth = signupBtn.offsetWidth;
+
+  googleBtn.innerHTML = "";
+
+  google.accounts.id.renderButton(googleBtn, {
+    theme: "outline",
+    size: "large",
+    text: "continue_with",
+    shape: "rectangular",
+    logo_alignment: "left",
+    width: exactWidth // ✅ NO math, NO hacks
+  });
+}
+
 
  async function handleGoogleSignup(response) {
   try {
