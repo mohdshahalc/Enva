@@ -719,9 +719,12 @@ google.accounts.id.renderButton(
     text: "continue_with",
     shape: "rectangular",
     logo_alignment: "left",
-    width: Math.floor(buttonWidth) // ✅ exact inner width
+    width: document
+      .querySelector(".card")
+      .getBoundingClientRect().width - 28 // exact inner width
   }
 );
+
 
 
     }
