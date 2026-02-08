@@ -216,10 +216,32 @@ exports.placeOrder = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("ORDER ERROR:", err);
-    res.status(500).json({ message: "Order placement failed" });
+  console.error("CHECKOUT ERROR:", err);
+
+  const msg = err.message || "";
+
+  // 🔒 STOCK ERROR
+  if (
+    msg.toLowerCase().includes("insufficient stock") ||
+    msg.toLowerCase().includes("only")
+  ) {
+    showToast(
+      "Some items are out of stock. Please reduce quantity in cart.",
+      "error"
+    );
+
+    // Optional: redirect to cart after 2s
+    setTimeout(() => {
+      window.location.href = "cart.html";
+    }, 2000);
+
+    return;
   }
-};
+
+  // ❌ OTHER ERRORS
+  showToast("Order failed. Please try again.", "error");
+}
+
 
 
 

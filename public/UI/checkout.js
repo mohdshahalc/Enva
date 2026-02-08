@@ -627,7 +627,7 @@ orderForm.addEventListener("submit", async function (e) {
   );
 
   if (!selectedRadio) {
-    alert("Please select a payment method");
+    showToast("Please select a payment method", "warning");
     return;
   }
 
@@ -638,7 +638,8 @@ orderForm.addEventListener("submit", async function (e) {
   const total = Number(totalText.replace(/[^\d.]/g, ""));
 
   if (!total || total <= 0) {
-    alert("Invalid order total");
+    showToast("Invalid order total", "error");
+
     return;
   }
 
@@ -649,18 +650,19 @@ orderForm.addEventListener("submit", async function (e) {
 
   if (!stockCheck.valid) {
     if (stockCheck.issues?.length) {
-      const msg = stockCheck.issues
-        .map(i => `${i.product} (${i.size}) – ${i.reason}`)
-        .join("\n");
+    
+const msg = stockCheck.issues
+  .map(i => `${i.product} (${i.size}) – ${i.reason}`)
+  .join("\n");
 
-      showToast("Some items are unavailable", "error");
-
-msg.split("\n").forEach(line => {
-  showToast(line, "warning");
-});
+showStockPopup(
+  "Some items are out of stock:\n\n" + msg
+);
+return;
 
     } else {
-      alert(stockCheck.message || "Stock unavailable");
+      showStockPopup(stockCheck.message || "Stock unavailable");
+
     }
 
     return; // ⛔ STOP PAYMENT FLOW COMPLETELY
@@ -758,13 +760,25 @@ showToast("Insufficient wallet balance", "error");
     redirectToThankYou(order.orderId);
 
   } catch (err) {
-    console.error("CHECKOUT ERROR:", err);
-    loader?.classList.add("d-none");
-    placeOrderBtn.disabled = false;
-    placeOrderBtn.textContent = "Place Order";
-    showToast(err.message || "Payment failed", "error");
+  console.error("CHECKOUT ERROR:", err);
 
+  const msg = err.message || "Order failed";
+
+  // 🔒 STOCK ERROR FROM BACKEND
+  if (
+    msg.toLowerCase().includes("insufficient stock") ||
+    msg.toLowerCase().includes("only")
+  ) {
+    showStockPopup(
+      msg + "\n\nPlease update your cart."
+    );
+    return;
   }
+
+  showToast("Order failed. Please try again.", "error");
+}
+
+
 });
 
 
@@ -824,7 +838,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (params.get("payment") === "cancel") {
-    alert("Payment cancelled. You can try again.");
+   showToast("Payment cancelled. You can try again.", "warning");
+
     window.history.replaceState({}, document.title, "checkout.html");
   }
 });
@@ -959,4 +974,23 @@ async function validateCartStockBeforeCheckout() {
   }
 
   return { valid: true };
+}
+
+
+function showStockPopup(message) {
+  document.getElementById("stockErrorMessage").innerText = message;
+
+  const modal = new bootstrap.Modal(
+    document.getElementById("stockErrorModal"),
+    {
+      backdrop: "static", // ⛔ cannot click outside
+      keyboard: false     // ⛔ cannot press ESC
+    }
+  );
+
+  modal.show();
+}
+
+function goToCart() {
+  window.location.href = "cart.html";
 }
