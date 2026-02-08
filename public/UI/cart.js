@@ -336,6 +336,8 @@ function redirectToProducts() {
 
 
 async function validateStockBeforeCheckout() {
+  if (stockToastActive) return false; 
+  
   const token = localStorage.getItem("userToken");
   if (!token) return false;
 
