@@ -120,37 +120,6 @@
   margin-left: 12px;
 }
 
-/* =========================
-   GOOGLE AUTH – FINAL LOCK
-========================= */
-
-.auth-secondary {
-  display: flex;
-  flex-direction: column;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Google wrapper */
-.google-auth-wrapper,
-#googleLoginBtn,
-#googleLoginBtn > div {
-  width: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Google iframe — force same height as LOGIN */
-#googleLoginBtn iframe {
-  width: 100% !important;
-  height: 52px !important;        /* 👈 SAME AS LOGIN */
-  min-height: 52px !important;
-  max-height: 56px !important;    /* allows "Continue as" */
-  display: block !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 8px !important;
-}
 
 /* =========================
    SIGNUP – FIXED POSITION
@@ -214,6 +183,49 @@
   width: 100%;
 }
 
+/* =========================
+   GOOGLE AUTH – CORRECT FIX
+========================= */
+
+.auth-secondary {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.google-auth-wrapper,
+#googleLoginBtn {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Google iframe — allow dynamic height */
+#googleLoginBtn iframe {
+  width: 100% !important;
+  min-height: 52px !important;   /* same as LOGIN */
+  height: auto !important;       /* 👈 KEY FIX */
+  max-height: none !important;   /* 👈 allow email */
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  line-height: normal !important;
+}
+
+/* =========================
+   SIGNUP POSITION
+========================= */
+
+.signup-text-left {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.signup-text-left p {
+  margin: 0;
+}
 
 </style>
   <script src="login.js"></script>
@@ -560,7 +572,7 @@ backdrop.onclick = () => {
     if (btn) {
       google.accounts.id.renderButton(btn, {
   theme: "outline",
-  size: "medium",          // 👈 KEY FIX
+  size: "large",          // 👈 KEY FIX
   text: "continue_with",
   shape: "rectangular",
   logo_alignment: "left",
