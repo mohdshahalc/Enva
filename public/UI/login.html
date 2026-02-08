@@ -390,6 +390,18 @@
   display: block !important;
 }
 
+/* === GOOGLE BUTTON CONTENT ALIGN FIX === */
+
+/* Move iframe slightly left to match LOGIN text start */
+#googleLoginBtn iframe {
+  transform: translateX(-10px); /* 👈 exact visual match */
+}
+
+/* Prevent overflow issues */
+.google-auth-wrapper {
+  overflow: hidden;
+}
+
 
   </style>
   
