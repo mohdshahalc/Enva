@@ -215,32 +215,27 @@ exports.placeOrder = async (req, res) => {
       orderId: order._id
     });
 
-  } catch (err) {
-  console.error("CHECKOUT ERROR:", err);
+   } catch (err) {
+    console.error("ORDER ERROR:", err);
 
-  const msg = err.message || "";
+    const msg = err.message || "Order failed";
 
-  // 🔒 STOCK ERROR
-  if (
-    msg.toLowerCase().includes("insufficient stock") ||
-    msg.toLowerCase().includes("only")
-  ) {
-    showToast(
-      "Some items are out of stock. Please reduce quantity in cart.",
-      "error"
-    );
+    // STOCK ERROR → send proper API response
+    if (
+      msg.toLowerCase().includes("insufficient stock") ||
+      msg.toLowerCase().includes("only")
+    ) {
+      return res.status(400).json({
+        message: msg
+      });
+    }
 
-    // Optional: redirect to cart after 2s
-    setTimeout(() => {
-      window.location.href = "cart.html";
-    }, 2000);
-
-    return;
+    return res.status(500).json({
+      message: "Order placement failed"
+    });
   }
+};
 
-  // ❌ OTHER ERRORS
-  showToast("Order failed. Please try again.", "error");
-}
 
 
 
