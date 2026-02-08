@@ -670,30 +670,47 @@ backdrop.onclick = () => {
     }
   };
 
-  async function handleGoogleSignup(response) {
-    try {
-      const res = await fetch("https://envastore.online/api/auth/user/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          credential: response.credential
-        })
-      });
+ async function handleGoogleSignup(response) {
+  try {
+    const res = await fetch("https://envastore.online/api/auth/user/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include", // ✅ refresh token cookie
+      body: JSON.stringify({
+        credential: response.credential
+      })
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        alert(data.message || "Google signup failed");
-        return;
-      }
-
-      localStorage.setItem("token", data.token);
-      window.location.href = "profile.html";
-    } catch (err) {
-      console.error(err);
-      alert("Google authentication error");
+    if (!res.ok) {
+      alert(data.message || "Google login failed");
+      return;
     }
+
+    const { accessToken, user } = data;
+
+    if (!accessToken || !user?.role) {
+      throw new Error("Invalid Google login response");
+    }
+
+    // ✅ SAME ROLE-BASED STORAGE AS NORMAL LOGIN
+    if (user.role === "admin") {
+      localStorage.setItem("adminToken", accessToken);
+      localStorage.setItem("adminRole", "admin");
+      window.location.href = "../Admin/dashbord.html";
+    } else {
+      localStorage.setItem("userToken", accessToken);
+      localStorage.setItem("userRole", "user");
+      window.location.href = "home.html";
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Google authentication error");
   }
+}
+
 </script>
 
 

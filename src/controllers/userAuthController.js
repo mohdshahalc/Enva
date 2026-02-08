@@ -306,7 +306,6 @@ exports.resetPassword = async (req, res) => {
 };
 
 
-
 exports.googleAuth = async (req, res) => {
   try {
     const { credential } = req.body;
@@ -315,7 +314,7 @@ exports.googleAuth = async (req, res) => {
       return res.status(400).json({ message: "Google token missing" });
     }
 
-    // ✅ Verify token with Google
+    // 🔐 Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID
@@ -325,27 +324,25 @@ exports.googleAuth = async (req, res) => {
     const { email, name, sub } = payload;
 
     if (!email) {
-      return res.status(400).json({ message: "Email not found from Google" });
+      return res.status(400).json({ message: "Email not available from Google" });
     }
 
-    // 🔍 Find user
+    // 🔍 Find or create user
     let user = await User.findOne({ email });
 
-    // 🆕 Create user if not exists
     if (!user) {
       user = new User({
         name,
         email,
         googleId: sub,
-        isVerified: true,   // 🔥 VERY IMPORTANT
+        isVerified: true,          // 🔥 skip OTP
         role: "user",
         authProvider: "google"
       });
-
       await user.save();
     }
 
-    // 🔐 Tokens
+    // 🔐 Generate tokens (same as login)
     const accessToken = generateAccessToken(user._id, user.role);
     const refreshToken = generateRefreshToken(user);
 
@@ -353,7 +350,7 @@ exports.googleAuth = async (req, res) => {
     user.refreshTokenRole = user.role;
     await user.save();
 
-    // 🍪 Cookie
+    // 🍪 Set refresh token cookie (same as login)
     res.cookie("userRefreshToken", refreshToken, {
       httpOnly: true,
       sameSite: "strict",
@@ -362,12 +359,14 @@ exports.googleAuth = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
+    // ✅ Final response (MATCH loginUser)
     res.json({
-      token: accessToken,
+      accessToken,
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        role: user.role
       }
     });
 
