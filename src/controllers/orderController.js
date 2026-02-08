@@ -207,6 +207,10 @@ exports.placeOrder = async (req, res) => {
       total
     });
 
+
+// 🔥 REDUCE STOCK (COD / WALLET)
+await reduceStock(cart.items);
+
     cart.items = [];
     await cart.save();
 
@@ -565,3 +569,24 @@ exports.updateOrderStatus = async (req, res) => {
   }
 };
 
+
+
+async function reduceStock(cartItems) {
+  for (const item of cartItems) {
+    const product = await Product.findById(item.product._id);
+
+    if (!product) continue;
+
+    // reduce size stock
+    if (product.sizes && product.sizes[item.size] !== undefined) {
+      product.sizes[item.size] -= item.quantity;
+    }
+
+    // reduce total stock if you track it
+    if (typeof product.stock === "number") {
+      product.stock -= item.quantity;
+    }
+
+    await product.save();
+  }
+}
