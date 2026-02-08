@@ -62,7 +62,7 @@
    LOGIN LAYOUT
 ========================= */
 .container-fluid {
-  min-height: 100vh;
+  min-height: 75vh;
 }
 
 .card {
@@ -104,7 +104,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: #6c757d;
-  margin: 12px 0 !important;   /* 👈 tighter */
+  margin: 12px 0;
 }
 .auth-divider::before,
 .auth-divider::after {
@@ -121,41 +121,41 @@
 }
 
 /* =========================
-   GOOGLE AUTH – FINAL FIX
+   GOOGLE AUTH (ADAPTIVE)
 ========================= */
 
-/* Auth container MUST NOT reserve space */
+/* Container */
 .auth-secondary {
-  display: block !important;
-  height: 44px !important;       /* 👈 HARD CLAMP */
-  min-height: 44px !important;
-  max-height: 44px !important;
-  overflow: hidden !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
 }
 
-/* Google wrapper */
+/* Wrapper */
 .google-auth-wrapper {
-  height: 44px !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-/* Google container + internal div */
+/* Google internal containers */
 #googleLoginBtn,
 #googleLoginBtn > div,
 #googleLoginBtn .S9gUrf-YoZ4jf {
-  height: 44px !important;
+  width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
   display: block !important;
 }
 
-/* Google iframe (actual button) */
+/* Google iframe – works for BOTH states */
 #googleLoginBtn iframe {
-  height: 44px !important;
   width: 100% !important;
+  min-height: 44px !important;   /* normal */
+  max-height: 64px !important;   /* "Continue as" */
+  height: auto !important;       /* 👈 KEY FIX */
   display: block !important;
   margin: 0 !important;
   border-radius: 8px !important;
@@ -165,30 +165,13 @@
    SIGNUP TEXT (LEFT)
 ========================= */
 .signup-text-left {
-  text-align: left;
-  font-size: 0.85rem;
-  margin-top: 4px;   /* 👈 very tight */
-}
-
-/* If still using .text-center anywhere */
-.text-center {
-  text-align: left !important;
-}
-
-/* =========================
-   HOVER
-========================= */
-.hover-black:hover {
-  color: #000 !important;
-}
-/* ===== SIGNUP TEXT SPACING ===== */
-.signup-text-left {
-  margin-top: 6px;          /* 👈 small, clean gap */
+  margin-top: 6px;
   font-size: 0.85rem;
   color: #6c757d;
+  text-align: left;
 }
 
-/* ===== SIGNUP LINK HOVER EFFECT ===== */
+/* Signup link hover effect */
 .signup-text-left a {
   color: #000;
   font-weight: 600;
@@ -197,7 +180,6 @@
   transition: color 0.2s ease;
 }
 
-/* underline animation */
 .signup-text-left a::after {
   content: "";
   position: absolute;
@@ -209,13 +191,80 @@
   transition: width 0.25s ease;
 }
 
-/* hover state */
-.signup-text-left a:hover {
-  color: #000;
-}
-
 .signup-text-left a:hover::after {
   width: 100%;
+}
+
+/* =========================
+   OVERRIDES
+========================= */
+.text-center {
+  text-align: left !important;
+}
+
+.hover-black:hover {
+  color: #000 !important;
+}
+/* ===== REMOVE GAP BETWEEN GOOGLE & SIGNUP ===== */
+
+/* Google container bottom cleanup */
+.auth-secondary {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Kill any margin under Google button */
+.google-auth-wrapper,
+#googleLoginBtn,
+#googleLoginBtn iframe {
+  margin-bottom: 0 !important;
+}
+
+/* Signup text: remove default <p> spacing */
+.signup-text-left {
+  margin-top: 4px !important;   /* 👈 small, controlled */
+  padding-top: 0 !important;
+  line-height: 1.3;
+}
+
+/* If signup text is inside <p> */
+.signup-text-left p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* =========================
+   FINAL GAP KILL (AUTHORITATIVE)
+========================= */
+
+/* Remove divider spacing */
+.auth-divider {
+  margin: 6px 0 !important;   /* small & controlled */
+}
+
+/* Remove flex gap */
+.auth-secondary {
+  gap: 0 !important;
+}
+
+/* Remove Google bottom spacing */
+.google-auth-wrapper,
+#googleLoginBtn,
+#googleLoginBtn iframe {
+  margin-bottom: -23 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Signup text tight */
+.signup-text-left {
+  margin-top: 2px !important;
+  padding-top: 0 !important;
+  line-height: 1.2;
+}
+
+/* Kill <p> default spacing */
+.signup-text-left p {
+  margin: 0 !important;
 }
 
 </style>
@@ -373,7 +422,7 @@
   </div>
 
   <!-- Divider -->
-<div class="auth-divider my-3">
+<div class="auth-divider ">
   <span>OR</span>
 </div>
 
