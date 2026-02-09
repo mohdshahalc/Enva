@@ -27,33 +27,6 @@ document
     });
   });
 
-
-  document
-  .querySelectorAll('input[name="shippingMethod"]')
-  .forEach(radio => {
-    radio.addEventListener("change", () => {
-      updateSummaryTotals(currentSubtotal);
-      updateShippingLabel();
-    });
-  });
-
-  function updateShippingLabel() {
-  const selected = document.querySelector(
-    'input[name="shippingMethod"]:checked'
-  );
-
-  const label = document.getElementById("shippingLabel");
-
-  if (!selected || !label) return;
-
-  label.textContent =
-    selected.id === "expressShipping"
-      ? "Shipping (Express)"
-      : "Shipping (Standard)";
-}
-
-
-
 async function loadOrderSummary() {
   const token = localStorage.getItem("userToken")
   if (!token) return;
@@ -441,6 +414,7 @@ function removeCoupon() {
 }
 
 
+
 function updateSummaryTotals(subtotal) {
   const selectedShipping =
     document.querySelector('input[name="shippingMethod"]:checked');
@@ -448,10 +422,11 @@ function updateSummaryTotals(subtotal) {
   const shipping = selectedShipping ? Number(selectedShipping.value) : 0;
   const tax = subtotal * 0.07;
 
-  let total =
-    subtotal + shipping + tax - couponDiscountAmount;
+ let total =
+  subtotal + shipping + tax - couponDiscountAmount;
 
-  if (total < 0) total = 0;
+if (total < 0) total = 0;
+
 
   document.getElementById("subtotal").textContent =
     `₹${subtotal.toFixed(2)}`;
@@ -474,13 +449,11 @@ function updateSummaryTotals(subtotal) {
 
 
 
-
 document.addEventListener("DOMContentLoaded", () => {
   loadSavedAddresses();
 });
 
 let addressMap = {};
-
 async function loadSavedAddresses() {
   const token = localStorage.getItem("userToken");
   if (!token) return;
@@ -500,17 +473,16 @@ async function loadSavedAddresses() {
   // ✅ Pick default OR first
   const addr = addresses.find(a => a.isDefault) || addresses[0];
 
-  // Fill hidden fields
+  // Fill hidden fields (backend untouched)
   email.value = addr.email || "";
   firstName.value = addr.firstName || "";
   lastName.value = addr.lastName || "";
-  phone.value = addr.phone || "";
   address.value = addr.street || "";
   city.value = addr.city || "";
   state.value = addr.state || "";
   zip.value = addr.postcode || "";
 
-  // ✅ Render UI
+  // ✅ Render premium UI
   document.getElementById("addressList").innerHTML = `
     <div class="saved-address-card">
 
@@ -536,10 +508,6 @@ async function loadSavedAddresses() {
           <div><strong>Email:</strong> ${addr.email}</div>
         ` : ""}
 
-        ${addr.phone ? `
-          <div><strong>Phone:</strong> ${addr.phone}</div>
-        ` : ""}
-
         ${addr.city ? `
           <div><strong>City:</strong> ${addr.city}</div>
         ` : ""}
@@ -561,7 +529,6 @@ async function loadSavedAddresses() {
 
 
 
-
 function selectAddress(id){
   document.querySelectorAll(".address-card").forEach(c => c.classList.remove("active"));
 
@@ -578,11 +545,9 @@ function selectAddress(id){
 function fillHiddenAddress(addr){
   if(!addr) return;
 
-
   email.value = addr.email || "";
   firstName.value = addr.firstName || "";
   lastName.value = addr.lastName || "";
-  phone.value = addr.phone || "";
   address.value = addr.street || "";
   city.value = addr.city || "";
   state.value = addr.state || "";
@@ -605,8 +570,6 @@ window.loadAddress = function (addressId) {
   document.getElementById("city").value = addr.city || "";
   document.getElementById("state").value = addr.state || "";
   document.getElementById("zip").value = addr.postcode || "";
-  document.getElementById("phone").value = addr.phone || ""; // ✅ ADD
-
 };
 
 
@@ -626,7 +589,6 @@ async function placeOrder(paymentMethod, paymentIntentId = null) {
         lastName: lastName.value,
         street: address.value,
         city: city.value,
-          phone: phone.value,
         state: state.value,
         zip: zip.value
       },
@@ -744,7 +706,6 @@ return;
               street: address.value,
               city: city.value,
               state: state.value,
-               phone: phone.value, 
               zip: zip.value
             },
             shippingMethod,
