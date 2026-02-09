@@ -309,13 +309,29 @@ document.getElementById("orderItems").innerHTML =
 /* =========================
    ADDRESS
 ========================= */
-const a = order.shippingAddress;
+const a = order.shippingAddress || {};
 
 document.getElementById("shippingAddress").innerHTML = `
-  <div><strong>${a.firstName} ${a.lastName}</strong></div>
-  <div>${a.street}, ${a.city}, ${a.state} - ${a.zip}</div>
-  ${a.phone ? `<div><strong>Phone:</strong> ${a.phone}</div>` : ""}
-  ${a.email ? `<div><strong>Email:</strong> ${a.email}</div>` : ""}
+  <div class="fw-semibold mb-1">
+    ${a.firstName || ""} ${a.lastName || ""}
+  </div>
+
+  <div class="text-muted mb-1">
+    <strong>Address:</strong>
+    ${a.street || ""}, ${a.city || ""}, ${a.state || ""} - ${a.zip || ""}
+  </div>
+
+  ${a.phone ? `
+    <div class="mb-1">
+      <strong>Phone:</strong> ${a.phone}
+    </div>
+  ` : ""}
+
+  ${a.email ? `
+    <div>
+      <strong>Email:</strong> ${a.email}
+    </div>
+  ` : ""}
 `;
 
   /* =========================
