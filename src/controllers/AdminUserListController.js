@@ -5,36 +5,50 @@ const Order = require("../models/order");
 exports.getAllCustomers = async (req, res) => {
   try {
     const users = await User.find({ role: "user" })
-      .select("name email createdAt isBlocked")
+      .select(
+        "name email createdAt isBlocked isVerified authProvider tempSignup"
+      )
       .lean();
 
     const customers = await Promise.all(
       users.map(async (user) => {
-        const orders = await Order.find({ user: user._id })
-          .sort({ createdAt: -1 });
+        const orders = await Order.find({ user: user._id });
 
         const totalOrders = orders.length;
-        const totalSpent = orders.reduce(
-          (sum, o) => sum + o.total,
-          0
-        );
+        const totalSpent = orders.reduce((sum, o) => sum + o.total, 0);
+
+        // ✅ NAME RESOLUTION (FINAL RULE)
+        let displayName;
+
+        if (user.isVerified) {
+          // Verified users (normal + Google)
+          displayName = user.name;
+        } else {
+          // ❗ Unverified users → tempSignup
+          displayName = user.tempSignup?.name;
+        }
+
+        // 🔒 Absolute fallback (never undefined)
+        if (!displayName) {
+          displayName = "Unknown User";
+        }
 
         return {
           id: user._id,
-          name: user.name,
+          name: displayName,
           email: user.email,
           joinedAt: user.createdAt,
           totalOrders,
           totalSpent,
-
-          // ✅ ACCOUNT STATUS (THIS IS THE KEY FIX)
-          status: user.isBlocked ? "Blocked" : "Active"
+          status: user.isBlocked ? "Blocked" : "Active",
+          isVerified: user.isVerified
         };
       })
     );
 
     res.json(customers);
   } catch (err) {
+    console.error("GET CUSTOMERS ERROR:", err);
     res.status(500).json({ message: "Failed to load customers" });
   }
 };
