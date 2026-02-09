@@ -161,12 +161,11 @@ function showCouponsByStatus(subtotal) {
     const end = new Date(c.endDate);
 
     // 🔴 USED (already used by someone)
-   const userId = localStorage.getItem("userId"); // or from token
+    if (c.usedBy && c.usedBy.length > 0) {
+      used.push(c);
+      return;
+    }
 
-if (c.usedBy?.includes(userId)) {
-  used.push(c);
-  return;
-}
     if (!c.isActive) {
       invalid.push({ ...c, reason: "Disabled" });
       return;
@@ -873,7 +872,9 @@ function showCouponMessage(message, type = "success") {
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
 
- 
+  if (params.get("payment") === "success") {
+    redirectToThankYou();
+  }
 
   if (params.get("payment") === "cancel") {
    showToast("Payment cancelled. You can try again.", "warning");
@@ -990,27 +991,22 @@ async function validateCartStockBeforeCheckout() {
   const stockIssues = [];
 
   cart.items.forEach(item => {
-  const reserved =
-    item.product?.reservedStock?.[item.size] ?? 0;
+    const availableStock = item.product?.sizes?.[item.size] ?? 0;
 
-  const availableStock =
-    (item.product?.sizes?.[item.size] ?? 0) - reserved;
-
-  if (availableStock <= 0) {
-    stockIssues.push({
-      product: item.product.name,
-      size: item.size,
-      reason: "Out of stock"
-    });
-  } else if (item.quantity > availableStock) {
-    stockIssues.push({
-      product: item.product.name,
-      size: item.size,
-      reason: `Only ${availableStock} left`
-    });
-  }
-});
-
+    if (availableStock === 0) {
+      stockIssues.push({
+        product: item.product.name,
+        size: item.size,
+        reason: "Out of stock"
+      });
+    } else if (item.quantity > availableStock) {
+      stockIssues.push({
+        product: item.product.name,
+        size: item.size,
+        reason: `Only ${availableStock} left`
+      });
+    }
+  });
 
   if (stockIssues.length) {
     return { valid: false, issues: stockIssues };
@@ -1037,8 +1033,3 @@ function showStockPopup(message) {
 function goToCart() {
   window.location.href = "cart.html";
 }
-
-
-
-
-

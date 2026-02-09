@@ -10,10 +10,6 @@ const { creditWallet,debitWallet } = require("./walletController");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 
-
-/* ======================================================
-   PLACE ORDER
-====================================================== */
 exports.placeOrder = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -25,36 +21,73 @@ exports.placeOrder = async (req, res) => {
       paymentIntentId
     } = req.body;
 
-    const cart = await Cart.findOne({ user: userId }).populate("items.product");
+    // 1️⃣ Get cart
+    const cart = await Cart.findOne({ user: userId })
+      .populate("items.product");
 
     if (!cart || !cart.items.length) {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
-    /* ======================
-       🔒 STOCK CHECK
-    ====================== */
+    // ============================
+    // 🔒 STOCK VALIDATION (BEFORE PAYMENT)
+    // ============================
     for (const item of cart.items) {
       const product = await Product.findById(item.product._id);
+
+      if (!product) {
+        return res.status(400).json({ message: "Product not found" });
+      }
+
       const reserved = product.reservedStock?.get(item.size) || 0;
       const available = (product.sizes[item.size] || 0) - reserved;
 
       if (available < item.quantity) {
         return res.status(400).json({
-          message: `Insufficient stock for ${product.name} (${item.size})`
+          message: `Insufficient stock for ${product.name} (${item.size}). Only ${available} left`
         });
       }
     }
 
-    /* ======================
-       💰 PRICE CALC
-    ====================== */
+    // ============================
+    // 🔥 CALCULATE PRICES
+    // ============================
     let subtotal = 0;
+    const now = new Date();
     const orderItems = [];
 
     for (const item of cart.items) {
       const product = item.product;
-      const finalPrice = product.price;
+      let finalPrice = product.price;
+      let oldPrice = null;
+      let discountPercent = null;
+
+      const offer =
+        (await Offer.findOne({
+          offerType: "product",
+          product: product._id,
+          isActive: true,
+          startDate: { $lte: now },
+          endDate: { $gte: now }
+        })) ||
+        (product.category &&
+          (await Offer.findOne({
+            offerType: "category",
+            category: (
+              await Category.findOne({ name: product.category })
+            )?._id,
+            isActive: true,
+            startDate: { $lte: now },
+            endDate: { $gte: now }
+          })));
+
+      if (offer) {
+        oldPrice = product.price;
+        discountPercent = offer.discountPercent;
+        finalPrice = Math.round(
+          product.price - (product.price * discountPercent) / 100
+        );
+      }
 
       subtotal += finalPrice * item.quantity;
 
@@ -64,26 +97,20 @@ exports.placeOrder = async (req, res) => {
         productImage: product.images?.[0],
         size: item.size,
         quantity: item.quantity,
-        price: finalPrice
+        price: finalPrice,
+        oldPrice,
+        discountPercent
       });
     }
 
     const shippingPrice = shippingMethod === "express" ? 35 : 15;
     const tax = +(subtotal * 0.07).toFixed(2);
 
-<<<<<<< HEAD
-    /* ======================
-       🎟️ COUPON (NO CONSUME)
-    ====================== */
-    let discountAmount = 0;
-    let appliedCoupon = null;
-=======
    // ============================
 // 🎟️ COUPON (FLAT + PERCENTAGE SAFE)
 // ============================
 let discountAmount = 0;
 let appliedCoupon = null;
->>>>>>> f29fdc0 (coupons  fix)
 
 if (couponCode) {
   const coupon = await Coupon.findOne({
@@ -95,27 +122,6 @@ if (couponCode) {
     return res.status(400).json({ message: "Invalid coupon" });
   }
 
-<<<<<<< HEAD
-      if (subtotal < coupon.minPurchase) {
-        return res.status(400).json({
-          message: `Minimum ₹${coupon.minPurchase} required`
-        });
-      }
-
-      discountAmount =
-        coupon.type === "flat"
-          ? Math.min(coupon.flatAmount, subtotal)
-          : +((subtotal * coupon.discountPercent) / 100).toFixed(2);
-
-      appliedCoupon = {
-        code: coupon.code,
-        type: coupon.type,
-        discountAmount
-      };
-    }
-
-    const total = +(subtotal + shippingPrice + tax - discountAmount).toFixed(2);
-=======
   if (now < coupon.startDate || now > coupon.endDate) {
     return res.status(400).json({ message: "Coupon expired" });
   }
@@ -158,11 +164,10 @@ if (couponCode) {
 const total = +(
   subtotal + shippingPrice + tax - discountAmount
 ).toFixed(2);
->>>>>>> f29fdc0 (coupons  fix)
 
-    /* ======================
-       💳 PAYMENT STATUS
-    ====================== */
+    // ============================
+    // 👛 WALLET
+    // ============================
     let paymentStatus = "pending";
 
     if (paymentMethod === "wallet") {
@@ -170,44 +175,9 @@ const total = +(
       paymentStatus = "paid";
     }
 
-    /* ======================
-       ✅ CREATE ORDER
-    ====================== */
-    const order = await Order.create({
-      user: userId,
-      items: orderItems,
-      shippingAddress,
-      shippingMethod,
-      shippingPrice,
-      paymentMethod,
-      paymentStatus,
-      paymentIntentId: paymentIntentId || null,
-      subtotal,
-      tax,
-      discountAmount,
-      coupon: appliedCoupon,
-      total,
-      status: "pending",
-      isStripePending: paymentMethod === "stripe"
-    });
-
-    /* ======================
-       🎟️ CONSUME COUPON
-       (ONLY COD / WALLET)
-    ====================== */
-    if (couponCode && paymentMethod !== "stripe") {
-      await Coupon.updateOne(
-        { code: couponCode.trim().toUpperCase() },
-        {
-          $addToSet: { usedBy: userId },
-          $inc: { usedCount: 1 }
-        }
-      );
-    }
-
-    /* ======================
-       🟡 STRIPE → RESERVE ONLY
-    ====================== */
+    // ============================
+    // 💳 STRIPE — RESERVE STOCK
+    // ============================
     if (paymentMethod === "stripe") {
       for (const item of cart.items) {
         const product = await Product.findById(item.product._id);
@@ -222,15 +192,32 @@ const total = +(
       }
 
       return res.json({
-        message: "Order created, stock reserved",
-        orderId: order._id
+        message: "Stock reserved, waiting for Stripe payment"
       });
     }
 
-    /* ======================
-       🔥 COD / WALLET
-    ====================== */
-    await reduceStock(cart.items);
+    // ============================
+    // 📦 SAVE ORDER (wallet / COD)
+    // ============================
+    const order = await Order.create({
+      user: userId,
+      items: orderItems,
+      shippingAddress,
+      shippingMethod,
+      shippingPrice,
+      paymentMethod,
+      paymentStatus,
+      paymentIntentId: paymentIntentId || null,
+      subtotal,
+      tax,
+      discountAmount,
+      coupon: appliedCoupon,
+      total
+    });
+
+
+// 🔥 REDUCE STOCK (COD / WALLET)
+await reduceStock(cart.items);
 
     cart.items = [];
     await cart.save();
@@ -240,15 +227,28 @@ const total = +(
       orderId: order._id
     });
 
-  } catch (err) {
+   } catch (err) {
     console.error("ORDER ERROR:", err);
-    res.status(500).json({ message: "Order placement failed" });
+
+    const msg = err.message || "Order failed";
+
+    // STOCK ERROR → send proper API response
+    if (
+      msg.toLowerCase().includes("insufficient stock") ||
+      msg.toLowerCase().includes("only")
+    ) {
+      return res.status(400).json({
+        message: msg
+      });
+    }
+
+    return res.status(500).json({
+      message: "Order placement failed"
+    });
   }
 };
 
 
-<<<<<<< HEAD
-=======
 
 
 
@@ -499,7 +499,6 @@ exports.returnOrderItem = async (req, res) => {
 
 
 
->>>>>>> f29fdc0 (coupons  fix)
 async function restockSingleProduct(productId, size, qty) {
   const product = await Product.findById(productId);
   if (!product) return;
@@ -586,12 +585,15 @@ exports.updateOrderStatus = async (req, res) => {
 async function reduceStock(cartItems) {
   for (const item of cartItems) {
     const product = await Product.findById(item.product._id);
+
     if (!product) continue;
 
+    // reduce size stock
     if (product.sizes && product.sizes[item.size] !== undefined) {
       product.sizes[item.size] -= item.quantity;
     }
 
+    // reduce total stock if you track it
     if (typeof product.stock === "number") {
       product.stock -= item.quantity;
     }
