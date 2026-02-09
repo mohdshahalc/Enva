@@ -29,7 +29,6 @@ exports.stripeWebhook = async (req, res) => {
     return res.status(400).send("Webhook Error");
   }
 
-  // Only handle successful checkout
   if (event.type !== "checkout.session.completed") {
     return res.json({ received: true });
   }
@@ -40,13 +39,13 @@ exports.stripeWebhook = async (req, res) => {
     const userId = metadata.userId;
 
     if (!userId) {
-      console.error("❌ Stripe session missing userId");
+      console.error("❌ Missing userId in Stripe metadata");
       return res.json({ received: true });
     }
 
-    /* ================================
-       👛 WALLET TOP-UP (FIRST PRIORITY)
-    ================================ */
+    /* ==============================
+       👛 WALLET TOP-UP
+    ============================== */
     if (metadata.type === "wallet_topup") {
       const amount = Number(metadata.amount || 0);
 
@@ -61,19 +60,19 @@ exports.stripeWebhook = async (req, res) => {
       return res.json({ received: true });
     }
 
-    /* ================================
+    /* ==============================
        📦 ORDER FLOW
-    ================================ */
+    ============================== */
 
-    // 🔁 Prevent duplicate orders
+    // 🔁 Idempotency
     const existingOrder = await Order.findOne({
       stripeSessionId: session.id
     });
+
     if (existingOrder) {
       return res.json({ received: true });
     }
 
-    // ✅ Read shipping data from metadata
     const shippingAddress = metadata.shippingAddress
       ? JSON.parse(metadata.shippingAddress)
       : null;
@@ -84,13 +83,8 @@ exports.stripeWebhook = async (req, res) => {
     // 1️⃣ Load cart
     const cart = await Cart.findOne({ user: userId }).populate("items.product");
 
-    if (!cart) {
-      console.error("❌ Cart not found for user:", userId);
-      return res.json({ received: true });
-    }
-
-    if (!cart.items.length) {
-      console.error("❌ Cart empty for user:", userId);
+    if (!cart || !cart.items.length) {
+      console.error("❌ Cart missing or empty for user:", userId);
       return res.json({ received: true });
     }
 
@@ -98,7 +92,7 @@ exports.stripeWebhook = async (req, res) => {
     let subtotal = 0;
     const orderItems = [];
 
-    // 2️⃣ PRICE CALCULATION (UNCHANGED)
+    // 2️⃣ PRICE CALCULATION
     for (const item of cart.items) {
       const product = item.product;
       if (!product) continue;
@@ -107,7 +101,6 @@ exports.stripeWebhook = async (req, res) => {
       let oldPrice = null;
       let discountPercent = null;
 
-      // Product offer
       let offer = await Offer.findOne({
         offerType: "product",
         product: product._id,
@@ -116,7 +109,6 @@ exports.stripeWebhook = async (req, res) => {
         endDate: { $gte: now }
       }).lean();
 
-      // Category offer
       if (!offer && product.category) {
         const categoryDoc = await Category.findOne({
           name: product.category
@@ -158,7 +150,7 @@ exports.stripeWebhook = async (req, res) => {
     const tax = +(subtotal * 0.07).toFixed(2);
 
     /* ==============================
-       🎟️ COUPON LOGIC (UNCHANGED)
+       🎟️ COUPON
     ============================== */
     let appliedCoupon = null;
     let discountAmount = 0;
@@ -187,23 +179,40 @@ exports.stripeWebhook = async (req, res) => {
       }
     }
 
-    // ✅ Stripe is FINAL source of truth
+    // ✅ Stripe is final amount authority
     const total = session.amount_total / 100;
 
-    // 3️⃣ STOCK VALIDATION
+    // 3️⃣ STOCK VALIDATION (WITH RESERVED STOCK)
     for (const item of cart.items) {
       const product = await Product.findById(item.product._id);
-      if (!product || product.sizes[item.size] < item.quantity) {
-        console.error("❌ Stock issue:", product?._id);
+      if (!product) {
+        return res.json({ received: true });
+      }
+
+      const reserved = product.reservedStock?.get(item.size) || 0;
+      const available = product.sizes[item.size] - reserved;
+
+      if (available < item.quantity) {
+        console.error("❌ Stock conflict:", product._id);
         return res.json({ received: true });
       }
     }
 
-    // 4️⃣ STOCK REDUCTION
+    // 4️⃣ FINAL STOCK REDUCTION
     for (const item of cart.items) {
       const product = await Product.findById(item.product._id);
+      if (!product) continue;
+
+      const reserved = product.reservedStock?.get(item.size) || 0;
+
       product.sizes[item.size] -= item.quantity;
       product.stock -= item.quantity;
+
+      product.reservedStock.set(
+        item.size,
+        Math.max(reserved - item.quantity, 0)
+      );
+
       await product.save();
     }
 
@@ -230,7 +239,18 @@ exports.stripeWebhook = async (req, res) => {
       status: "confirmed"
     });
 
-    // 6️⃣ CLEAR CART
+    // 6️⃣ CONSUME COUPON (NOW SAFE)
+    if (appliedCoupon?.code) {
+      await Coupon.updateOne(
+        { code: appliedCoupon.code },
+        {
+          $addToSet: { usedBy: userId },
+          $inc: { usedCount: 1 }
+        }
+      );
+    }
+
+    // 7️⃣ CLEAR CART
     cart.items = [];
     cart.couponCode = null;
     await cart.save();
