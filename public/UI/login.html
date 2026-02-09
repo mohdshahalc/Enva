@@ -22,9 +22,9 @@
   border-radius: 12px;
 }
 
-.container-fluid {
+/* .container-fluid {
   min-height: 75vh;
-}
+} */
 
 /* ==========================================
    INPUTS
@@ -430,6 +430,43 @@
   z-index: 1025;
 }
 
+.login-page {
+  min-height: calc(100vh - 112px); /* navbar + sub-navbar */
+}
+.card,
+.form-control,
+.input-group,
+.input-group-text {
+  position: relative;
+  z-index: 10;
+}
+.navbar-main {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.navbar-sub {
+  position: sticky;
+  top: 64px;
+  z-index: 1025;
+}
+
+/* === BLACK SUB NAV HEIGHT (PREVIOUS SIZE) === */
+
+.navbar-sub {
+  height: 64px;              /* 👈 same visual weight as before */
+  display: flex;
+  align-items: center;
+}
+
+.login-sub-inner {
+  height: 64px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
 
   </style>
   
@@ -438,7 +475,7 @@
 <body class="bg-white text-dark">
   
 <!-- ========================= MAIN NAVBAR ========================= -->
-<nav class="navbar-main w-100 top-0 start-0 z-3 shadow-sm">
+<nav class="navbar-main w-100 top-0 start-0 z-5 shadow-sm">
 
   <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between">
 
@@ -510,7 +547,8 @@
 
 <div class="navbar-sub w-100 bg-black text-white">
   <div class="container-fluid px-4 custom-container-lg mx-auto">
-    <div class="d-flex align-items-center justify-content-between py-2" style="height:48px;font-size:.85rem;">
+    <div class="d-flex align-items-center justify-content-between login-sub-inner">
+
       <span class="fw-semibold">Login</span>
     </div>
   </div>
@@ -523,7 +561,8 @@
 
  
   
-  <div class="container-fluid d-flex justify-content-center py-5" style="background-color: #f8f9fa;">
+  <div class="container-fluid login-page d-flex justify-content-center py-4" style="background-color:#f8f9fa;">
+
     <div class="card border border-light-subtle rounded-3 bg-white shadow-lg p-4 p-md-5" style="max-width: 450px; width: 100%;">
 
         <h2 class="text-center fs-4 fw-bold mb-4 mb-md-5">Welcome to Envacloth&co</h2>
