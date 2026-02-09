@@ -600,4 +600,4 @@ async function reduceStock(cartItems) {
 
     await product.save();
   }
-}
+}  
