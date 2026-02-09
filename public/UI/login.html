@@ -285,10 +285,6 @@
 =============================== */
 
 /* Make sure form is on top */
-.card {
-  position: relative !important;
-  /* z-index: 999 !important; */
-}
 
 
 /* Re-enable navbar links only */
@@ -394,6 +390,44 @@
 /* Prevent overflow issues */
 .google-auth-wrapper {
   overflow: hidden;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+}
+
+#drawerBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1040;
+}
+
+#drawerBackdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
+.body-spacer {
+  height: 68px;           /* main + sub navbar height */
+}
+/* MAIN NAVBAR */
+.navbar-main {
+  position: sticky;        /* or fixed if you want */
+  top: 0;
+  z-index: 1030;           /* Bootstrap standard */
+}
+
+/* SUB NAVBAR */
+.navbar-sub {
+  position: sticky;
+  top: 64px;               /* height of main navbar */
+  z-index: 1025;
 }
 
 
