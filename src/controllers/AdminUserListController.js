@@ -17,18 +17,15 @@ exports.getAllCustomers = async (req, res) => {
         const totalOrders = orders.length;
         const totalSpent = orders.reduce((sum, o) => sum + o.total, 0);
 
-        // ✅ NAME RESOLUTION (FINAL RULE)
+        // ✅ NAME RESOLUTION
         let displayName;
 
         if (user.isVerified) {
-          // Verified users (normal + Google)
-          displayName = user.name;
+          displayName = user.name; // verified users
         } else {
-          // ❗ Unverified users → tempSignup
-          displayName = user.tempSignup?.name;
+          displayName = user.tempSignup?.name; // unverified users
         }
 
-        // 🔒 Absolute fallback (never undefined)
         if (!displayName) {
           displayName = "Unknown User";
         }
@@ -40,8 +37,10 @@ exports.getAllCustomers = async (req, res) => {
           joinedAt: user.createdAt,
           totalOrders,
           totalSpent,
-          status: user.isBlocked ? "Blocked" : "Active",
-          isVerified: user.isVerified
+
+          // ✅ THESE TWO FIELDS DRIVE THE UI
+          isVerified: user.isVerified,
+          isBlocked: user.isBlocked
         };
       })
     );
@@ -52,6 +51,7 @@ exports.getAllCustomers = async (req, res) => {
     res.status(500).json({ message: "Failed to load customers" });
   }
 };
+
 
 
 exports.blockCustomer = async (req, res) => {

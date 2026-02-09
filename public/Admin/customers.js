@@ -28,6 +28,8 @@ async function loadCustomers() {
   }
 }
 
+
+
 function renderCustomers(customers) {
   const tbody = document.getElementById("customerTableBody");
   tbody.innerHTML = "";
@@ -47,37 +49,47 @@ function renderCustomers(customers) {
     tbody.innerHTML += `
       <tr>
         <td>${index + 1}</td>
-        <td><strong>${c.name}</strong></td>
+
+        <td>
+          <strong>${c.name}</strong>
+          ${
+            !c.isVerified
+              ? `<div class="text-warning small">Pending verification</div>`
+              : ""
+          }
+        </td>
+
         <td>${c.email}</td>
         <td>${new Date(c.joinedAt).toDateString()}</td>
         <td>${c.totalOrders}</td>
         <td>₹${c.totalSpent}</td>
+
+        <!-- ✅ VERIFIED STATUS -->
         <td>
-          <span class="status-pill ${c.status === "Active" ? "paid" : "canceled"}">
-            ${c.status}
+          <span class="status-pill ${c.isVerified ? "paid" : "pending"}">
+            ${c.isVerified ? "Verified" : "Unverified"}
           </span>
         </td>
+
+        <!-- 🔒 ACTION -->
         <td class="text-end">
-
-        <button
-  class="btn btn-sm ${
-    c.status === "Active"
-      ? "btn-outline-danger"
-      : "btn-outline-success"
-  } ms-2"
-  onclick="${
-    c.status === "Active"
-      ? `blockCustomer('${c.id}')`
-      : `unblockCustomer('${c.id}')`
-  }">
-  ${c.status === "Active" ? "Block" : "Unblock"}
-</button>
-
+          <button
+            class="btn btn-sm ${
+              c.isBlocked ? "btn-outline-success" : "btn-outline-danger"
+            }"
+            onclick="${
+              c.isBlocked
+                ? `unblockCustomer('${c.id}')`
+                : `blockCustomer('${c.id}')`
+            }">
+            ${c.isBlocked ? "Unblock" : "Block"}
+          </button>
         </td>
       </tr>
     `;
   });
 }
+
 
 document.getElementById("applyFilterBtn")
   .addEventListener("click", applyCustomerFilters);
@@ -104,11 +116,12 @@ function applyCustomerFilters() {
   }
 
   /* 🏷 STATUS */
-  if (status !== "all") {
-    filtered = filtered.filter(
-      c => c.status.toLowerCase() === status
-    );
-  }
+ if (status !== "all") {
+  filtered = filtered.filter(c =>
+    status === "verified" ? c.isVerified : !c.isVerified
+  );
+}
+
 
   /* 🔃 SORT */
   switch (sortBy) {
@@ -148,10 +161,8 @@ function updateCustomerKPIs(customers) {
   // TOTAL
   const totalCustomers = customers.length;
 
-  // ACTIVE
-  const activeCustomers = customers.filter(
-    c => c.status.toLowerCase() === "active"
-  ).length;
+  // VERIFIED
+  const verifiedCustomers = customers.filter(c => c.isVerified).length;
 
   // NEW THIS MONTH
   const newThisMonth = customers.filter(c => {
@@ -162,7 +173,7 @@ function updateCustomerKPIs(customers) {
     );
   }).length;
 
-  // RETURNING (customers with orders > 1)
+  // RETURNING
   const returningCustomers = customers.filter(
     c => c.totalOrders > 1
   ).length;
@@ -172,7 +183,7 @@ function updateCustomerKPIs(customers) {
     totalCustomers.toLocaleString();
 
   document.getElementById("kpiActiveCustomers").innerText =
-    activeCustomers.toLocaleString();
+    verifiedCustomers.toLocaleString();
 
   document.getElementById("kpiNewCustomers").innerText =
     newThisMonth.toLocaleString();
@@ -181,12 +192,7 @@ function updateCustomerKPIs(customers) {
     returningCustomers.toLocaleString();
 }
 
-function isActiveLast30Days(customer) {
-  if (!customer.lastOrderDate) return false;
 
-  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-  return Date.now() - new Date(customer.lastOrderDate) <= THIRTY_DAYS;
-}
 
 function blockCustomer(customerId) {
   if (!confirm("Are you sure you want to block this customer?")) return;
@@ -202,7 +208,7 @@ function blockCustomer(customerId) {
       showToast(data.message, "warning");
 
       const customer = allCustomers.find(c => c.id === customerId);
-      if (customer) customer.status = "Blocked";
+      if (customer) customer.isBlocked = true;
 
       renderCustomers(allCustomers);
       updateCustomerKPIs(allCustomers);
@@ -226,7 +232,7 @@ function unblockCustomer(customerId) {
       showToast(data.message, "success");
 
       const customer = allCustomers.find(c => c.id === customerId);
-      if (customer) customer.status = "Active";
+      if (customer) customer.isBlocked = false;
 
       renderCustomers(allCustomers);
       updateCustomerKPIs(allCustomers);
