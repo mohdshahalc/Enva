@@ -306,12 +306,17 @@ document.getElementById("orderItems").innerHTML =
 
 
 
-  /* =========================
-     ADDRESS
-  ========================= */
-  const a = order.shippingAddress;
-  document.getElementById("shippingAddress").textContent =
-    `${a.firstName} ${a.lastName}, ${a.street}, ${a.city}, ${a.state} - ${a.zip}`;
+/* =========================
+   ADDRESS
+========================= */
+const a = order.shippingAddress;
+
+document.getElementById("shippingAddress").innerHTML = `
+  <div><strong>${a.firstName} ${a.lastName}</strong></div>
+  <div>${a.street}, ${a.city}, ${a.state} - ${a.zip}</div>
+  ${a.phone ? `<div><strong>Phone:</strong> ${a.phone}</div>` : ""}
+  ${a.email ? `<div><strong>Email:</strong> ${a.email}</div>` : ""}
+`;
 
   /* =========================
      PAYMENT METHOD
