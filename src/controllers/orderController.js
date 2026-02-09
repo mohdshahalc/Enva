@@ -106,56 +106,64 @@ exports.placeOrder = async (req, res) => {
     const shippingPrice = shippingMethod === "express" ? 35 : 15;
     const tax = +(subtotal * 0.07).toFixed(2);
 
-    // ============================
-    // 🎟️ COUPON
-    // ============================
-    let discountAmount = 0;
-    let appliedCoupon = null;
+   // ============================
+// 🎟️ COUPON (FLAT + PERCENTAGE SAFE)
+// ============================
+let discountAmount = 0;
+let appliedCoupon = null;
 
-    if (couponCode) {
-      const coupon = await Coupon.findOne({
-        code: couponCode.trim().toUpperCase(),
-        isActive: true
-      });
+if (couponCode) {
+  const coupon = await Coupon.findOne({
+    code: couponCode.trim().toUpperCase(),
+    isActive: true
+  });
 
-      if (!coupon) {
-        return res.status(400).json({ message: "Invalid coupon" });
-      }
+  if (!coupon) {
+    return res.status(400).json({ message: "Invalid coupon" });
+  }
 
-      if (now < coupon.startDate || now > coupon.endDate) {
-        return res.status(400).json({ message: "Coupon expired" });
-      }
+  if (now < coupon.startDate || now > coupon.endDate) {
+    return res.status(400).json({ message: "Coupon expired" });
+  }
 
-      if (subtotal < coupon.minPurchase) {
-        return res.status(400).json({
-          message: `Minimum ₹${coupon.minPurchase} required`
-        });
-      }
+  if (subtotal < coupon.minPurchase) {
+    return res.status(400).json({
+      message: `Minimum ₹${coupon.minPurchase} required`
+    });
+  }
 
-      if (coupon.usedBy.includes(userId)) {
-        return res.status(400).json({
-          message: "You have already used this coupon"
-        });
-      }
+  if (coupon.usedBy.includes(userId)) {
+    return res.status(400).json({
+      message: "You have already used this coupon"
+    });
+  }
 
-      discountAmount = +(
-        (subtotal * coupon.discountPercent) / 100
-      ).toFixed(2);
-
-      coupon.usedBy.push(userId);
-      coupon.usedCount += 1;
-      await coupon.save();
-
-      appliedCoupon = {
-        code: coupon.code,
-        discountPercent: coupon.discountPercent,
-        discountAmount
-      };
-    }
-
-    const total = +(
-      subtotal + shippingPrice + tax - discountAmount
+  // ✅ HANDLE BOTH FLAT & PERCENTAGE
+  if (coupon.type === "flat") {
+    discountAmount = Math.min(coupon.flatAmount, subtotal);
+  } else {
+    discountAmount = +(
+      (subtotal * coupon.discountPercent) / 100
     ).toFixed(2);
+  }
+
+  appliedCoupon = {
+    code: coupon.code,
+    type: coupon.type,
+    flatAmount: coupon.flatAmount || null,
+    discountPercent: coupon.discountPercent || null,
+    discountAmount
+  };
+
+  coupon.usedBy.push(userId);
+  coupon.usedCount += 1;
+  await coupon.save();
+}
+
+// ✅ TOTAL (UNCHANGED BUT NOW SAFE)
+const total = +(
+  subtotal + shippingPrice + tax - discountAmount
+).toFixed(2);
 
     // ============================
     // 👛 WALLET
@@ -282,10 +290,13 @@ exports.validateCoupon = async (req, res) => {
       });
     }
 
-    return res.json({
-      code: coupon.code,
-      discountPercent: coupon.discountPercent
-    });
+   return res.json({
+  code: coupon.code,
+  type: coupon.type,
+  flatAmount: coupon.flatAmount || null,
+  discountPercent: coupon.discountPercent || null,
+  maxPurchase: coupon.maxPurchase || null
+});
 
   } catch (err) {
     res.status(500).json({ message: "Coupon validation failed" });

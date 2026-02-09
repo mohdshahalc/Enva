@@ -480,6 +480,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 let addressMap = {};
+
 async function loadSavedAddresses() {
   const token = localStorage.getItem("userToken");
   if (!token) return;
@@ -499,16 +500,17 @@ async function loadSavedAddresses() {
   // ✅ Pick default OR first
   const addr = addresses.find(a => a.isDefault) || addresses[0];
 
-  // Fill hidden fields (backend untouched)
+  // Fill hidden fields
   email.value = addr.email || "";
   firstName.value = addr.firstName || "";
   lastName.value = addr.lastName || "";
+  phone.value = addr.phone || "";
   address.value = addr.street || "";
   city.value = addr.city || "";
   state.value = addr.state || "";
   zip.value = addr.postcode || "";
 
-  // ✅ Render premium UI
+  // ✅ Render UI
   document.getElementById("addressList").innerHTML = `
     <div class="saved-address-card">
 
@@ -534,6 +536,10 @@ async function loadSavedAddresses() {
           <div><strong>Email:</strong> ${addr.email}</div>
         ` : ""}
 
+        ${addr.phone ? `
+          <div><strong>Phone:</strong> ${addr.phone}</div>
+        ` : ""}
+
         ${addr.city ? `
           <div><strong>City:</strong> ${addr.city}</div>
         ` : ""}
@@ -555,6 +561,7 @@ async function loadSavedAddresses() {
 
 
 
+
 function selectAddress(id){
   document.querySelectorAll(".address-card").forEach(c => c.classList.remove("active"));
 
@@ -571,9 +578,11 @@ function selectAddress(id){
 function fillHiddenAddress(addr){
   if(!addr) return;
 
+
   email.value = addr.email || "";
   firstName.value = addr.firstName || "";
   lastName.value = addr.lastName || "";
+  phone.value = addr.phone || "";
   address.value = addr.street || "";
   city.value = addr.city || "";
   state.value = addr.state || "";
@@ -596,6 +605,8 @@ window.loadAddress = function (addressId) {
   document.getElementById("city").value = addr.city || "";
   document.getElementById("state").value = addr.state || "";
   document.getElementById("zip").value = addr.postcode || "";
+  document.getElementById("phone").value = addr.phone || ""; // ✅ ADD
+
 };
 
 
@@ -615,6 +626,7 @@ async function placeOrder(paymentMethod, paymentIntentId = null) {
         lastName: lastName.value,
         street: address.value,
         city: city.value,
+          phone: phone.value,
         state: state.value,
         zip: zip.value
       },
@@ -732,6 +744,7 @@ return;
               street: address.value,
               city: city.value,
               state: state.value,
+               phone: phone.value, 
               zip: zip.value
             },
             shippingMethod,
