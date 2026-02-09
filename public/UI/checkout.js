@@ -27,6 +27,33 @@ document
     });
   });
 
+
+  document
+  .querySelectorAll('input[name="shippingMethod"]')
+  .forEach(radio => {
+    radio.addEventListener("change", () => {
+      updateSummaryTotals(currentSubtotal);
+      updateShippingLabel();
+    });
+  });
+
+  function updateShippingLabel() {
+  const selected = document.querySelector(
+    'input[name="shippingMethod"]:checked'
+  );
+
+  const label = document.getElementById("shippingLabel");
+
+  if (!selected || !label) return;
+
+  label.textContent =
+    selected.id === "expressShipping"
+      ? "Shipping (Express)"
+      : "Shipping (Standard)";
+}
+
+
+
 async function loadOrderSummary() {
   const token = localStorage.getItem("userToken")
   if (!token) return;
@@ -414,7 +441,6 @@ function removeCoupon() {
 }
 
 
-
 function updateSummaryTotals(subtotal) {
   const selectedShipping =
     document.querySelector('input[name="shippingMethod"]:checked');
@@ -422,11 +448,10 @@ function updateSummaryTotals(subtotal) {
   const shipping = selectedShipping ? Number(selectedShipping.value) : 0;
   const tax = subtotal * 0.07;
 
- let total =
-  subtotal + shipping + tax - couponDiscountAmount;
+  let total =
+    subtotal + shipping + tax - couponDiscountAmount;
 
-if (total < 0) total = 0;
-
+  if (total < 0) total = 0;
 
   document.getElementById("subtotal").textContent =
     `₹${subtotal.toFixed(2)}`;
@@ -445,6 +470,7 @@ if (total < 0) total = 0;
     btn.textContent = `Place Order – ₹${total.toFixed(2)}`;
   }
 }
+
 
 
 
