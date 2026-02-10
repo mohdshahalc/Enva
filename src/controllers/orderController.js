@@ -380,37 +380,100 @@ exports.cancelOrderItem = async (req, res) => {
       item.quantity
     );
 
-    // 💰 Refund if needed
-    const itemTotal = item.price * item.quantity;
-
-    if (
-      order.paymentStatus === "paid" &&
-      ["wallet", "stripe", "razorpay"].includes(order.paymentMethod)
-    ) {
-      await creditWallet(
-        userId,
-        itemTotal,
-        `Refund for cancelled item in order #${order._id}`
-      );
-    }
-
     item.status = "cancelled";
     item.cancelReason = reason || "User cancelled";
     item.cancelledAt = new Date();
 
-    // Update order status if needed
+    // ==========================================
+    // 🔄 RECALCULATE ORDER TOTALS & COUPON
+    // ==========================================
+
+    // 1️⃣ Calculate NEW Subtotal (excluding cancelled/returned)
     const activeItems = order.items.filter(
       i => !["cancelled", "returned"].includes(i.status)
     );
+
+    let newSubtotal = 0;
+    activeItems.forEach(i => {
+      // Use original item price logic
+      const price = i.price;
+      newSubtotal += price * i.quantity;
+    });
+
+    // 2️⃣ Recalculate Tax
+    let newTax = +(newSubtotal * 0.07).toFixed(2);
+
+    // 3️⃣ Recalculate Coupon
+    let newDiscountAmount = 0;
+    let couponRemoved = false;
+
+    if (order.coupon) { // check existing coupon order
+      const coupon = await Coupon.findOne({ code: order.coupon.code });
+
+      if (coupon) {
+        // ❌ Check Min Purchase
+        if (newSubtotal < coupon.minPurchase) {
+          order.coupon = null; // Remove coupon
+          couponRemoved = true;
+        } else {
+          // ✅ Keep Coupon - Recalculate Discount
+          if (order.coupon.type === "flat") {
+            newDiscountAmount = Math.min(order.coupon.flatAmount, newSubtotal);
+          } else {
+            newDiscountAmount = +((newSubtotal * order.coupon.discountPercent) / 100).toFixed(2);
+            if (order.coupon.maxPurchase) {
+              newDiscountAmount = Math.min(newDiscountAmount, order.coupon.maxPurchase);
+            }
+          }
+        }
+      }
+    }
+
+    // 4️⃣ Calculate NEW Total
+    // shippingPrice stays same unless policy changes
+    const newTotal = +(newSubtotal + order.shippingPrice + newTax - newDiscountAmount).toFixed(2);
+
+    // 5️⃣ Calculate Refund Amount
+    // Refund = What User Paid (Old Total) - What User Should Pay (New Total)
+    // NOTE: If order was partially refunded before, we must track 'paidAmount' or check logic.
+    // Assuming simple case: order.total is current paid amount? NO.
+    // Better: Refund = (Item Price) - (Lost Discount) - (Tax Adj)
+
+    // 🏆 BEST WAY: Refund = Previous Total - New Total
+    const refundAmount = +(order.total - newTotal).toFixed(2);
+
+    // 💰 Credit Wallet
+    if (
+      order.paymentStatus === "paid" &&
+      ["wallet", "stripe", "razorpay"].includes(order.paymentMethod) &&
+      refundAmount > 0
+    ) {
+      await creditWallet(
+        userId,
+        refundAmount,
+        `Refund for cancelled item (Order #${order._id})${couponRemoved ? " [Coupon Removed]" : ""}`
+      );
+    }
+
+    // ✅ UPDATE ORDER
+    order.subtotal = newSubtotal;
+    order.tax = newTax;
+    order.discountAmount = newDiscountAmount;
+    order.total = newTotal;
 
     if (activeItems.length === 0) {
       order.status = "cancelled";
       order.paymentStatus = "refunded";
     }
 
-    await order.save();
+    await order.save();  // 🔥 FINAL SAVE
 
-    res.json({ message: "Item cancelled successfully" });
+    res.json({
+      message: "Item cancelled successfully",
+      refundAmount: refundAmount > 0 ? refundAmount : 0,
+      newTotal,
+      couponRemoved
+    });
 
   } catch (err) {
     console.error(err);
