@@ -149,26 +149,26 @@ function showCouponsByStatus(subtotal) {
       return;
     }
 
-    
-if (end < now) {
-  return;
-}
 
-   if (subtotal < c.minPurchase) {
-  invalid.push({
-    ...c,
-    reason: `Min ₹${c.minPurchase} required`
-  });
-  return;
-}
+    if (end < now) {
+      return;
+    }
 
-if (c.maxPurchase && subtotal > c.maxPurchase) {
-  invalid.push({
-    ...c,
-    reason: `Valid up to ₹${c.maxPurchase}`
-  });
-  return;
-}
+    if (subtotal < c.minPurchase) {
+      invalid.push({
+        ...c,
+        reason: `Min ₹${c.minPurchase} required`
+      });
+      return;
+    }
+
+    if (c.maxPurchase && subtotal > c.maxPurchase) {
+      invalid.push({
+        ...c,
+        reason: `Valid up to ₹${c.maxPurchase}`
+      });
+      return;
+    }
 
 
     available.push(c);
@@ -203,32 +203,29 @@ function renderCouponList(containerId, coupons, type) {
         <div>
           <div class="coupon-code">${c.code}</div>
           <div class="coupon-desc">
-         ${
-  c.type === "flat"
-    ? `Flat ₹${c.flatAmount} OFF`
-    : `${c.discountPercent}% OFF`
-}
+         ${c.type === "flat"
+        ? `Flat ₹${c.flatAmount} OFF`
+        : `${c.discountPercent}% OFF`
+      }
  • Min ₹${c.minPurchase}
 ${c.type === "percentage" && c.maxPurchase ? ` – Max ₹${c.maxPurchase}` : ""}
 
-            ${
-              type === "used"
-                ? `<br><span class="text-danger">Already used</span>`
-                : c.reason
-                ? `<br><span class="text-muted">${c.reason}</span>`
-                : ""
-            }
+            ${type === "used"
+        ? `<br><span class="text-danger">Already used</span>`
+        : c.reason
+          ? `<br><span class="text-muted">${c.reason}</span>`
+          : ""
+      }
           </div>
         </div>
 
-        ${
-          type === "available"
-            ? `<button class="apply-mini-btn"
+        ${type === "available"
+        ? `<button class="apply-mini-btn"
                 onclick="applyCouponFromCard('${c.code}')">
                 Apply
               </button>`
-            : ""
-        }
+        : ""
+      }
       </div>
     `;
   });
@@ -294,12 +291,12 @@ function applyCouponFromInput() {
   }
 
   // MAX ONLY FOR PERCENTAGE
-if (coupon.type === "percentage" && coupon.maxPurchase && currentSubtotal > coupon.maxPurchase) {
-  feedback.textContent =
-    `Coupon valid only up to ₹${coupon.maxPurchase}`;
-  feedback.classList.add("error");
-  return;
-}
+  if (coupon.type === "percentage" && coupon.maxPurchase && currentSubtotal > coupon.maxPurchase) {
+    feedback.textContent =
+      `Coupon valid only up to ₹${coupon.maxPurchase}`;
+    feedback.classList.add("error");
+    return;
+  }
 
 
 
@@ -349,22 +346,22 @@ async function applyCoupon() {
     // ✅ VALID COUPON
     appliedCoupon = data;
 
-// 🔥 CALCULATE DISCOUNT
-// 🔥 CALCULATE DISCOUNT
-if (data.type === "flat") {
-  // ✅ Prevent flat discount from exceeding subtotal
-  couponDiscountAmount = Math.min(data.flatAmount, currentSubtotal);
-} else {
-  couponDiscountAmount =
-    (currentSubtotal * data.discountPercent) / 100;
+    // 🔥 CALCULATE DISCOUNT
+    // 🔥 CALCULATE DISCOUNT
+    if (data.type === "flat") {
+      // ✅ Prevent flat discount from exceeding subtotal
+      couponDiscountAmount = Math.min(data.flatAmount, currentSubtotal);
+    } else {
+      couponDiscountAmount =
+        (currentSubtotal * data.discountPercent) / 100;
 
-  if (data.maxPurchase) {
-    couponDiscountAmount = Math.min(
-      couponDiscountAmount,
-      data.maxPurchase
-    );
-  }
-}
+      if (data.maxPurchase) {
+        couponDiscountAmount = Math.min(
+          couponDiscountAmount,
+          data.maxPurchase
+        );
+      }
+    }
 
 
 
@@ -375,11 +372,10 @@ if (data.type === "flat") {
       `- ₹${couponDiscountAmount.toFixed(2)}`;
 
     showCouponMessage(
-      `Coupon ${data.code} applied (${
-  data.type === "flat"
-    ? `₹${data.flatAmount} OFF`
-    : `${data.discountPercent}% OFF`
-})
+      `Coupon ${data.code} applied (${data.type === "flat"
+        ? `₹${data.flatAmount} OFF`
+        : `${data.discountPercent}% OFF`
+      })
 
        <span style="color:#c62828; cursor:pointer; margin-left:8px;"
          onclick="removeCoupon()">Remove</span>`,
@@ -422,10 +418,10 @@ function updateSummaryTotals(subtotal) {
   const shipping = selectedShipping ? Number(selectedShipping.value) : 0;
   const tax = subtotal * 0.07;
 
- let total =
-  subtotal + shipping + tax - couponDiscountAmount;
+  let total =
+    subtotal + shipping + tax - couponDiscountAmount;
 
-if (total < 0) total = 0;
+  if (total < 0) total = 0;
 
 
   document.getElementById("subtotal").textContent =
@@ -529,7 +525,7 @@ async function loadSavedAddresses() {
 
 
 
-function selectAddress(id){
+function selectAddress(id) {
   document.querySelectorAll(".address-card").forEach(c => c.classList.remove("active"));
 
   const addr = [...document.querySelectorAll(".address-card")]
@@ -542,8 +538,8 @@ function selectAddress(id){
   event.currentTarget.classList.add("active");
 }
 
-function fillHiddenAddress(addr){
-  if(!addr) return;
+function fillHiddenAddress(addr) {
+  if (!addr) return;
 
   email.value = addr.email || "";
   firstName.value = addr.firstName || "";
@@ -558,7 +554,7 @@ function fillHiddenAddress(addr){
 
 window.loadAddress = function (addressId) {
   if (!addressId) return;
-  
+
   const addr = addressMap[addressId];
   if (!addr) return;
 
@@ -594,7 +590,7 @@ async function placeOrder(paymentMethod, paymentIntentId = null) {
       },
       shippingMethod:
         document.querySelector('input[name="shippingMethod"]:checked').id ===
-        "expressShipping"
+          "expressShipping"
           ? "express"
           : "standard",
 
@@ -650,15 +646,15 @@ orderForm.addEventListener("submit", async function (e) {
 
   if (!stockCheck.valid) {
     if (stockCheck.issues?.length) {
-    
-const msg = stockCheck.issues
-  .map(i => `${i.product} (${i.size}) – ${i.reason}`)
-  .join("\n");
 
-showStockPopup(
-  "Some items are out of stock:\n\n" + msg
-);
-return;
+      const msg = stockCheck.issues
+        .map(i => `${i.product} (${i.size}) – ${i.reason}`)
+        .join("\n");
+
+      showStockPopup(
+        "Some items are out of stock:\n\n" + msg
+      );
+      return;
 
     } else {
       showStockPopup(stockCheck.message || "Stock unavailable");
@@ -709,7 +705,8 @@ return;
               zip: zip.value
             },
             shippingMethod,
-            shippingPrice
+            shippingPrice,
+            couponCode: appliedCoupon ? appliedCoupon.code : null
           })
         }
       );
@@ -744,7 +741,7 @@ return;
         loader?.classList.add("d-none");
         placeOrderBtn.disabled = false;
         placeOrderBtn.textContent = "Place Order";
-showToast("Insufficient wallet balance", "error");
+        showToast("Insufficient wallet balance", "error");
         return;
       }
 
@@ -760,23 +757,23 @@ showToast("Insufficient wallet balance", "error");
     redirectToThankYou(order.orderId);
 
   } catch (err) {
-  console.error("CHECKOUT ERROR:", err);
+    console.error("CHECKOUT ERROR:", err);
 
-  const msg = err.message || "Order failed";
+    const msg = err.message || "Order failed";
 
-  // 🔒 STOCK ERROR FROM BACKEND
-  if (
-    msg.toLowerCase().includes("insufficient stock") ||
-    msg.toLowerCase().includes("only")
-  ) {
-    showStockPopup(
-      msg + "\n\nPlease update your cart."
-    );
-    return;
+    // 🔒 STOCK ERROR FROM BACKEND
+    if (
+      msg.toLowerCase().includes("insufficient stock") ||
+      msg.toLowerCase().includes("only")
+    ) {
+      showStockPopup(
+        msg + "\n\nPlease update your cart."
+      );
+      return;
+    }
+
+    showToast("Order failed. Please try again.", "error");
   }
-
-  showToast("Order failed. Please try again.", "error");
-}
 
 
 });
@@ -804,7 +801,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-});  
+});
 
 function showCouponMessage(message, type = "success") {
   const box = document.getElementById("couponFeedback");
@@ -838,7 +835,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (params.get("payment") === "cancel") {
-   showToast("Payment cancelled. You can try again.", "warning");
+    showToast("Payment cancelled. You can try again.", "warning");
 
     window.history.replaceState({}, document.title, "checkout.html");
   }
@@ -893,7 +890,7 @@ async function redirectToThankYou(orderId = null) {
     document.body.classList.add("page-fade-out");
     setTimeout(() => {
       window.location.href = `thankyou.html?order=${orderId}`
-      
+
     }, 800);
   }, 2000);
 }

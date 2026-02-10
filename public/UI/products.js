@@ -5,11 +5,11 @@ let categoryToastShown = false;
 
 
 
-function showSkeleton(){
+function showSkeleton() {
   const skel = document.getElementById("skeletonGrid");
-  if(!skel) return;
+  if (!skel) return;
 
-  skel.innerHTML = Array(8).fill(0).map(()=>`
+  skel.innerHTML = Array(8).fill(0).map(() => `
     <div class="skeleton-card">
       <div class="skeleton-img"></div>
       <div class="skeleton-body">
@@ -27,8 +27,8 @@ async function loadUserProducts() {
 
   showSkeleton();   // 🔥 show loader
 
-  document.getElementById("productGrid").style.display="none";
-  document.getElementById("skeletonGrid").style.display="grid";
+  document.getElementById("productGrid").style.display = "none";
+  document.getElementById("skeletonGrid").style.display = "grid";
 
   try {
     const res = await fetch("https://envastore.online/api/user/products/shop");
@@ -37,8 +37,8 @@ async function loadUserProducts() {
     allProducts = products;
     filteredProducts = [...products];
 
-    document.getElementById("skeletonGrid").style.display="none";
-    document.getElementById("productGrid").style.display="grid";
+    document.getElementById("skeletonGrid").style.display = "none";
+    document.getElementById("productGrid").style.display = "grid";
 
     applyCategoryFromURL();
 
@@ -46,7 +46,7 @@ async function loadUserProducts() {
       renderUserProducts(filteredProducts);
     }
 
-  } catch(err){
+  } catch (err) {
     console.error(err);
   }
 }
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", loadUserProducts);
 
 function renderUserProducts(products) {
   console.log(products);
-  
+
   const grid = document.getElementById("productGrid");
   const noProducts = document.getElementById("noProducts");
 
@@ -80,25 +80,24 @@ function renderUserProducts(products) {
         : product.category;
 
     // 🟢 OFFER LOGIC
-   const hasOffer =
-  product.discountPercent &&
-  product.oldPrice &&
-  product.finalPrice;
+    const hasOffer =
+      product.discountPercent &&
+      product.oldPrice &&
+      product.finalPrice;
 
-  const isOutOfStock =
-  product.stock === 0 ||
-  Object.values(product.sizes || {}).every(qty => qty === 0);
+    const isOutOfStock =
+      product.stock === 0 ||
+      Object.values(product.sizes || {}).every(qty => qty === 0);
 
 
-return `
+    return `
 <a href="singleProduct.html?id=${product._id}" class="product-card-premium">
   <div class="product-img-box">
 
-    ${
-      hasOffer
+    ${hasOffer
         ? `<span class="offer-badge">${product.discountPercent}% OFF</span>`
         : ""
-    }
+      }
 
     <img src="${imageSrc}" alt="${product.name}" class="product-img">
   </div>
@@ -117,28 +116,26 @@ return `
       </div>
 
       <div class="price-box">
-        ${
-          hasOffer
-            ? `
+        ${hasOffer
+        ? `
               <span class="price-current">₹ ${product.finalPrice}</span>
               <span class="price-old">₹ ${product.oldPrice}</span>
             `
-            : `
+        : `
               <span class="price-current">
                 ₹ ${product.price.toFixed(2)}
               </span>
             `
-        }
+      }
       </div>
     </div>
 
-    ${
-  isOutOfStock
-    ? `<button class="product-card-button" disabled style="background:#999;cursor:not-allowed;">
+    ${isOutOfStock
+        ? `<button class="product-card-button" disabled style="background:#999;cursor:not-allowed;">
          Out of Stock
        </button>`
-    : `<button class="product-card-button">Quick View</button>`
-}
+        : `<button class="product-card-button">Quick View</button>`
+      }
 
   </div>
 </a>
@@ -203,10 +200,10 @@ document.querySelector("#filterPopup .popup-apply")
         selectedCategories.includes(productCategory);
 
       /* SIZE MATCH (NOW WORKS) */
-     const matchSize =
-  selectedSizes.length === 0 ||
-  !product.sizes ||
-  selectedSizes.some(size => size in product.sizes);
+      const matchSize =
+        selectedSizes.length === 0 ||
+        !product.sizes ||
+        selectedSizes.some(size => size in product.sizes);
 
 
       /* PRICE MATCH */
@@ -226,7 +223,7 @@ document.querySelector("#filterPopup .popup-apply")
     );
   });
 
-  document.getElementById("clearFilters")
+document.getElementById("clearFilters")
   ?.addEventListener("click", () => {
 
     // ✅ Uncheck all checkboxes (category + size)
@@ -323,7 +320,7 @@ document.getElementById("clearProductFilters")
     showToast("Filters cleared", "info");
   });
 
-  document.getElementById("clearSort")
+document.getElementById("clearSort")
   ?.addEventListener("click", () => {
 
     // Uncheck sort radios
@@ -339,7 +336,7 @@ document.getElementById("clearProductFilters")
   });
 
 
- function applyCategoryFromURL() {
+function applyCategoryFromURL() {
   const params = new URLSearchParams(window.location.search);
   const category = params.get("category");
 

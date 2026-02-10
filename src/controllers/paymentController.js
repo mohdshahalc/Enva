@@ -35,15 +35,16 @@ exports.createCheckoutSession = async (req, res) => {
 
       // 🔥 IMPORTANT: STORE EVERYTHING WEBHOOK NEEDS
       metadata: {
-  type: "order",                 // 🔥 REQUIRED
-  userId: String(req.user.id || req.user._id),
+        type: "order",                 // 🔥 REQUIRED
+        userId: String(req.user.id || req.user._id),
 
-  amount: String(amount),        // 🔥 REQUIRED (Stripe source of truth)
+        amount: String(amount),        // 🔥 REQUIRED (Stripe source of truth)
 
-  shippingAddress: JSON.stringify(shippingAddress),
-  shippingMethod: shippingMethod || "standard",
-  shippingPrice: String(shippingPrice || 15)
-},
+        shippingAddress: JSON.stringify(shippingAddress),
+        shippingMethod: shippingMethod || "standard",
+        shippingPrice: String(shippingPrice || 15),
+        couponCode: req.body.couponCode || ""
+      },
 
       success_url:
         "https://envastore.online/UI/checkout.html?payment=success",
