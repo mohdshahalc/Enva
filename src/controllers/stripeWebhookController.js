@@ -238,8 +238,22 @@ exports.stripeWebhook = async (req, res) => {
       coupon: appliedCoupon,
 
       total,
-      status: "confirmed"
+      status: "pending" // ✅ MATCH COD/WALLET BEHAVIOR
     });
+
+    // 🟢 MARK COUPON AS USED
+    if (couponCodeToUse) {
+      const dbCoupon = await Coupon.findOne({
+        code: couponCodeToUse,
+        isActive: true
+      });
+
+      if (dbCoupon) {
+        dbCoupon.usedBy.push(userId);
+        dbCoupon.usedCount += 1;
+        await dbCoupon.save();
+      }
+    }
 
     // 6️⃣ CLEAR CART
     cart.items = [];
