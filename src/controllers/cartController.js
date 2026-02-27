@@ -2,6 +2,89 @@ const Cart = require("../models/cart");
 const Offer = require("../models/offer");
 const Category = require("../models/category");
 
+async function getCartWithOffers(userId) {
+  const cart = await Cart.findOne({ user: userId })
+    .populate("items.product")
+    .lean();
+
+  if (!cart || !cart.items.length) {
+    return cart || { items: [] };
+  }
+
+  const now = new Date();
+
+  // 🔹 Collect productIds & categories
+  const validItems = cart.items.filter(i => i.product);
+  const productIds = validItems.map(i => i.product._id);
+  const categories = validItems
+    .map(i => i.product.category)
+    .filter(Boolean);
+
+  // 🔹 Fetch ALL offers in parallel
+  const [productOffers, categoryDocs] = await Promise.all([
+    Offer.find({
+      offerType: "product",
+      product: { $in: productIds },
+      isActive: true,
+      startDate: { $lte: now },
+      endDate: { $gte: now }
+    }).lean(),
+
+    Category.find({ name: { $in: categories } }).lean()
+  ]);
+
+  const categoryIds = categoryDocs.map(c => c._id);
+
+  const categoryOffers = await Offer.find({
+    offerType: "category",
+    category: { $in: categoryIds },
+    isActive: true,
+    startDate: { $lte: now },
+    endDate: { $gte: now }
+  }).lean();
+
+  // 🔹 Maps for instant lookup
+  const productOfferMap = {};
+  productOffers.forEach(o => productOfferMap[o.product.toString()] = o);
+
+  const categoryMap = {};
+  categoryDocs.forEach(c => categoryMap[c.name] = c._id.toString());
+
+  const categoryOfferMap = {};
+  categoryOffers.forEach(o => categoryOfferMap[o.category.toString()] = o);
+
+  // 🔹 Apply pricing
+  for (const item of cart.items) {
+    if (!item.product) continue;
+    const product = item.product;
+
+    let finalPrice = product.price;
+    let oldPrice = null;
+    let discountPercent = null;
+
+    let offer = productOfferMap[product._id.toString()];
+
+    if (!offer && product.category) {
+      const catId = categoryMap[product.category];
+      offer = categoryOfferMap[catId];
+    }
+
+    if (offer) {
+      oldPrice = product.price;
+      discountPercent = offer.discountPercent;
+      finalPrice = Math.round(
+        product.price - (product.price * discountPercent) / 100
+      );
+    }
+
+    item.finalPrice = finalPrice;
+    item.oldPrice = oldPrice;
+    item.discountPercent = discountPercent;
+  }
+
+  return cart;
+}
+
 exports.addToCart = async (req, res) => {
   try {
     const userId = req.user._id || req.user.id;
@@ -76,92 +159,13 @@ exports.addToCart = async (req, res) => {
 exports.getUserCart = async (req, res) => {
   try {
     const userId = req.user._id || req.user.id;
-
-    const cart = await Cart.findOne({ user: userId })
-      .populate("items.product")
-      .lean();
-
-    if (!cart || !cart.items.length) {
-      return res.json({ items: [] });
-    }
-
-    const now = new Date();
-
-    // 🔹 Collect productIds & categories
-    const productIds = cart.items.map(i => i.product._id);
-    const categories = cart.items
-      .map(i => i.product.category)
-      .filter(Boolean);
-
-    // 🔹 Fetch ALL offers in parallel
-    const [productOffers, categoryDocs] = await Promise.all([
-      Offer.find({
-        offerType: "product",
-        product: { $in: productIds },
-        isActive: true,
-        startDate: { $lte: now },
-        endDate: { $gte: now }
-      }).lean(),
-
-      Category.find({ name: { $in: categories } }).lean()
-    ]);
-
-    const categoryIds = categoryDocs.map(c => c._id);
-
-    const categoryOffers = await Offer.find({
-      offerType: "category",
-      category: { $in: categoryIds },
-      isActive: true,
-      startDate: { $lte: now },
-      endDate: { $gte: now }
-    }).lean();
-
-    // 🔹 Maps for instant lookup
-    const productOfferMap = {};
-    productOffers.forEach(o => productOfferMap[o.product.toString()] = o);
-
-    const categoryMap = {};
-    categoryDocs.forEach(c => categoryMap[c.name] = c._id.toString());
-
-    const categoryOfferMap = {};
-    categoryOffers.forEach(o => categoryOfferMap[o.category.toString()] = o);
-
-    // 🔹 Apply pricing
-    for (const item of cart.items) {
-      const product = item.product;
-
-      let finalPrice = product.price;
-      let oldPrice = null;
-      let discountPercent = null;
-
-      let offer = productOfferMap[product._id.toString()];
-
-      if (!offer && product.category) {
-        const catId = categoryMap[product.category];
-        offer = categoryOfferMap[catId];
-      }
-
-      if (offer) {
-        oldPrice = product.price;
-        discountPercent = offer.discountPercent;
-        finalPrice = Math.round(
-          product.price - (product.price * discountPercent) / 100
-        );
-      }
-
-      item.finalPrice = finalPrice;
-      item.oldPrice = oldPrice;
-      item.discountPercent = discountPercent;
-    }
-
+    const cart = await getCartWithOffers(userId);
     res.json(cart);
-
   } catch (error) {
     console.error("GET CART ERROR:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 exports.updateCartQuantity = async (req, res) => {
   try {
@@ -193,69 +197,19 @@ exports.updateCartQuantity = async (req, res) => {
 
     // 🔒 Stock check
     const availableStock = item.product.sizes?.[size] || 0;
-   // 🔑 allow decrease always
-if (quantity > item.quantity && quantity > availableStock) {
-  return res.status(400).json({
-    message: `Only ${availableStock} items left for size ${size}`
-  });
-}
-
+    // 🔑 allow decrease always
+    if (quantity > item.quantity && quantity > availableStock) {
+      return res.status(400).json({
+        message: `Only ${availableStock} items left for size ${size}`
+      });
+    }
 
     // 2️⃣ Update qty
     item.quantity = quantity;
     await cartDoc.save();
 
-    // 3️⃣ RE-FETCH CART AS LEAN (CRITICAL)
-    const cart = await Cart.findOne({ user: userId })
-      .populate("items.product")
-      .lean();
-
-    const now = new Date();
-
-    // 4️⃣ APPLY OFFERS
-    for (const item of cart.items) {
-      const product = item.product;
-
-      let finalPrice = product.price;
-      let oldPrice = null;
-      let discountPercent = null;
-
-      let offer = await Offer.findOne({
-        offerType: "product",
-        product: product._id,
-        isActive: true,
-        startDate: { $lte: now },
-        endDate: { $gte: now }
-      }).lean();
-
-      if (!offer && product.category) {
-        const categoryDoc = await Category.findOne({
-          name: product.category
-        }).lean();
-
-        if (categoryDoc) {
-          offer = await Offer.findOne({
-            offerType: "category",
-            category: categoryDoc._id,
-            isActive: true,
-            startDate: { $lte: now },
-            endDate: { $gte: now }
-          }).lean();
-        }
-      }
-
-      if (offer) {
-        oldPrice = product.price;
-        discountPercent = offer.discountPercent;
-        finalPrice = Math.round(
-          product.price - (product.price * discountPercent) / 100
-        );
-      }
-
-      item.finalPrice = finalPrice;
-      item.oldPrice = oldPrice;
-      item.discountPercent = discountPercent;
-    }
+    // 3️⃣ FETCH EXPERT CART WITH OFFERS
+    const cart = await getCartWithOffers(userId);
 
     // 5️⃣ SEND CART WITH OFFERS
     res.json({
@@ -270,26 +224,22 @@ if (quantity > item.quantity && quantity > availableStock) {
 };
 
 
-
-
 exports.removeFromCart = async (req, res) => {
   try {
-  
     const userId = req.user.id;
     const { productId, size } = req.params;
-          
-          
+
     if (!productId || !size) {
       return res.status(400).json({ message: "Product and size required" });
     }
 
-    const cart = await Cart.findOne({ user: userId }).populate("items.product");
+    const cartDoc = await Cart.findOne({ user: userId }).populate("items.product");
 
-    if (!cart) {
+    if (!cartDoc) {
       return res.status(404).json({ message: "Cart not found" });
     }
 
-    cart.items = cart.items.filter(item =>
+    cartDoc.items = cartDoc.items.filter(item =>
       !(
         item.product &&
         item.product._id.toString() === productId &&
@@ -297,7 +247,9 @@ exports.removeFromCart = async (req, res) => {
       )
     );
 
-    await cart.save();
+    await cartDoc.save();
+
+    const cart = await getCartWithOffers(userId);
 
     res.status(200).json({ cart });
   } catch (err) {
