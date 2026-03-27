@@ -37,26 +37,17 @@ async function loadUserProducts() {
     allProducts = products;
     filteredProducts = [...products];
 
-<<<<<<< HEAD
-// 🔥 APPLY CATEGORY OR SEARCH FROM URL
-applyCategoryFromURL();
-applySearchFromURL();
-
-// If NO category and NO search in URL → show all products
-if (!window.location.search.includes("category") && !window.location.search.includes("search")) {
-  renderUserProducts(filteredProducts);
-}
-=======
     document.getElementById("skeletonGrid").style.display = "none";
     document.getElementById("productGrid").style.display = "grid";
 
+    // 🔥 APPLY CATEGORY OR SEARCH FROM URL
     applyCategoryFromURL();
+    applySearchFromURL();
 
-    if (!window.location.search.includes("category")) {
+    // If NO category and NO search in URL → show all products
+    if (!window.location.search.includes("category") && !window.location.search.includes("search")) {
       renderUserProducts(filteredProducts);
     }
-
->>>>>>> cff120e6b16b68d733c2ecd5a28269a957beb8b6
   } catch (err) {
     console.error(err);
   }
