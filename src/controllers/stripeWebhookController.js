@@ -158,14 +158,17 @@ exports.stripeWebhook = async (req, res) => {
     const tax = +(subtotal * 0.07).toFixed(2);
 
     /* ==============================
-       🎟️ COUPON LOGIC (UNCHANGED)
+       🎟️ COUPON LOGIC (METADATA PRIORITY)
     ============================== */
     let appliedCoupon = null;
     let discountAmount = 0;
 
-    if (cart.couponCode) {
+    // 🔥 PREFER METADATA CODE, FALLBACK TO CART
+    const couponCodeToUse = (metadata.couponCode || cart.couponCode || "").toUpperCase();
+
+    if (couponCodeToUse) {
       const coupon = await Coupon.findOne({
-        code: cart.couponCode.toUpperCase(),
+        code: couponCodeToUse,
         isActive: true
       });
 
@@ -175,13 +178,21 @@ exports.stripeWebhook = async (req, res) => {
         now <= coupon.endDate &&
         subtotal >= coupon.minPurchase
       ) {
-        discountAmount = +(
-          (subtotal * coupon.discountPercent) / 100
-        ).toFixed(2);
+
+        if (coupon.type === "flat") {
+          discountAmount = Math.min(coupon.flatAmount, subtotal);
+        } else {
+          discountAmount = +((subtotal * coupon.discountPercent) / 100).toFixed(2);
+          if (coupon.maxPurchase) {
+            discountAmount = Math.min(discountAmount, coupon.maxPurchase);
+          }
+        }
 
         appliedCoupon = {
           code: coupon.code,
           discountPercent: coupon.discountPercent,
+          flatAmount: coupon.flatAmount, // store flat amount too
+          type: coupon.type,
           discountAmount
         };
       }
@@ -227,8 +238,22 @@ exports.stripeWebhook = async (req, res) => {
       coupon: appliedCoupon,
 
       total,
-      status: "confirmed"
+      status: "pending" // ✅ MATCH COD/WALLET BEHAVIOR
     });
+
+    // 🟢 MARK COUPON AS USED
+    if (couponCodeToUse) {
+      const dbCoupon = await Coupon.findOne({
+        code: couponCodeToUse,
+        isActive: true
+      });
+
+      if (dbCoupon) {
+        dbCoupon.usedBy.push(userId);
+        dbCoupon.usedCount += 1;
+        await dbCoupon.save();
+      }
+    }
 
     // 6️⃣ CLEAR CART
     cart.items = [];

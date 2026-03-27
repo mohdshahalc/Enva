@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const {registerUser,sendSignupOTP,verifySignupOTP,loginUser,sendForgotPasswordOTP,resetPassword} = require("../controllers/userAuthController");
+const {registerUser,sendSignupOTP,verifySignupOTP,loginUser,sendForgotPasswordOTP,resetPassword,googleAuth} = require("../controllers/userAuthController");
 
 router.post("/user/send-signup-otp", sendSignupOTP);
 router.post("/user/verify-signup-otp", verifySignupOTP);
 
 router.post("/user/signup", registerUser);
+router.post("/user/google", googleAuth);
 
 
 router.post("/user/login", loginUser);

@@ -46,7 +46,12 @@ const productSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
-    }
+    },
+    reservedStock: {
+  type: Map,
+  of: Number,
+  default: {}
+}
   },
   { timestamps: true }
 );

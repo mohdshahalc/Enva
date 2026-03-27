@@ -1,21 +1,43 @@
 
 let allProducts = [];   // store original products
 let filteredProducts = []; // working copy
+let categoryToastShown = false;
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadUserProducts();
-});
+
+function showSkeleton() {
+  const skel = document.getElementById("skeletonGrid");
+  if (!skel) return;
+
+  skel.innerHTML = Array(8).fill(0).map(() => `
+    <div class="skeleton-card">
+      <div class="skeleton-img"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line long"></div>
+        <div class="skeleton-btn"></div>
+      </div>
+    </div>
+  `).join("");
+}
+
 
 async function loadUserProducts() {
+
+  showSkeleton();   // 🔥 show loader
+
+  document.getElementById("productGrid").style.display = "none";
+  document.getElementById("skeletonGrid").style.display = "grid";
+
   try {
-    const res = await fetch("http://localhost:5000/api/user/products/shop");
+    const res = await fetch("https://envastore.online/api/user/products/shop");
     const products = await res.json();
-console.log(products);
 
-   allProducts = products;
-filteredProducts = [...products];
+    allProducts = products;
+    filteredProducts = [...products];
 
+<<<<<<< HEAD
 // 🔥 APPLY CATEGORY OR SEARCH FROM URL
 applyCategoryFromURL();
 applySearchFromURL();
@@ -24,16 +46,28 @@ applySearchFromURL();
 if (!window.location.search.includes("category") && !window.location.search.includes("search")) {
   renderUserProducts(filteredProducts);
 }
+=======
+    document.getElementById("skeletonGrid").style.display = "none";
+    document.getElementById("productGrid").style.display = "grid";
+
+    applyCategoryFromURL();
+
+    if (!window.location.search.includes("category")) {
+      renderUserProducts(filteredProducts);
+    }
+
+>>>>>>> cff120e6b16b68d733c2ecd5a28269a957beb8b6
   } catch (err) {
-    console.error("Failed to load products", err);
+    console.error(err);
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", loadUserProducts);
 
 function renderUserProducts(products) {
   console.log(products);
-  
+
   const grid = document.getElementById("productGrid");
   const noProducts = document.getElementById("noProducts");
 
@@ -57,20 +91,24 @@ function renderUserProducts(products) {
         : product.category;
 
     // 🟢 OFFER LOGIC
-   const hasOffer =
-  product.discountPercent &&
-  product.oldPrice &&
-  product.finalPrice;
+    const hasOffer =
+      product.discountPercent &&
+      product.oldPrice &&
+      product.finalPrice;
 
-return `
+    const isOutOfStock =
+      product.stock === 0 ||
+      Object.values(product.sizes || {}).every(qty => qty === 0);
+
+
+    return `
 <a href="singleProduct.html?id=${product._id}" class="product-card-premium">
   <div class="product-img-box">
 
-    ${
-      hasOffer
+    ${hasOffer
         ? `<span class="offer-badge">${product.discountPercent}% OFF</span>`
         : ""
-    }
+      }
 
     <img src="${imageSrc}" alt="${product.name}" class="product-img">
   </div>
@@ -89,22 +127,27 @@ return `
       </div>
 
       <div class="price-box">
-        ${
-          hasOffer
-            ? `
+        ${hasOffer
+        ? `
               <span class="price-current">₹ ${product.finalPrice}</span>
               <span class="price-old">₹ ${product.oldPrice}</span>
             `
-            : `
+        : `
               <span class="price-current">
                 ₹ ${product.price.toFixed(2)}
               </span>
             `
-        }
+      }
       </div>
     </div>
 
-    <button class="product-card-button">Quick View</button>
+    ${isOutOfStock
+        ? `<button class="product-card-button" disabled style="background:#999;cursor:not-allowed;">
+         Out of Stock
+       </button>`
+        : `<button class="product-card-button">Quick View</button>`
+      }
+
   </div>
 </a>
 `;
@@ -116,7 +159,7 @@ return `
 async function loadFilterCategories() {
 
 
-  const res = await fetch("http://localhost:5000/api/admin/categories");
+  const res = await fetch("https://envastore.online/api/admin/categories");
   const categories = await res.json();
 
   document.getElementById("categoryFilters").innerHTML =
@@ -170,10 +213,9 @@ document.querySelector("#filterPopup .popup-apply")
       /* SIZE MATCH (NOW WORKS) */
       const matchSize =
         selectedSizes.length === 0 ||
-        selectedSizes.some(size =>
-          product.sizes &&
-          product.sizes[size] > 0
-        );
+        !product.sizes ||
+        selectedSizes.some(size => size in product.sizes);
+
 
       /* PRICE MATCH */
       const matchPrice =
@@ -192,7 +234,7 @@ document.querySelector("#filterPopup .popup-apply")
     );
   });
 
-  document.getElementById("clearFilters")
+document.getElementById("clearFilters")
   ?.addEventListener("click", () => {
 
     // ✅ Uncheck all checkboxes (category + size)
@@ -289,7 +331,7 @@ document.getElementById("clearProductFilters")
     showToast("Filters cleared", "info");
   });
 
-  document.getElementById("clearSort")
+document.getElementById("clearSort")
   ?.addEventListener("click", () => {
 
     // Uncheck sort radios
@@ -305,7 +347,7 @@ document.getElementById("clearProductFilters")
   });
 
 
-  function applyCategoryFromURL() {
+function applyCategoryFromURL() {
   const params = new URLSearchParams(window.location.search);
   const category = params.get("category");
 
@@ -321,7 +363,11 @@ document.getElementById("clearProductFilters")
 
   renderUserProducts(filteredProducts);
 
-  showToast(`Showing ${category} products`, "info");
+  // ✅ SHOW TOAST ONLY ONCE (FROM HOME)
+  if (!categoryToastShown) {
+    showToast(`Showing ${category} products`, "info");
+    categoryToastShown = true;
+  }
 }
 
 function applySearchFromURL() {

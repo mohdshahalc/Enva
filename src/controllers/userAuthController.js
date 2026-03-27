@@ -1,9 +1,11 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-const { generateAccessToken, generateRefreshToken,generateAdminAccessToken } = require("../utils/token");
+const { generateAccessToken, generateRefreshToken } = require("../utils/token");
 const nodemailer = require("nodemailer");
 const transporter = require("../utils/mailer");
 const crypto = require("crypto");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /* ===========================
    REGISTER USER
@@ -300,5 +302,76 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({
       message: "Server error"
     });
+  }
+};
+
+
+exports.googleAuth = async (req, res) => {
+  try {
+    const { credential } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({ message: "Google token missing" });
+    }
+
+    // 🔐 Verify Google token
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, sub } = payload;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email not available from Google" });
+    }
+
+    // 🔍 Find or create user
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({
+        name,
+        email,
+        googleId: sub,
+        isVerified: true,          // 🔥 skip OTP
+        role: "user",
+        authProvider: "google"
+      });
+      await user.save();
+    }
+
+    // 🔐 Generate tokens (same as login)
+    const accessToken = generateAccessToken(user._id, user.role);
+    const refreshToken = generateRefreshToken(user);
+
+    user.refreshToken = refreshToken;
+    user.refreshTokenRole = user.role;
+    await user.save();
+
+    // 🍪 Set refresh token cookie (same as login)
+    res.cookie("userRefreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: false, // true in prod
+      path: "/api/user",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    // ✅ Final response (MATCH loginUser)
+    res.json({
+      accessToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+
+  } catch (err) {
+    console.error("GOOGLE AUTH ERROR:", err);
+    res.status(401).json({ message: "Google authentication failed" });
   }
 };

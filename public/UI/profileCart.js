@@ -10,7 +10,7 @@
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/user/cart", {
+      const res = await fetch("https://envastore.online/api/user/cart", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -122,7 +122,7 @@ function updateQuantity(productId, size, quantity) {
 
   isUpdatingQty = true;
 
-  fetch("http://localhost:5000/api/user/cart/update", {
+  fetch("https://envastore.online/api/user/cart/update", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -149,7 +149,7 @@ function updateQuantity(productId, size, quantity) {
 function removeFromCart(productId, size) {
   if (!confirm(`Remove size ${size} from cart?`)) return;
 
-  apiFetch(`http://localhost:5000/api/user/cart/remove/${productId}/${size}`, {
+  apiFetch(`https://envastore.online/api/user/cart/remove/${productId}/${size}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("userToken")}`
@@ -175,7 +175,7 @@ function removeFromCart(productId, size) {
 
     if (!token) return;
 
-    const res = await apiFetch("http://localhost:5000/api/user/profile", {
+    const res = await apiFetch("https://envastore.online/api/user/profile", {
       headers: {
         Authorization: `Bearer ${token}`
       }

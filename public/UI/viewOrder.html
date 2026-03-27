@@ -131,7 +131,11 @@ nav.navbar-main {
 
 .custom-container-lg {
     max-width: 1400px;
+}.order-status-badge.partial{
+  background:#fff3cd;
+  color:#856404;
 }
+
 
 .hover-black:hover {
     color: #000 !important;
@@ -260,6 +264,13 @@ body {
 .order-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999; }
 .order-modal { background: #fff; width: 400px; padding: 25px; border-radius: 10px; }
 #toastBox { position: fixed; top: 140px; right: 20px; z-index: 10000; }
+
+/* 📱 Mobile only */
+@media (max-width: 768px) {
+  .page-content {
+    margin-top: 0px !important;
+  }
+}
 
   </style>
 </head>

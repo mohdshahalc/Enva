@@ -58,3 +58,24 @@ exports.setDefaultAddress = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+// UPDATE ADDRESS
+exports.updateAddress = async (req, res) => {
+  try {
+    const address = await Address.findOneAndUpdate(
+      { _id: req.params.id, user: req.user.id },
+      req.body,
+      { new: true }
+    );
+
+    if (!address) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    res.json({ message: "Address updated", address });
+  } catch (err) {
+    console.error("UPDATE ADDRESS ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

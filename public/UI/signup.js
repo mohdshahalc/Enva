@@ -70,7 +70,7 @@ form.addEventListener("submit", async (e) => {
 
   try {
     // 🔐 SEND OTP
-   const res = await fetch("http://localhost:5000/api/auth/user/send-signup-otp", {
+   const res = await fetch("https://envastore.online/api/auth/user/send-signup-otp", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(signupPayload)
@@ -105,7 +105,7 @@ form.addEventListener("submit", async (e) => {
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/auth/user/verify-signup-otp", {
+        const res = await fetch("https://envastore.online/api/auth/user/verify-signup-otp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

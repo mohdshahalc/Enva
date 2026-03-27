@@ -9,8 +9,7 @@ exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find({
       isActive: true,
-      isDeleted: false,
-      stock: { $gt: 0 }
+      isDeleted: false
     }).lean();
 
     const now = new Date();

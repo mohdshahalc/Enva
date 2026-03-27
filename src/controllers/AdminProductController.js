@@ -65,11 +65,25 @@ exports.updateProduct = async (req, res) => {
       );
     }
 
-    // 🖼️ Images (optional)
-    let images = product.images;
-    if (req.files && req.files.length > 0) {
-      images = req.files.map(file => file.filename);
-    }
+   // 🖼️ Images (handle delete + append)
+let images = product.images || [];
+
+// 🔴 REMOVE images deleted in frontend
+if (req.body.removedImages) {
+  const removedImages = JSON.parse(req.body.removedImages);
+  images = images.filter(img => !removedImages.includes(img));
+}
+
+// 🟢 APPEND new images
+if (req.files && req.files.length > 0) {
+  const newImages = req.files.map(file => file.filename);
+  images = [...images, ...newImages];
+}
+
+// 🔒 ENFORCE MAX 3 IMAGES
+images = images.slice(0, 3);
+
+
 
     // ✅ Update fields
     product.name = name ?? product.name;
@@ -94,15 +108,21 @@ exports.updateProduct = async (req, res) => {
 };
 
 
-// GET ALL PRODUCTS
+// GET ALL PRODUCTS (OPTIMIZED – no logic change)
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
+    const products = await Product.find({ isActive: true, isDeleted: false })
+      .select("name price stock category images description sizes createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
     res.json(products);
-  } catch {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 
 

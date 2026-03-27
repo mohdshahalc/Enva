@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", loadAddresses);
 
+let editingAddressId = null;
+
+
 async function loadAddresses() {
   const token = localStorage.getItem("userToken")
 
-  const res = await apiFetch("http://localhost:5000/api/user/address", {
+  const res = await apiFetch("https://envastore.online/api/user/address", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -30,7 +33,7 @@ async function loadUserName() {
 
   if (!token) return;
 
-  const res = await apiFetch("http://localhost:5000/api/user/profile", {
+  const res = await apiFetch("https://envastore.online/api/user/profile", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -210,17 +213,21 @@ document.querySelector("#addressForm").addEventListener("submit", async e => {
      API CALL
   ========================= */
   try {
-    const res = await apiFetch(
-      "http://localhost:5000/api/user/address/add",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("userToken")}`
-        },
-        body: JSON.stringify(data)
-      }
-    );
+    const url = editingAddressId
+  ? `https://envastore.online/api/user/address/${editingAddressId}`
+  : "https://envastore.online/api/user/address/add";
+
+const method = editingAddressId ? "PUT" : "POST";
+
+const res = await apiFetch(url, {
+  method,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("userToken")}`
+  },
+  body: JSON.stringify(data)
+});
+
 
     const result = await res.json();
 
@@ -229,9 +236,24 @@ document.querySelector("#addressForm").addEventListener("submit", async e => {
       return;
     }
 
-    showToast("Address added successfully", "success");
-    loadAddresses();
-    e.target.reset();
+  showToast(
+  editingAddressId ? "Address updated successfully" : "Address added successfully",
+  "success"
+);
+
+// ✅ RESET EDIT MODE HERE
+editingAddressId = null;
+loadAddresses();
+e.target.reset();
+
+const submitBtn = document.querySelector("#addressForm button");
+submitBtn.textContent = "Add Address";
+
+// 🔓 Re-enable address card buttons
+document
+  .querySelectorAll("#savedAddresses button")
+  .forEach(btn => btn.disabled = false);
+
 
   } catch (err) {
     console.error(err);
@@ -241,7 +263,7 @@ document.querySelector("#addressForm").addEventListener("submit", async e => {
 
 
 async function deleteAddress(id) {
-  await apiFetch(`http://localhost:5000/api/user/address/${id}`, {
+  await apiFetch(`https://envastore.online/api/user/address/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${ localStorage.getItem("userToken")}`
@@ -253,7 +275,7 @@ async function deleteAddress(id) {
 
 
 function setDefaultAddress(addressId) {
-  apiFetch(`http://localhost:5000/api/user/address/default/${addressId}`, {
+  apiFetch(`https://envastore.online/api/user/address/default/${addressId}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${ localStorage.getItem("userToken")}`
@@ -293,4 +315,57 @@ function showToast(message, type = "success") {
   setTimeout(() => toast.remove(), 3200);
 }
 
+
+function editAddress(id) {
+  editingAddressId = id;
+
+  // 🔒 Disable ONLY address card buttons
+  document
+    .querySelectorAll("#savedAddresses button")
+    .forEach(btn => btn.disabled = true);
+
+  // Keep form submit button enabled
+  const submitBtn = document.querySelector("#addressForm button");
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Update Address";
+
+  apiFetch("https://envastore.online/api/user/address", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("userToken")}`
+    }
+  })
+    .then(res => res.json())
+    .then(addresses => {
+      const address = addresses.find(a => a._id === id);
+      if (!address) {
+        showToast("Address not found", "error");
+        return;
+      }
+
+      // 📝 Fill form
+      document.querySelector(
+        `input[name="addressType"][value="${address.type}"]`
+      ).checked = true;
+
+      document.getElementById("firstName").value = address.firstName;
+      document.getElementById("lastName").value = address.lastName;
+      document.getElementById("email").value = address.email;
+      document.getElementById("phone").value = address.phone;
+      document.getElementById("street").value = address.street;
+      document.getElementById("city").value = address.city;
+      document.getElementById("state").value = address.state;
+      document.getElementById("postalCode").value = address.postcode;
+
+      // ⬆️ Scroll to form
+      document
+        .getElementById("addressForm")
+        .scrollIntoView({ behavior: "smooth", block: "start" });
+
+      showToast("Editing address. Update & save.", "info");
+    })
+    .catch(err => {
+      console.error(err);
+      showToast("Failed to load address", "error");
+    });
+}
 

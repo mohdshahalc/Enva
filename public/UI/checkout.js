@@ -3,6 +3,7 @@ let couponDiscountAmount = 0;
 let allCoupons = [];
 let appliedCoupon = null;
 let walletBalance = 0;
+window.currentAddresses = [];
 
 let stripe;
 let elements;
@@ -30,7 +31,7 @@ async function loadOrderSummary() {
   const token = localStorage.getItem("userToken")
   if (!token) return;
 
-  const res = await apiFetch("http://localhost:5000/api/user/cart", {
+  const res = await apiFetch("https://envastore.online/api/user/cart", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -101,7 +102,7 @@ function renderOrderSummary(items) {
 
 async function loadAllCoupons(subtotal) {
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/coupons", {
+    const res = await apiFetch("https://envastore.online/api/admin/coupons", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("userToken")}`
       }
@@ -148,26 +149,26 @@ function showCouponsByStatus(subtotal) {
       return;
     }
 
+
     if (end < now) {
-      invalid.push({ ...c, reason: "Expired" });
       return;
     }
 
-   if (subtotal < c.minPurchase) {
-  invalid.push({
-    ...c,
-    reason: `Min ₹${c.minPurchase} required`
-  });
-  return;
-}
+    if (subtotal < c.minPurchase) {
+      invalid.push({
+        ...c,
+        reason: `Min ₹${c.minPurchase} required`
+      });
+      return;
+    }
 
-if (c.maxPurchase && subtotal > c.maxPurchase) {
-  invalid.push({
-    ...c,
-    reason: `Valid up to ₹${c.maxPurchase}`
-  });
-  return;
-}
+    if (c.maxPurchase && subtotal > c.maxPurchase) {
+      invalid.push({
+        ...c,
+        reason: `Valid up to ₹${c.maxPurchase}`
+      });
+      return;
+    }
 
 
     available.push(c);
@@ -176,7 +177,8 @@ if (c.maxPurchase && subtotal > c.maxPurchase) {
   renderCouponList("availableCouponList", available, "available");
   renderCouponList("upcomingCouponList", upcoming, "upcoming");
   renderCouponList("invalidCouponList", invalid, "invalid");
-  renderCouponList("usedCouponList", used, "used");
+  const limitedUsed = used.slice(0, 3);
+  renderCouponList("usedCouponList", limitedUsed, "used");
 }
 
 
@@ -201,25 +203,29 @@ function renderCouponList(containerId, coupons, type) {
         <div>
           <div class="coupon-code">${c.code}</div>
           <div class="coupon-desc">
-           ${c.discountPercent}% OFF • ₹${c.minPurchase} – ₹${c.maxPurchase}
-            ${
-              type === "used"
-                ? `<br><span class="text-danger">Already used</span>`
-                : c.reason
-                ? `<br><span class="text-muted">${c.reason}</span>`
-                : ""
-            }
+         ${c.type === "flat"
+        ? `Flat ₹${c.flatAmount} OFF`
+        : `${c.discountPercent}% OFF`
+      }
+ • Min ₹${c.minPurchase}
+${c.type === "percentage" && c.maxPurchase ? ` – Max ₹${c.maxPurchase}` : ""}
+
+            ${type === "used"
+        ? `<br><span class="text-danger">Already used</span>`
+        : c.reason
+          ? `<br><span class="text-muted">${c.reason}</span>`
+          : ""
+      }
           </div>
         </div>
 
-        ${
-          type === "available"
-            ? `<button class="apply-mini-btn"
-                onclick="applyCouponFromCard('${c.code}', ${c.discountPercent})">
+        ${type === "available"
+        ? `<button class="apply-mini-btn"
+                onclick="applyCouponFromCard('${c.code}')">
                 Apply
               </button>`
-            : ""
-        }
+        : ""
+      }
       </div>
     `;
   });
@@ -284,23 +290,27 @@ function applyCouponFromInput() {
     return;
   }
 
-  // 🔴 MAX PURCHASE CHECK (🔥 THIS WAS MISSING)
-  if (coupon.maxPurchase && currentSubtotal > coupon.maxPurchase) {
+  // MAX ONLY FOR PERCENTAGE
+  if (coupon.type === "percentage" && coupon.maxPurchase && currentSubtotal > coupon.maxPurchase) {
     feedback.textContent =
       `Coupon valid only up to ₹${coupon.maxPurchase}`;
     feedback.classList.add("error");
     return;
   }
 
+
+
+
   // ✅ APPLY COUPON
-  applyCoupon(coupon.code, coupon.discountPercent);
+  applyCoupon();
 }
 
 
-function applyCouponFromCard(code, discountPercent) {
+function applyCouponFromCard(code) {
   document.getElementById("couponInput").value = code;
-  applyCoupon(code, discountPercent);
+  applyCoupon();
 }
+
 
 async function applyCoupon() {
   const code = document.getElementById("couponInput").value.trim();
@@ -312,7 +322,7 @@ async function applyCoupon() {
 
   try {
     const res = await apiFetch(
-      "http://localhost:5000/api/user/orders/validate",
+      "https://envastore.online/api/user/orders/validate",
       {
         method: "POST",
         headers: {
@@ -334,13 +344,26 @@ async function applyCoupon() {
     }
 
     // ✅ VALID COUPON
-    appliedCoupon = {
-      code: data.code,
-      discountPercent: data.discountPercent
-    };
+    appliedCoupon = data;
 
-    couponDiscountAmount =
-      (currentSubtotal * data.discountPercent) / 100;
+    // 🔥 CALCULATE DISCOUNT
+    // 🔥 CALCULATE DISCOUNT
+    if (data.type === "flat") {
+      // ✅ Prevent flat discount from exceeding subtotal
+      couponDiscountAmount = Math.min(data.flatAmount, currentSubtotal);
+    } else {
+      couponDiscountAmount =
+        (currentSubtotal * data.discountPercent) / 100;
+
+      if (data.maxPurchase) {
+        couponDiscountAmount = Math.min(
+          couponDiscountAmount,
+          data.maxPurchase
+        );
+      }
+    }
+
+
 
     document.getElementById("couponRow").classList.remove("d-none");
     document.getElementById("couponLabel").textContent =
@@ -349,7 +372,11 @@ async function applyCoupon() {
       `- ₹${couponDiscountAmount.toFixed(2)}`;
 
     showCouponMessage(
-      `Coupon ${data.code} applied (${data.discountPercent}% OFF)
+      `Coupon ${data.code} applied (${data.type === "flat"
+        ? `₹${data.flatAmount} OFF`
+        : `${data.discountPercent}% OFF`
+      })
+
        <span style="color:#c62828; cursor:pointer; margin-left:8px;"
          onclick="removeCoupon()">Remove</span>`,
       "success"
@@ -391,8 +418,11 @@ function updateSummaryTotals(subtotal) {
   const shipping = selectedShipping ? Number(selectedShipping.value) : 0;
   const tax = subtotal * 0.07;
 
-  const total =
+  let total =
     subtotal + shipping + tax - couponDiscountAmount;
+
+  if (total < 0) total = 0;
+
 
   document.getElementById("subtotal").textContent =
     `₹${subtotal.toFixed(2)}`;
@@ -420,47 +450,106 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 let addressMap = {};
-
 async function loadSavedAddresses() {
-  const token = localStorage.getItem("userToken")
+  const token = localStorage.getItem("userToken");
   if (!token) return;
 
-  const res = await apiFetch("http://localhost:5000/api/user/address", {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+  const res = await apiFetch("https://envastore.online/api/user/address", {
+    headers: { Authorization: `Bearer ${token}` }
   });
 
   const addresses = await res.json();
-  console.log(addresses);
-  
-  const select = document.getElementById("existingAddress");
 
-  if (!select) return;
+  // 🚨 No address → redirect
+  if (!addresses.length) {
+    window.location.href = "address.html";
+    return;
+  }
 
-  // reset dropdown
-  select.innerHTML = `
-    <option value="" selected disabled>
-      Select or Enter a New Address...
-    </option>
+  // ✅ Pick default OR first
+  const addr = addresses.find(a => a.isDefault) || addresses[0];
+
+  // Fill hidden fields (backend untouched)
+  email.value = addr.email || "";
+  firstName.value = addr.firstName || "";
+  lastName.value = addr.lastName || "";
+  address.value = addr.street || "";
+  city.value = addr.city || "";
+  state.value = addr.state || "";
+  zip.value = addr.postcode || "";
+
+  // ✅ Render premium UI
+  document.getElementById("addressList").innerHTML = `
+    <div class="saved-address-card">
+
+      <div class="address-header">
+        <span class="fw-semibold">Delivering To</span>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-dark"
+          onclick="window.location.href='address.html'"
+        >
+          Change Address
+        </button>
+      </div>
+
+      <div class="address-content">
+
+        ${addr.firstName || addr.lastName ? `
+          <div><strong>Name:</strong> ${addr.firstName || ""} ${addr.lastName || ""}</div>
+        ` : ""}
+
+        ${addr.email ? `
+          <div><strong>Email:</strong> ${addr.email}</div>
+        ` : ""}
+
+        ${addr.city ? `
+          <div><strong>City:</strong> ${addr.city}</div>
+        ` : ""}
+
+        ${addr.postcode ? `
+          <div><strong>Pincode:</strong> ${addr.postcode}</div>
+        ` : ""}
+
+        <div>
+          <strong>Address:</strong>
+          ${addr.street}, ${addr.state}
+        </div>
+
+      </div>
+    </div>
   `;
-
-  addresses.forEach(addr => {
-    addressMap[addr._id] = addr;
-
-    const option = document.createElement("option");
-    option.value = addr._id;
-    option.textContent =
-      `${addr.type}: ${addr.street}, ${addr.city}, ${addr.postcode}`;
-
-    select.appendChild(option);
-  });
-
-  // ✅ THIS IS THE MISSING PART
-  select.addEventListener("change", (e) => {
-    loadAddress(e.target.value);
-  });
 }
+
+
+
+
+function selectAddress(id) {
+  document.querySelectorAll(".address-card").forEach(c => c.classList.remove("active"));
+
+  const addr = [...document.querySelectorAll(".address-card")]
+    .find(c => c.innerHTML.includes(id));
+
+  const selected = window.currentAddresses.find(a => a._id === id);
+  fillHiddenAddress(selected);
+
+  // highlight
+  event.currentTarget.classList.add("active");
+}
+
+function fillHiddenAddress(addr) {
+  if (!addr) return;
+
+  email.value = addr.email || "";
+  firstName.value = addr.firstName || "";
+  lastName.value = addr.lastName || "";
+  address.value = addr.street || "";
+  city.value = addr.city || "";
+  state.value = addr.state || "";
+  zip.value = addr.postcode || "";
+}
+
 
 
 window.loadAddress = function (addressId) {
@@ -468,7 +557,7 @@ window.loadAddress = function (addressId) {
 
   const addr = addressMap[addressId];
   if (!addr) return;
-console.log(addr.state);
+
 
   document.getElementById("email").value = addr.email || "";
   document.getElementById("firstName").value = addr.firstName || "";
@@ -483,7 +572,7 @@ console.log(addr.state);
 async function placeOrder(paymentMethod, paymentIntentId = null) {
   const token = localStorage.getItem("userToken");
 
-  const res = await apiFetch("http://localhost:5000/api/user/orders", {
+  const res = await apiFetch("https://envastore.online/api/user/orders", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -501,7 +590,7 @@ async function placeOrder(paymentMethod, paymentIntentId = null) {
       },
       shippingMethod:
         document.querySelector('input[name="shippingMethod"]:checked').id ===
-        "expressShipping"
+          "expressShipping"
           ? "express"
           : "standard",
 
@@ -523,6 +612,7 @@ async function placeOrder(paymentMethod, paymentIntentId = null) {
 const orderForm = document.querySelector(".checkout-form form");
 const placeOrderBtn = document.getElementById("placeOrderBtn");
 
+
 orderForm.addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -533,163 +623,159 @@ orderForm.addEventListener("submit", async function (e) {
   );
 
   if (!selectedRadio) {
-    alert("Please select a payment method");
+    showToast("Please select a payment method", "warning");
     return;
   }
 
-  const selectedMethod = selectedRadio.value; // ✅ use value
+  const selectedMethod = selectedRadio.value;
   const loader = document.getElementById("paymentLoader");
 
   const totalText = document.getElementById("total").textContent;
   const total = Number(totalText.replace(/[^\d.]/g, ""));
 
   if (!total || total <= 0) {
-    alert("Invalid order total");
+    showToast("Invalid order total", "error");
+
     return;
   }
 
+  // ================================
+  // 🔒 STOCK CHECK (ADD THIS HERE)
+  // ================================
+  const stockCheck = await validateCartStockBeforeCheckout();
+
+  if (!stockCheck.valid) {
+    if (stockCheck.issues?.length) {
+
+      const msg = stockCheck.issues
+        .map(i => `${i.product} (${i.size}) – ${i.reason}`)
+        .join("\n");
+
+      showStockPopup(
+        "Some items are out of stock:\n\n" + msg
+      );
+      return;
+
+    } else {
+      showStockPopup(stockCheck.message || "Stock unavailable");
+
+    }
+
+    return; // ⛔ STOP PAYMENT FLOW COMPLETELY
+  }
+
+  // ✅ ONLY AFTER STOCK IS OK
   try {
     placeOrderBtn.disabled = true;
     placeOrderBtn.textContent = "Processing…";
     console.log(selectedMethod);
-    
+
     // ================================
     // 💳 STRIPE
     // ================================
     if (selectedMethod === "stripe") {
-  loader?.classList.remove("d-none");
+      loader?.classList.remove("d-none");
 
-  // ✅ GET SHIPPING METHOD
-  const selectedShipping = document.querySelector(
-    'input[name="shippingMethod"]:checked'
-  );
+      const selectedShipping = document.querySelector(
+        'input[name="shippingMethod"]:checked'
+      );
 
-  const shippingMethod =
-    selectedShipping?.id === "expressShipping" ? "express" : "standard";
+      const shippingMethod =
+        selectedShipping?.id === "expressShipping" ? "express" : "standard";
 
-  const shippingPrice = Number(selectedShipping?.value || 15);
+      const shippingPrice = Number(selectedShipping?.value || 15);
 
-  const res = await apiFetch(
-    "http://localhost:5000/api/payment/create-checkout-session",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("userToken")}`
-      },
-      body: JSON.stringify({
-        amount: Math.round(total * 100),
+      const res = await apiFetch(
+        "https://envastore.online/api/payment/create-checkout-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`
+          },
+          body: JSON.stringify({
+            amount: Math.round(total * 100),
+            shippingAddress: {
+              email: email.value,
+              firstName: firstName.value,
+              lastName: lastName.value,
+              street: address.value,
+              city: city.value,
+              state: state.value,
+              zip: zip.value
+            },
+            shippingMethod,
+            shippingPrice,
+            couponCode: appliedCoupon ? appliedCoupon.code : null
+          })
+        }
+      );
 
-        // 🔥 SEND SHIPPING DATA TO STRIPE
-        shippingAddress: {
-          email: email.value,
-          firstName: firstName.value,
-          lastName: lastName.value,
-          street: address.value,
-          city: city.value,
-          state: state.value,
-          zip: zip.value
-        },
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        throw new Error("Stripe session creation failed");
+      }
 
-        shippingMethod,
-        shippingPrice
-      })
+      window.location.href = data.url;
+      return;
     }
-  );
-
-  const data = await res.json();
-
-  if (!res.ok || !data.url) {
-    throw new Error("Stripe session creation failed");
-  }
-
-  setTimeout(() => {
-    window.location.href = data.url;
-  }, 400);
-
-  return;
-}
-
 
     // ================================
     // 👛 WALLET
     // ================================
     if (selectedMethod === "wallet") {
-  loader?.classList.remove("d-none");
+      loader?.classList.remove("d-none");
 
-  const walletRes = await apiFetch(
-    "http://localhost:5000/api/user/wallet",
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("userToken")}`
+      const walletRes = await apiFetch(
+        "https://envastore.online/api/user/wallet",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      );
+
+      const walletData = await walletRes.json();
+
+      if (walletData.balance < total) {
+        loader?.classList.add("d-none");
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = "Place Order";
+        showToast("Insufficient wallet balance", "error");
+        return;
       }
+
+      const order = await placeOrder("wallet");
+      redirectToThankYou(order.orderId);
+      return;
     }
-  );
-
-  const walletData = await walletRes.json();
-
-  // ❌ INSUFFICIENT BALANCE
-  if (walletData.balance < total) {
-    loader?.classList.add("d-none");
-    placeOrderBtn.disabled = false;
-    placeOrderBtn.textContent = "Place Order";
-
-    const overlay = document.getElementById("walletOverlay");
-    const msg = document.getElementById("walletOverlayMsg");
-
-    msg.innerText =
-      `Your wallet balance is ₹${walletData.balance}, ` +
-      `but your order total is ₹${total}.`;
-
-    document.getElementById("rechargeWalletBtn").onclick = () => { window.location.href = "wallet.html"; }; document.getElementById("changePaymentBtn").onclick = () => { overlay.classList.add("d-none"); document.getElementById("wallet").checked = false; };
-
-    overlay.classList.remove("d-none");
-    return;
-  }
-
-  try {
-    // ⏳ ENSURE LOADER VISIBLE FOR 2 SECONDS
-    // await wait(2000);
-
-    // ✅ PLACE ORDER
-    const order = await placeOrder("wallet");
-
-loader?.classList.add("d-none");
-placeOrderBtn.textContent = "Order Placed ✓";
-placeOrderBtn.disabled = true;
-
-redirectToThankYou(order.orderId);
-
-  } catch (err) {
-    console.error(err);
-    loader?.classList.add("d-none");
-    placeOrderBtn.disabled = false;
-    placeOrderBtn.textContent = "Place Order";
-    showToast(err.message || "Wallet payment failed", "error");
-  }
-
-  return;
-}
-
-
 
     // ================================
     // 💵 CASH ON DELIVERY
     // ================================
     const order = await placeOrder("cod");
-
-    placeOrderBtn.textContent = "Order Placed ✓";
     redirectToThankYou(order.orderId);
 
   } catch (err) {
     console.error("CHECKOUT ERROR:", err);
 
-    loader?.classList.add("d-none");
-    placeOrderBtn.disabled = false;
-    placeOrderBtn.textContent = "Place Order";
+    const msg = err.message || "Order failed";
 
-    alert("Payment failed. Please try again.");
+    // 🔒 STOCK ERROR FROM BACKEND
+    if (
+      msg.toLowerCase().includes("insufficient stock") ||
+      msg.toLowerCase().includes("only")
+    ) {
+      showStockPopup(
+        msg + "\n\nPlease update your cart."
+      );
+      return;
+    }
+
+    showToast("Order failed. Please try again.", "error");
   }
+
+
 });
 
 
@@ -715,7 +801,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-});  
+});
 
 function showCouponMessage(message, type = "success") {
   const box = document.getElementById("couponFeedback");
@@ -749,7 +835,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (params.get("payment") === "cancel") {
-    alert("Payment cancelled. You can try again.");
+    showToast("Payment cancelled. You can try again.", "warning");
+
     window.history.replaceState({}, document.title, "checkout.html");
   }
 });
@@ -757,7 +844,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadWalletBalance() {
   try {
-    const res = await apiFetch("http://localhost:5000/api/user/wallet", {
+    const res = await apiFetch("https://envastore.online/api/user/wallet", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("userToken")}`
       }
@@ -803,7 +890,7 @@ async function redirectToThankYou(orderId = null) {
     document.body.classList.add("page-fade-out");
     setTimeout(() => {
       window.location.href = `thankyou.html?order=${orderId}`
-      
+
     }, 800);
   }, 2000);
 }
@@ -828,4 +915,79 @@ function showToast(message, type = "success") {
 
   toastBox.appendChild(toast);
   setTimeout(() => toast.remove(), 3200);
+}
+
+document.getElementById("existingAddress")?.addEventListener("change", e => {
+  const addr = addressMap[e.target.value];
+  if (!addr) return;
+
+  document.getElementById("email").value = addr.email || "";
+  document.getElementById("firstName").value = addr.firstName || "";
+  document.getElementById("lastName").value = addr.lastName || "";
+  document.getElementById("address").value = addr.street || "";
+  document.getElementById("city").value = addr.city || "";
+  document.getElementById("state").value = addr.state || "";
+  document.getElementById("zip").value = addr.postcode || "";
+});
+
+
+async function validateCartStockBeforeCheckout() {
+  const token = localStorage.getItem("userToken");
+
+  const res = await apiFetch("https://envastore.online/api/user/cart", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  const cart = await res.json();
+
+  if (!cart.items || !cart.items.length) {
+    return { valid: false, message: "Your cart is empty" };
+  }
+
+  const stockIssues = [];
+
+  cart.items.forEach(item => {
+    const availableStock = item.product?.sizes?.[item.size] ?? 0;
+
+    if (availableStock === 0) {
+      stockIssues.push({
+        product: item.product.name,
+        size: item.size,
+        reason: "Out of stock"
+      });
+    } else if (item.quantity > availableStock) {
+      stockIssues.push({
+        product: item.product.name,
+        size: item.size,
+        reason: `Only ${availableStock} left`
+      });
+    }
+  });
+
+  if (stockIssues.length) {
+    return { valid: false, issues: stockIssues };
+  }
+
+  return { valid: true };
+}
+
+
+function showStockPopup(message) {
+  document.getElementById("stockErrorMessage").innerText = message;
+
+  const modal = new bootstrap.Modal(
+    document.getElementById("stockErrorModal"),
+    {
+      backdrop: "static", // ⛔ cannot click outside
+      keyboard: false     // ⛔ cannot press ESC
+    }
+  );
+
+  modal.show();
+}
+
+function goToCart() {
+  window.location.href = "cart.html";
 }

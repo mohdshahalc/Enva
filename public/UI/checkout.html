@@ -343,6 +343,11 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.06);
   width: 100%;
 }
+/* DESKTOP DEFAULT – show all coupons */
+.summary-right {
+  display: block;
+}
+
 .order-summary h3 {
   min-width: 420px;
 }
@@ -1338,33 +1343,538 @@ p { color: var(--text-muted); font-size: 1rem; }
   }
 }
 
+/* Improve spacing for Shipping & Payment blocks */
+.option-box {
+  padding: 14px 18px;        /* more breathing room */
+  margin-bottom: 12px;      /* vertical separation */
+  border-radius: 10px;      /* softer */
+}
+
+/* Extra space above FIRST option in each group */
+.my-3 .option-box:first-child {
+  margin-top: 10px;
+}
+
+/* Better label alignment */
+.option-box label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.option-box {
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+}
+
+.my-3 .option-box:first-child {
+  margin-top: 10px;
+}
+
+.option-box label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+/* Make Shipping & Payment wider than Order Summary */
+.checkout-form {
+  flex: 0 0 58%;   /* left panel width */
+  max-width: 58%;
+}
+
+.order-summary {
+  flex: 0 0 42%;   /* right panel width */
+  max-width: 42%;
+}
+
+.checkout-form {
+  flex: 0 0 62%;
+  max-width: 62%;
+}
+
+.order-summary {
+  flex: 0 0 38%;
+  max-width: 38%;
+}
+/* Make payment rows identical to shipping rows */
+.form-check.option-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-check-input {
+  margin-top: 0;
+}
+
+.form-check-label {
+  width: 100%;
+}
+
+/* Highlight selected row */
+.form-check-input:checked ~ label {
+  color: #c9404d;
+  font-weight: 600;
+}
+
+/* Selected card border */
+.form-check.option-box:has(.form-check-input:checked) {
+  border-color: #c9404d;
+  background: #fff5f6;
+}
+/* SAVED ADDRESS CARD */
+
+.saved-address-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.address-content {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.address-name {
+  font-weight: 700;
+}
+
+.address-muted {
+  color: #6b7280;
+  font-size: 13px;
+}
+/* =========================
+   📱 RESPONSIVE ADDRESS CARD
+========================= */
+
+@media (max-width: 768px) {
+
+  .saved-address-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .address-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .address-header button {
+    width: 100%;
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .address-content {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .address-name {
+    font-size: 14px;
+  }
+
+  .address-muted {
+    font-size: 12px;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 420px) {
+
+  .saved-address-card {
+    padding: 12px;
+  }
+
+  .address-content {
+    font-size: 12.5px;
+  }
+
+  .address-header span {
+    font-size: 13px;
+  }
+}
+.saved-address-card:hover {
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+/* ===========================
+   📦 MULTI ADDRESS UI
+=========================== */
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.address-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.address-card:hover {
+  border-color: #c9404d;
+}
+
+.address-card.active {
+  border-color: #c9404d;
+  background: #fff5f6;
+}
+
+.address-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.address-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.default-badge {
+  background: #c9404d;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.address-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.address-actions {
+  margin-top: 8px;
+  text-align: right;
+}
+
+.address-actions button {
+  font-size: 12px;
+}
+
+/* Mobile */
+@media(max-width:768px){
+  .address-card { padding: 12px; }
+  .address-body { font-size: 12px; }
+}
+.saved-address-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.address-content {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.address-name {
+  font-weight: 700;
+}
+
+.address-muted {
+  color: #6b7280;
+  font-size: 13px;
+}
+.address-content div {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.address-content strong {
+  color: #111;
+  min-width: 70px;
+  display: inline-block;
+}
+
+.address-content {
+  display: grid;
+  row-gap: 6px;
+  font-size: 14px;
+}
+
+.address-content div {
+  display: flex;
+  gap: 6px;
+}
+
+.address-content strong {
+  min-width: 80px;
+  color: #111;
+}
+
+@media(max-width:768px){
+  .address-content {
+    font-size: 13px;
+  }
+
+  .address-content strong {
+    min-width: 70px;
+  }
+}
+
+/* ===============================
+   📱 FLIPKART STYLE MOBILE CHECKOUT
+================================*/
+@media (max-width: 768px) {
+
+  /* Navbar hierarchy */
+  .navbar-main,
+  .navbar-sub {
+    z-index: 100 !important;
+  }
+
+  /* Main container */
+  .checkout-container {
+    flex-direction: column !important;
+    margin-top:40px !important;
+    padding: 0 12px !important;
+    gap: 14px !important;
+  }
+
+  /* Left form full width */
+  .checkout-form {
+    max-width: 100% !important;
+    flex: 1 !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Summary becomes compact card */
+  .order-summary {
+    max-width: 100% !important;
+    flex: 1 !important;
+    padding: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  
+
+  /* Smaller titles */
+  .checkout-form h2 {
+    font-size: 18px !important;
+  }
+
+  .order-summary h3 {
+    font-size: 16px !important;
+  }
+
+  /* Products tighter */
+  .summary-item {
+    padding: 6px 0 !important;
+  }
+
+  .summary-item-image {
+    width: 44px !important;
+    height: 58px !important;
+  }
+
+  /* Totals */
+  .summary-line {
+    font-size: 13px !important;
+    padding: 3px 0 !important;
+  }
+
+  .summary-total {
+    font-size: 16px !important;
+    padding-top: 6px !important;
+    margin-top: 6px !important;
+  }
+
+  /* ==========================
+     STICKY PLACE ORDER BAR
+  ===========================*/
+  .place-order-btn {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 18px 18px 0 0 !important;
+    padding: 16px !important;
+    font-size: 16px !important;
+    z-index: 50 !important;
+  }
+
+  /* Space for sticky bar */
+  body {
+    padding-bottom: 90px !important;
+  }
+
+  /* Overlays */
+  .payment-loader,
+  .wallet-overlay,
+  .status-overlay {
+    z-index: 200 !important;
+  }
+
+  /* Toast highest */
+  #toastBox {
+    z-index: 99999 !important;
+  }
+
+  footer {
+    display: none;
+  }
+}
+/* 📱 Reduce m-5 margin on mobile */
+@media (max-width: 768px) {
+  .checkout-section.m-5 {
+    margin: 1rem !important;
+  }
+}
+
+/* =========================
+   📱 MOBILE COUPON RULES
+========================= */
+@media (max-width: 768px) {
+
+  
+  /* ❌ Hide everything except Available */
+  #upcomingCouponList,
+  #invalidCouponList,
+  #usedCouponList {
+    display: none !important;
+  }
+
+  .coupon-title.text-warning,
+  .coupon-title.text-muted,
+  .coupon-title.text-danger {
+    display: none !important;
+  }
+}
+
+
+/* =========================
+   📱 Professional Sticky Place Order (Mobile)
+========================= */
+@media (max-width: 768px) {
+
+  .place-order-btn {
+    position: fixed !important;
+    bottom: 12px !important;
+    left: 12px !important;
+    right: 12px !important;
+
+    width: auto !important;
+
+    border-radius: 14px !important;
+    padding: 14px 16px !important;
+
+    font-size: 15px !important;
+    font-weight: 700;
+
+    box-shadow: 0 12px 25px rgba(201,64,77,.35) !important;
+    z-index: 120 !important;
+  }
+
+  body {
+    padding-bottom: 120px !important;
+  }
+}
+
+/* Show ONLY available coupons on mobile */
+@media (max-width: 768px) {
+
+
+
+  /* Hide upcoming / invalid / used */
+  #upcomingCouponList,
+  #invalidCouponList,
+  #usedCouponList {
+    display: none !important;
+  }
+
+  .coupon-title:not(.text-success) {
+    display: none !important;
+  }
+}
+/* =========================
+   📱 MOBILE – SHOW ONLY AVAILABLE COUPONS
+========================= */
+@media (max-width: 768px) {
+
+  .summary-right {
+    display: block !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-top: -24px;
+  }
+
+  /* Hide all except Available */
+  #upcomingCouponList,
+  #invalidCouponList,
+  #usedCouponList {
+    display: none !important;
+  }
+
+  .coupon-title:not(.text-success) {
+    display: none !important;
+  }
+}
+
+
+
 </style>
 </head>
 
 <body class="bg-light text-dark">
  
   
-
 <!-- ========================= MAIN NAVBAR ========================= -->
-<nav class="navbar-main w-100 position-fixed top-0 start-0 z-3 shadow-sm">
+<nav class="navbar-main w-100 top-0 start-0 z-3 shadow-sm">
+
   <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between">
 
+    <!-- BRAND -->
     <a href="./home.html" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
-      <img src="../Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
+      <img src="/Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
       <div class="brand-text">
         <div class="brand-name fw-bold">Enva cloth & co</div>
         <div class="brand-tagline">Wear Your Confidence</div>
       </div>
     </a>
 
+    <!-- DESKTOP LINKS -->
     <ul class="nav gap-4 d-none d-lg-flex small fw-bold ms-5">
       <li><a href="./home.html" class="nav-link text-dark p-0">Home</a></li>
       <li><a href="./products.html" class="nav-link text-dark p-0">Products</a></li>
       <li><a href="./blog.html" class="nav-link text-dark p-0">Blog</a></li>
     </ul>
 
+    <!-- DESKTOP SEARCH -->
     <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center px-4">
-      <div class="input-group srch-btn shadow-none" style="max-width: 350px;">
+      <div class="input-group srch-btn shadow-none" style="max-width:350px;">
         <input type="text" class="form-control border-0 py-2 small fw-medium" placeholder="Search trends...">
         <button class="btn border-0 text-dark">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -1372,32 +1882,43 @@ p { color: var(--text-muted); font-size: 1rem; }
       </div>
     </div>
 
+    <!-- ICONS -->
     <div class="d-flex align-items-center gap-2 gap-md-3 small fw-medium text-secondary">
 
-      <a href="./home.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
+      <!-- MOBILE SHORTCUTS -->
+      <a href="./home.html" class="nav-icon mobile-only">
         <i class="fa-solid fa-house"></i>
       </a>
 
-      <a href="./products.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
+      <a href="./products.html" class="nav-icon mobile-only">
         <i class="fa-solid fa-bag-shopping"></i>
       </a>
 
-      <a href="./profile.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+      <!-- ACCOUNT -->
+      <a href="./profile.html" class="nav-icon">
         <i class="fa-regular fa-user"></i>
         <span class="nav-text d-none d-xl-inline">Account</span>
       </a>
 
-      <a href="./wishlist.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+      <!-- WISHLIST -->
+      <a href="./wishlist.html" class="nav-icon">
         <i class="fa-regular fa-heart"></i>
         <span class="nav-text d-none d-xl-inline">Wishlist</span>
       </a>
 
-      <a href="./cart.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+      <!-- CART -->
+      <a href="./cart.html" class="nav-icon">
         <i class="fa-solid fa-cart-shopping"></i>
         <span class="nav-text d-none d-xl-inline">Cart</span>
       </a>
 
+      <!-- MOBILE HAMBURGER -->
+      <a class="nav-icon mobile-only" id="menuToggle">
+        <i class="fa-solid fa-bars"></i>
+      </a>
+
     </div>
+
   </div>
 </nav>
 
@@ -1419,72 +1940,54 @@ p { color: var(--text-muted); font-size: 1rem; }
             <h2><i class="fas fa-truck-fast me-2"></i> Shipping & Payment</h2>
 
             <form>
-               <div class="address-select-box">
-  <label class="address-label">
-    <i class="fas fa-map-marker-alt"></i>
-    Ship to Existing Address
-  </label>
+            
+           <div class="address-select-box">
 
-  <div class="select-wrapper">
-    <select
-      id="existingAddress"
-      class="form-select address-select"
-      onchange="loadAddress(this.value)"
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <label class="address-label mb-0">
+      <i class="fas fa-map-marker-alt"></i>
+      Delivery Address
+    </label>
+
+    <!-- ADD ADDRESS BUTTON -->
+    <button
+      type="button"
+      class="btn btn-sm btn-dark"
+      onclick="window.location.href='address.html'"
     >
-      <option value="" selected disabled>
-        Select or Enter a New Address…
-      </option>
-    </select>
-
-    <span class="select-icon">
-      <i class="fas fa-chevron-down"></i>
-    </span>
+      + Add Address
+    </button>
   </div>
+
+<!-- SAVED ADDRESS CARD -->
+<div id="addressList" ></div>
+
+
+
 </div>
 
 
 
-                <h3 class="form-section-title">Manual Address Entry</h3>
-                <div class="row g-3"> 
-                    <div class="col-12">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="email" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="firstName" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" required>
-                    </div>
-                    <div class="col-12">
-                        <label for="address" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="address" placeholder="Street Address, Apt, Suite" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="city" class="form-label">City</label>
-                        <input type="text" class="form-control" id="city" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="state" class="form-label">State</label>
-                      <select id="state" class="form-select" required>
-  <option value="">Select...</option>
-  <option value="Tamil Nadu">Tamil Nadu</option>
-  <option value="Kerala">Kerala</option>
-  <option value="Karnataka">Karnataka</option>
- </select>
+<!-- Hidden manual fields (kept for backend compatibility) -->
+<div class="manual-address-form" style="display:none">
 
-                    </div>
-                    <div class="col-md-4">
-                        <label for="zip" class="form-label">PIN</label>
-                        <input type="text" class="form-control" id="zip" required>
-                    </div>
-                </div>
+  <input id="email">
+  <input id="firstName">
+  <input id="lastName">
+  <input id="phone">
+  <input id="address">
+  <input id="city">
+  <input id="state">
+  <input id="zip">
+
+</div>
+
+
                 
                 <hr class="mt-4 mb-3">
 
                 <h3 class="form-section-title">Shipping Method</h3>
+
 <div class="my-3">
   <div class="form-check option-box">
     <input
@@ -1522,59 +2025,43 @@ p { color: var(--text-muted); font-size: 1rem; }
 <div class="my-3">
 
   <!-- STRIPE -->
- <!-- STRIPE -->
-<div class="form-check option-box">
-  <input
-    id="stripe"
-    name="paymentMethod"
-    type="radio"
-    class="form-check-input"
-    value="stripe"
-  >
-  <label class="form-check-label small fw-medium" for="stripe">
-    <i class="fas fa-credit-card me-2"></i>
-    Card / UPI (Stripe)
-  </label>
-</div>
-
+  <div class="form-check option-box">
+    <input id="stripe" name="paymentMethod" type="radio" class="form-check-input" value="stripe">
+    <label class="form-check-label w-100 d-flex justify-content-between align-items-center" for="stripe">
+      <span>
+        <i class="fas fa-credit-card me-2"></i>
+        Card / UPI (Stripe)
+      </span>
+    </label>
+  </div>
 
   <!-- WALLET -->
-<div class="form-check option-box">
-  <input
-    id="wallet"
-    name="paymentMethod"
-    type="radio"
-    class="form-check-input"
-    value="wallet"
-  >
-  <label class="form-check-label small fw-medium" for="wallet">
-    <i class="fas fa-wallet me-2"></i>
-    Wallet
-    (<span id="walletBalance">₹0</span>
-    <span id="walletPayable"></span>)
-  </label>
-</div>
-
-
-
+  <div class="form-check option-box">
+    <input id="wallet" name="paymentMethod" type="radio" class="form-check-input" value="wallet">
+    <label class="form-check-label w-100 d-flex justify-content-between align-items-center" for="wallet">
+      <span>
+        <i class="fas fa-wallet me-2"></i>
+        Wallet
+      </span>
+      <span class="fw-bold">
+        ₹<span id="walletBalance">0</span>
+      </span>
+    </label>
+  </div>
 
   <!-- COD -->
   <div class="form-check option-box">
-    <input
-  id="cod"
-  name="paymentMethod"
-  type="radio"
-  class="form-check-input"
-  value="cod"
-  checked
->
-    <label class="form-check-label small fw-medium" for="cod">
-      <i class="fas fa-money-bill-wave me-2"></i>
-      Cash on Delivery (COD)
+    <input id="cod" name="paymentMethod" type="radio" class="form-check-input" value="cod" checked>
+    <label class="form-check-label w-100 d-flex justify-content-between align-items-center" for="cod">
+      <span>
+        <i class="fas fa-money-bill-wave me-2"></i>
+        Cash on Delivery (COD)
+      </span>
     </label>
   </div>
 
 </div>
+
 
                 
                 <hr class="my-4">
@@ -1852,6 +2339,80 @@ p { color: var(--text-muted); font-size: 1rem; }
 
 <div id="toastBox"></div>
  <script src="apiFetch.js"></script>
+<<<<<<< HEAD
 <script src="search.js" defer></script>
+=======
+
+ 
+
+<!-- MOBILE SLIDE MENU -->
+<div id="mobileDrawer" class="mobile-drawer">
+
+  <div class="drawer-header">
+    <strong>Menu</strong>
+    <span id="closeDrawer">✕</span>
+  </div>
+
+  <a href="./home.html">Home</a>
+  <a href="./products.html">Products</a>
+  <a href="./wishlist.html">Wishlist</a>
+  <a href="./cart.html">Cart</a>
+  <a href="./profile.html">Account</a>
+
+</div>
+<script>
+const toggle = document.getElementById("menuToggle");
+const drawer = document.getElementById("mobileDrawer");
+const close = document.getElementById("closeDrawer");
+const backdrop = document.getElementById("drawerBackdrop");
+
+toggle.onclick = () => {
+  drawer.classList.add("open");
+  backdrop.classList.add("show");
+};
+
+close.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+
+backdrop.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+</script>
+
+<div id="drawerBackdrop"></div>
+
+<!-- Stock Error Modal -->
+<div class="modal fade" id="stockErrorModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">
+          Stock Unavailable
+        </h5>
+      </div>
+
+      <div class="modal-body" id="stockErrorMessage">
+        Some items are out of stock.
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-dark"
+          onclick="goToCart()"
+        >
+          Go to Cart
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+>>>>>>> cff120e6b16b68d733c2ecd5a28269a957beb8b6
 </body>
 </html>

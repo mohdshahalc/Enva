@@ -6,7 +6,7 @@ const auth = require("../middlewares/authMiddleware");
 
 router.post("/", upload.array("images", 3),auth,createProduct);
 router.put("/:id", upload.array("images", 3),auth,updateProduct); 
-router.get("/",auth,getProducts);
+router.get("/",getProducts);
 router.delete("/:id",auth,deleteProduct);
 
 module.exports = router;

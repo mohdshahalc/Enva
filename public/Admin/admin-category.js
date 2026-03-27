@@ -28,7 +28,7 @@ function showToast(message, type = "success") {
 // ======================
 async function loadCategories() {
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/categories", {
+    const res = await apiFetch("/api/admin/categories", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }

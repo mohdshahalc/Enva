@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadAllCoupons(subtotal) {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/coupons", {
+    const res = await fetch("https://envastore.online/api/admin/coupons", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("userToken")}`
       }
@@ -131,7 +131,7 @@ async function loadUserName() {
 
   if (!token) return;
 
-  const res = await apiFetch("http://localhost:5000/api/user/profile", {
+  const res = await apiFetch("https://envastore.online/api/user/profile", {
     headers: {
       Authorization: `Bearer ${token}`
     }

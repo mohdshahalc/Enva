@@ -1,5 +1,7 @@
 let productSizes = {};
 let selectedSize = null;
+let isProductOutOfStock = false;
+
 
 document.addEventListener("DOMContentLoaded", async () => {
   const qtyInput = document.getElementById("qtyInput");
@@ -15,7 +17,7 @@ if (qtyInput) qtyInput.disabled = true;
   }
 
   try {
-    const res = await fetch(`http://localhost:5000/api/user/products/${productId}`);
+    const res = await fetch(`https://envastore.online/api/user/products/${productId}`);
 
     if (!res.ok) {
       throw new Error("Product not found");
@@ -26,9 +28,14 @@ if (qtyInput) qtyInput.disabled = true;
     // ✅ IMPORTANT LINE (THIS FIXES THE ERROR)
     productSizes = product.sizes || {};
      console.log(product);
-     
-    renderSingleProduct(product);
-    setupSizeButtons(); // ✅ activate size logic
+
+    isProductOutOfStock =
+  product.stock === 0 ||
+  Object.values(product.sizes || {}).every(qty => qty === 0);
+
+
+   renderSingleProduct(product, isProductOutOfStock);
+setupSizeButtons(isProductOutOfStock);
 
   } catch (err) {
     console.error("Error loading product", err.message);
@@ -37,7 +44,17 @@ if (qtyInput) qtyInput.disabled = true;
 
 
 
-function setupSizeButtons() {
+function setupSizeButtons(isOutOfStock = false) {
+
+  if (isOutOfStock) {
+  document.querySelectorAll(".size-btn").forEach(btn => {
+    btn.disabled = true;
+    btn.classList.add("disabled");
+  });
+  return; // ⛔ stop further logic
+}
+
+
   const stockText = document.getElementById("sizeStockText");
   const qtyInput = document.getElementById("qtyInput");
 
@@ -77,6 +94,8 @@ function setupSizeButtons() {
         qtyInput.value = 1;
       }
         checkWishlistStatus();
+        checkCartStatus(); // ✅ auto toggle button
+
       // 🔴 LOW STOCK WARNING
       if (stock < 7) {
         stockText.textContent = `Only ${stock} left in size ${size}!`;
@@ -92,7 +111,7 @@ function setupSizeButtons() {
 }
 
 
-function renderSingleProduct(product) {
+function renderSingleProduct(product, isOutOfStock) {
 
   /* ======================
      BASIC INFO
@@ -159,6 +178,27 @@ function renderSingleProduct(product) {
         onclick="changeImage(this)">
     `;
   });
+
+  const cartBtn = document.getElementById("addToCartBtn");
+const qtyInput = document.getElementById("qtyInput");
+
+if (isOutOfStock) {
+  cartBtn.textContent = "Out of Stock";
+  cartBtn.disabled = true;
+
+  cartBtn.classList.remove("btn-danger");
+  cartBtn.classList.add("btn-secondary");
+
+  cartBtn.style.opacity = "0.7";
+  cartBtn.style.cursor = "not-allowed";
+
+  if (qtyInput) {
+    qtyInput.disabled = true;
+    qtyInput.value = 1;
+  }
+}
+cartBtn.setAttribute("aria-disabled", "true");
+
 }
 
 
@@ -167,6 +207,12 @@ function renderSingleProduct(product) {
 
 async function handleAddToCart() {
   const token = localStorage.getItem("userToken");
+
+if (isProductOutOfStock) {
+  showToast("This product is currently out of stock", "warning");
+  return;
+}
+
 
   if (!token) {
   const modal = new bootstrap.Modal(
@@ -192,7 +238,7 @@ async function handleAddToCart() {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/user/cart/add", {
+    const res = await fetch("https://envastore.online/api/user/cart/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -207,14 +253,14 @@ async function handleAddToCart() {
 
     const data = await res.json();
 
-    if (data.status === "exists") {
-      showToast(
-        "Item already in cart. <a href='cart.html' style='color:#fff;text-decoration:underline'>View Cart</a>",
-        "info"
-      );
-    } else if (res.ok) {
-      showToast("Added to cart successfully", "success");
-    } else {
+   if (data.status === "exists") {
+  showToast("Item already in cart", "info");
+  setViewCartMode();   // ✅ switch button
+} else if (res.ok) {
+  showToast("Added to cart successfully", "success");
+  setViewCartMode();   // ✅ switch button after add
+} else {
+
       showToast(data.message || "Failed to add to cart", "error");
     }
 
@@ -241,41 +287,51 @@ function handleAddToWishlist() {
 }
 
 
-  // 🚫 SIZE REQUIRED
+ let size = null;
+
+// If product is in stock → size required
+if (!isProductOutOfStock) {
   if (!selectedSize || !selectedSize.label) {
     showToast("Please select a size first", "warning");
     return;
   }
+  size = selectedSize.label.trim().toUpperCase();
+} 
+// If product is out of stock → allow wishlist without size
+else {
+  size = "ALL"; // or "NA"
+}
+
 
   const productId = new URLSearchParams(window.location.search).get("id");
-  const size = selectedSize.label.trim().toUpperCase(); // ✅ normalize once
   const encodedSize = encodeURIComponent(size);
 
-  // ❤️ REMOVE from wishlist
-  if (isWishlisted) {
-    fetch(`http://localhost:5000/api/user/wishlist/remove/${productId}`, {
-  method: "DELETE",
-  headers: {
-    Authorization: `Bearer ${token}`
-  }
-})
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === "removed") {
-          isWishlisted = false;
-          toggleWishlistIcon(false);
-          showToast("Removed from wishlist", "info");
-        } else {
-          showToast(data.message || "Failed to remove", "error");
-        }
-      })
-      .catch(() => showToast("Server error", "error"));
+ // ❤️ REMOVE from wishlist
+if (isWishlisted) {
+  fetch(`https://envastore.online/api/user/wishlist/remove/${productId}/${encodedSize}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "removed") {
+        isWishlisted = false;
+        toggleWishlistIcon(false);
+        showToast("Removed from wishlist", "info");
+      } else {
+        showToast(data.message || "Failed to remove", "error");
+      }
+    })
+    .catch(() => showToast("Server error", "error"));
 
-    return;
-  }
+  return;
+}
+
 
   // 🤍 ADD to wishlist
-  fetch("http://localhost:5000/api/user/wishlist/add", {
+  fetch("https://envastore.online/api/user/wishlist/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -315,7 +371,7 @@ async function checkWishlistStatus() {
   const size = selectedSize.label;
 
   try {
-    const res = await fetch("http://localhost:5000/api/user/wishlist", {
+    const res = await fetch("https://envastore.online/api/user/wishlist", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -386,5 +442,69 @@ function showToast(message, type = "success") {
 
 function redirectToLogin() {
   window.location.href = "login.html";
+}
+
+function setViewCartMode() {
+  const btn = document.getElementById("addToCartBtn");
+  if (!btn) return;
+
+  btn.textContent = "View Cart";
+  btn.classList.remove("btn-danger");
+  btn.classList.add("btn-dark");
+
+  // remove old handler
+  btn.onclick = null;
+
+  // redirect to cart
+  btn.addEventListener("click", () => {
+    window.location.href = "cart.html";
+  });
+}
+
+async function checkCartStatus() {
+  const token = localStorage.getItem("userToken");
+  if (!token || !selectedSize) return;
+
+  const productId = new URLSearchParams(window.location.search).get("id");
+
+  try {
+    const res = await fetch("https://envastore.online/api/user/cart", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const cart = await res.json();
+
+    const exists = cart.items?.some(item => {
+      const id =
+        typeof item.product === "object"
+          ? item.product._id
+          : item.product;
+
+      return id === productId && item.size === selectedSize.label;
+    });
+
+    if (exists) {
+      setViewCartMode();          // ✅ already in cart
+    } else {
+      resetAddToCartButton();    // ✅ not in cart
+    }
+
+  } catch (err) {
+    console.error("Cart check failed", err);
+  }
+}
+
+
+function resetAddToCartButton() {
+  const btn = document.getElementById("addToCartBtn");
+  if (!btn) return;
+
+  btn.textContent = "Add To Cart";
+  btn.classList.remove("btn-dark");
+  btn.classList.add("btn-danger");
+
+  btn.onclick = handleAddToCart;
 }
 

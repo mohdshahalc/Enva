@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Enva cloth & co - Forgot Password</title>
+    <title>Enva cloth & co - Product</title>
     <link rel="icon" type="image/png" href="../Images/favicon.png">
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -240,27 +240,30 @@
 </head>
 
 <body class="bg-white text-dark">
-
 <!-- ========================= MAIN NAVBAR ========================= -->
-<nav class="navbar-main w-100 position-fixed top-0 start-0 z-3 shadow-sm">
+<nav class="navbar-main w-100 top-0 start-0 z-3 shadow-sm">
+
   <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between">
 
+    <!-- BRAND -->
     <a href="./home.html" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
-      <img src="../Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
+      <img src="/Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
       <div class="brand-text">
         <div class="brand-name fw-bold">Enva cloth & co</div>
         <div class="brand-tagline">Wear Your Confidence</div>
       </div>
     </a>
 
+    <!-- DESKTOP LINKS -->
     <ul class="nav gap-4 d-none d-lg-flex small fw-bold ms-5">
       <li><a href="./home.html" class="nav-link text-dark p-0">Home</a></li>
       <li><a href="./products.html" class="nav-link text-dark p-0">Products</a></li>
       <li><a href="./blog.html" class="nav-link text-dark p-0">Blog</a></li>
     </ul>
 
+    <!-- DESKTOP SEARCH -->
     <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center px-4">
-      <div class="input-group srch-btn shadow-none" style="max-width: 350px;">
+      <div class="input-group srch-btn shadow-none" style="max-width:350px;">
         <input type="text" class="form-control border-0 py-2 small fw-medium" placeholder="Search trends...">
         <button class="btn border-0 text-dark">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -268,32 +271,43 @@
       </div>
     </div>
 
+    <!-- ICONS -->
     <div class="d-flex align-items-center gap-2 gap-md-3 small fw-medium text-secondary">
 
-      <a href="./home.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
+      <!-- MOBILE SHORTCUTS -->
+      <a href="./home.html" class="nav-icon mobile-only">
         <i class="fa-solid fa-house"></i>
       </a>
 
-      <a href="./products.html" class="nav-icon mobile-only d-flex align-items-center text-decoration-none text-dark">
+      <a href="./products.html" class="nav-icon mobile-only">
         <i class="fa-solid fa-bag-shopping"></i>
       </a>
 
-      <a href="./profile.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+      <!-- ACCOUNT -->
+      <a href="./profile.html" class="nav-icon">
         <i class="fa-regular fa-user"></i>
         <span class="nav-text d-none d-xl-inline">Account</span>
       </a>
 
-      <a href="./wishlist.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+      <!-- WISHLIST -->
+      <a href="./wishlist.html" class="nav-icon">
         <i class="fa-regular fa-heart"></i>
         <span class="nav-text d-none d-xl-inline">Wishlist</span>
       </a>
 
-      <a href="./cart.html" class="nav-icon d-flex align-items-center gap-1 text-decoration-none text-dark">
+      <!-- CART -->
+      <a href="./cart.html" class="nav-icon">
         <i class="fa-solid fa-cart-shopping"></i>
         <span class="nav-text d-none d-xl-inline">Cart</span>
       </a>
 
+      <!-- MOBILE HAMBURGER -->
+      <a class="nav-icon mobile-only" id="menuToggle">
+        <i class="fa-solid fa-bars"></i>
+      </a>
+
     </div>
+
   </div>
 </nav>
 
@@ -362,13 +376,17 @@
 </div>
 
 
-      <div class="d-flex align-items-center gap-3 mb-4">
+     <div class="mobile-buy-bar">
+
 
         <div class="qty-box">
           <button class="qty-btn" onclick="decQty()">-</button>
           <input type="text" id="qtyInput" value="1" class="qty-input">
           <button class="qty-btn" onclick="incQty()">+</button>
         </div>
+
+        <div class="mobile-size-bar" id="mobileSizeOptions"></div>
+
 
         <button 
   id="addToCartBtn" 
@@ -788,19 +806,207 @@ function moveLens(e) {
   }
 }
 
-/* 📱 Mobile responsive */
-@media (max-width: 480px) {
-  #toastBox {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+
+@media (max-width:576px){
+
+body{
+  padding-bottom:170px!important;
+}
+
+/* MAIN BAR */
+.mobile-buy-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+
+  background:#fff;
+
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  grid-template-rows:auto auto;
+  gap:10px;
+
+  padding:12px 12px env(safe-area-inset-bottom);
+
+  border-top:1px solid #eee;
+  box-shadow:0 -8px 25px rgba(0,0,0,.12);
+  border-radius:18px 18px 0 0;
+
+  z-index:9999;
+}
+
+/* -------- ROW 1 : SIZES -------- */
+.mobile-size-bar{
+  grid-column:1 / span 3;
+  grid-row:1;
+
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+}
+
+.mobile-size-bar .size-btn{
+  height:32px;
+  border-radius:14px;
+  background:#f2f2f2;
+  border:0;
+  font-size:12px;
+  font-weight:700;
+  padding:0;
+}
+
+.mobile-size-bar .size-btn.active{
+  background:#000;
+  color:#fff;
+}
+
+/* -------- ROW 2 -------- */
+
+/* Quantity */
+.qty-box{
+  grid-column:1;
+  grid-row:2;
+
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid #ddd;
+  background:#fafafa;
+}
+
+/* Cart */
+#addToCartBtn{
+  grid-column:2;
+  grid-row:2;
+
+  height:42px;
+  border-radius:21px!important;
+
+  font-size:14px!important;
+  font-weight:700;
+
+  background:linear-gradient(135deg,#ff4d4d,#d10000)!important;
+  border:none;
+
+  box-shadow:0 5px 14px rgba(209,0,0,.3);
+}
+
+/* Wishlist */
+#addToWishlistBtn{
+  grid-column:3;
+  grid-row:2;
+
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+  background:#fff;
+
+  box-shadow:0 4px 12px rgba(0,0,0,.18);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Hide desktop size */
+#sizeOptions,
+label.fw-semibold.small,
+#sizeStockText{
+  display:none!important;
+}
+
+}
+
+/* Extra small phones */
+@media(max-width:360px){
+.mobile-size-bar{
+  grid-template-columns:repeat(2,1fr);
+}
+}/* =========================
+   DESKTOP QUANTITY STYLE
+========================= */
+@media (min-width: 577px) {
+
+  .qty-box {
+    width: 140px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+
+    background: #fafafa;
   }
 
-  .custom-toast {
-    width: 92vw;        /* responsive on mobile */
-    min-height: 60px;
+  .qty-btn {
+    width: 42px;
+    height: 42px;
+
+    background: #f5f5f5;
+    border: none;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    transition: .2s;
+  }
+
+  .qty-btn:hover {
+    background: #eaeaea;
+  }
+
+  .qty-input {
+    width: 50px;
+    text-align: center;
+
+    border: none;
+    outline: none;
+
+    font-weight: 600;
+    background: transparent;
+  }
+
+}
+
+/* Desktop spacing between Qty → Cart → Wishlist */
+/* =========================
+   DESKTOP BUY BAR FIX
+========================= */
+@media (min-width: 577px) {
+
+  .mobile-buy-bar {
+    display: flex !important;
+    align-items: center;
+    gap: 18px;
+    margin-top: 18px;
+  }
+
+  .qty-box {
+    flex-shrink: 0;
+  }
+
+  #addToCartBtn {
+    min-width: 160px;
+    height: 44px;
+    border-radius: 10px !important;
+  }
+
+  #addToWishlistBtn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
+
+
 
 </style>
 
@@ -847,6 +1053,63 @@ function moveLens(e) {
   </div>
 </div>
 
+<<<<<<< HEAD
 <script src="search.js" defer></script>
+=======
+
+
+<!-- MOBILE SLIDE MENU -->
+<div id="mobileDrawer" class="mobile-drawer">
+
+  <div class="drawer-header">
+    <strong>Menu</strong>
+    <span id="closeDrawer">✕</span>
+  </div>
+
+  <a href="./home.html">Home</a>
+  <a href="./products.html">Products</a>
+  <a href="./wishlist.html">Wishlist</a>
+  <a href="./cart.html">Cart</a>
+  <a href="./profile.html">Account</a>
+
+</div>
+<script>
+const toggle = document.getElementById("menuToggle");
+const drawer = document.getElementById("mobileDrawer");
+const close = document.getElementById("closeDrawer");
+const backdrop = document.getElementById("drawerBackdrop");
+
+toggle.onclick = () => {
+  drawer.classList.add("open");
+  backdrop.classList.add("show");
+};
+
+close.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+
+backdrop.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const desktopSizes = document.getElementById("sizeOptions");
+  const mobileSizes = document.getElementById("mobileSizeOptions");
+
+  // ✅ Only clone sizes on MOBILE
+  if (window.innerWidth <= 576 && desktopSizes && mobileSizes) {
+    mobileSizes.innerHTML = desktopSizes.innerHTML;
+  }
+});
+
+</script>
+
+<div id="drawerBackdrop"></div>
+
+>>>>>>> cff120e6b16b68d733c2ecd5a28269a957beb8b6
 </body>
 </html>

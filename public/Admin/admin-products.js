@@ -1,9 +1,12 @@
+
 let allProducts = [];
 let editingProductId = null;
+  let selectedFiles = [];
+  let removedImages = [];
 
 
 async function loadCategoriesForProduct() {
-  const res = await apiFetch("http://localhost:5000/api/admin/categories", {
+  const res = await apiFetch("/api/admin/categories", {
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("adminToken")}`
     }
@@ -27,7 +30,7 @@ selects.forEach(select => {
 
 async function loadProducts() {
   try {
-    const res = await apiFetch("http://localhost:5000/api/admin/products", {
+    const res = await apiFetch("/api/admin/products", {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("adminToken")}`
       }
@@ -186,22 +189,34 @@ document.addEventListener("DOMContentLoaded", () => {
   if (uploadBox && imageInput && preview) {
     uploadBox.addEventListener("click", () => imageInput.click());
 
-    imageInput.addEventListener("change", () => {
-      preview.innerHTML = "";
+  
 
-      const files = Array.from(imageInput.files).slice(0, 3);
+imageInput.addEventListener("change", () => {
+  const newFiles = Array.from(imageInput.files);
 
-      files.forEach(file => {
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);
-        img.style.width = "80px";
-        img.style.height = "80px";
-        img.style.objectFit = "cover";
-        img.style.borderRadius = "10px";
-        img.classList.add("me-2");
-        preview.appendChild(img);
-      });
-    });
+  const existingCount = selectedFiles.filter(f => f.existing).length;
+  const availableSlots = 3 - existingCount;
+
+  if (availableSlots <= 0) {
+    showToast("You already have 3 images", "warning");
+    imageInput.value = "";
+    return;
+  }
+
+  const filesToAdd = newFiles.slice(0, availableSlots);
+  selectedFiles.push(...filesToAdd);
+
+  if (newFiles.length > availableSlots) {
+    showToast(`Only ${availableSlots} more image(s) allowed`, "warning");
+  }
+
+  renderPreview();
+  imageInput.value = "";
+});
+
+
+
+
   }
 
   // ======================
@@ -224,11 +239,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const productDescription = document.getElementById("productDescription");
   const productImages = document.getElementById("productImages");
 
-  const name = productName.value.trim();
+  let name = productName.value
   const price = productPrice.value;
   const category = productCategory.value;
-  const description = productDescription.value.trim();
-  const images = productImages.files;
+  let description = productDescription.value
+ const images = selectedFiles;
+
+
 
   // =========================
   // 🟦 SIZE-WISE QUANTITY
@@ -253,29 +270,74 @@ document.addEventListener("DOMContentLoaded", () => {
  // =========================
 // 🏷 PRODUCT NAME
 // =========================
-if (!name || name.trim().length < 3) {
-  showToast("Product name must be at least 3 characters", "error");
-  return;
-}
-
-if (name.length > 120) {
-  showToast("Product name cannot exceed 120 characters", "error");
-  return;
-}
-
-if (!/[a-zA-Z0-9]/.test(name)) {
-  showToast("Product name must contain letters or numbers", "error");
-  return;
-}
-
+// =========================
+// 🏷 PRODUCT NAME (Enterprise Level)
+// =========================
 
 // =========================
-// 💰 PRICE
+// ✅ ENTERPRISE VALIDATION
 // =========================
+
+// ---------- PRODUCT NAME ----------
+if (!name) {
+  showToast("Product name is required", "error");
+  return;
+}
+
+name = name.trim();
+
+if (!name) {
+  showToast("Product name cannot be empty", "error");
+  return;
+}
+
+if (name.length < 3 || name.length > 120) {
+  showToast("Product name must be between 3–120 characters", "error");
+  return;
+}
+
+// No multiple spaces
+if (/\s{2,}/.test(name)) {
+  showToast("Product name cannot contain multiple spaces", "error");
+  return;
+}
+
+// Must start with letter or number
+if (!/^[A-Za-z0-9]/.test(name)) {
+  showToast("Product name must start with a letter or number", "error");
+  return;
+}
+
+// Allowed characters (now includes dot)
+if (!/^[A-Za-z0-9\s\-,'().]+$/.test(name)) {
+  showToast("Product name contains invalid characters", "error");
+  return;
+}
+
+// Prevent junk like aaaaa
+if (/^(.)\1{3,}$/i.test(name.replace(/\s/g, ""))) {
+  showToast("Please enter a meaningful product name", "error");
+  return;
+}
+
+// Must contain at least one word
+if (!/\b[A-Za-z]{3,}\b/.test(name)) {
+  showToast("Product name must contain a valid word", "error");
+  return;
+}
+
+
+
+// ---------- PRICE ----------
 const parsedPrice = Number(price);
 
-if (!price || isNaN(parsedPrice) || parsedPrice <= 0) {
-  showToast("Enter a valid product price", "error");
+if (!price || isNaN(parsedPrice)) {
+  showToast("Product price is required", "error");
+  return;
+}
+
+if (parsedPrice <= 0) {
+  showToast("Price must be greater than zero", "error");
   return;
 }
 
@@ -284,21 +346,31 @@ if (!/^\d+(\.\d{1,2})?$/.test(price)) {
   return;
 }
 
-
-// =========================
-// 🏷 CATEGORY
-// =========================
-if (!category) {
-  showToast("Please select a product category", "error");
+if (parsedPrice > 1000000) {
+  showToast("Price seems unusually high", "warning");
   return;
 }
 
 
-// =========================
-// 📝 DESCRIPTION
-// =========================
-if (!description || description.length < 20) {
-  showToast("Product description must be at least 20 characters", "warning");
+
+// ---------- CATEGORY ----------
+if (!category) {
+  showToast("Please select a category", "error");
+  return;
+}
+
+
+
+// ---------- DESCRIPTION ----------
+description = description.trim();
+
+if (!description) {
+  showToast("Product description is required", "warning");
+  return;
+}
+
+if (description.length < 20) {
+  showToast("Description must be at least 20 characters", "warning");
   return;
 }
 
@@ -307,12 +379,17 @@ if (description.length > 2000) {
   return;
 }
 
+// Block emoji + strange symbols
+if (!/^[A-Za-z0-9\s.,\-'"()]+$/.test(description)) {
+  showToast("Description contains invalid characters", "error");
+  return;
+}
 
-// =========================
-// 📦 SIZE-WISE STOCK
-// =========================
+
+
+// ---------- SIZE STOCK ----------
 if (Object.keys(sizes).length === 0) {
-  showToast("Please enter quantity for at least one size", "warning");
+  showToast("Enter quantity for at least one size", "warning");
   return;
 }
 
@@ -321,34 +398,34 @@ for (const [size, qty] of Object.entries(sizes)) {
     showToast(`Invalid quantity for size ${size}`, "error");
     return;
   }
+
+  if (qty > 5000) {
+    showToast(`Quantity too high for size ${size}`, "warning");
+    return;
+  }
 }
 
 
-// =========================
-// 📊 TOTAL STOCK
-// =========================
+
+// ---------- TOTAL STOCK ----------
 if (totalStock <= 0) {
   showToast("Total stock must be greater than zero", "error");
   return;
 }
 
 if (totalStock > 10000) {
-  showToast("Stock quantity is unusually high. Please verify.", "warning");
+  showToast("Total stock unusually high — please verify", "warning");
   return;
 }
 
 
-// =========================
-// 🖼 IMAGE RULES (CREATE vs EDIT)
-// =========================
 
-// ❌ Image required ONLY when creating product
+// ---------- IMAGES ----------
 if (!editingProductId && images.length === 0) {
   showToast("Please upload at least one product image", "warning");
   return;
 }
 
-// ❌ Max 3 images always
 if (images.length > 3) {
   showToast("Maximum 3 images allowed", "warning");
   return;
@@ -369,14 +446,20 @@ if (images.length > 3) {
   formData.append("category", category);
   formData.append("description", description);
 
-  Array.from(images).slice(0, 3).forEach(img => {
-    formData.append("images", img);
-  });
+ selectedFiles
+  .filter(f => !f.existing)
+  .slice(0, 3)
+  .forEach(img => formData.append("images", img));
+
+  if (editingProductId && removedImages.length > 0) {
+  formData.append("removedImages", JSON.stringify(removedImages));
+}
+
 
   try {
    const url = editingProductId
-  ? `http://localhost:5000/api/admin/products/${editingProductId}`
-  : "http://localhost:5000/api/admin/products";
+  ? `/api/admin/products/${editingProductId}`
+  : "/api/admin/products";
 
 const method = editingProductId ? "PUT" : "POST";
 
@@ -398,8 +481,11 @@ const res = await apiFetch(url, {
   );
 
   editingProductId = null;
-  form.reset();
-  document.getElementById("imagePreview").innerHTML = "";
+   removedImages = [];
+ form.reset();
+selectedFiles = [];
+document.getElementById("imagePreview").innerHTML = "";
+
   loadProducts();
 }
  else {
@@ -416,6 +502,47 @@ const res = await apiFetch(url, {
 });
 
 
+function renderPreview() {
+  const preview = document.getElementById("imagePreview");
+  if (!preview) return;
+
+  preview.innerHTML = "";
+
+  selectedFiles.forEach((file, index) => {
+    const wrap = document.createElement("div");
+    wrap.style.position = "relative";
+
+    const img = document.createElement("img");
+
+    img.src = file.existing
+      ? `/uploads/${file.name}`
+      : URL.createObjectURL(file);
+
+    img.className = "preview-thumb";
+
+    const close = document.createElement("button");
+    close.innerHTML = "×";
+    close.className = "preview-close";
+
+   close.onclick = () => {
+  const removed = selectedFiles[index];
+
+  if (removed.existing) {
+    removedImages.push(removed.name);
+  }
+
+  selectedFiles.splice(index, 1);
+  renderPreview();
+};
+
+
+    wrap.appendChild(img);
+    wrap.appendChild(close);
+    preview.appendChild(wrap);
+  });
+}
+
+
 async function openDeleteModal(id) {
   if (!id) {
     showToast("Invalid product ID", "error");
@@ -426,7 +553,7 @@ async function openDeleteModal(id) {
 
   try {
     const res = await apiFetch(
-      `http://localhost:5000/api/admin/products/${id}`,
+      `/api/admin/products/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -451,6 +578,7 @@ async function openDeleteModal(id) {
 }
 
 function openEditProduct(id) {
+  removedImages = [];
   const product = allProducts.find(p => p._id === id);
   if (!product) {
     showToast("Product not found", "error");
@@ -476,16 +604,17 @@ function openEditProduct(id) {
   const preview = document.getElementById("imagePreview");
   preview.innerHTML = "";
 
-  product.images?.forEach(img => {
-    const image = document.createElement("img");
-    image.src = `/uploads/${img}`;
-    image.style.width = "80px";
-    image.style.height = "80px";
-    image.style.objectFit = "cover";
-    image.style.borderRadius = "10px";
-    image.classList.add("me-2");
-    preview.appendChild(image);
+ selectedFiles = [];
+
+product.images?.forEach(img => {
+  selectedFiles.push({
+    existing: true,
+    name: img
   });
+});
+
+renderPreview();
+
 
   showToast("Editing product mode enabled", "info");
 }

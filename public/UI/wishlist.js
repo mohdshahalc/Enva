@@ -13,7 +13,7 @@ async function loadWishlist() {
 
 
   try {
-    const res = await apiFetch("http://localhost:5000/api/user/wishlist", {
+    const res = await apiFetch("https://envastore.online/api/user/wishlist", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -60,6 +60,8 @@ function renderWishlist(items) {
 box.innerHTML = validItems.map(item => {
   const { product, size, finalPrice, oldPrice, discountPercent } = item;
 
+  const isOutOfStock = size === "ALL";
+
   return `
     <div class="wishlist-item">
       <div class="item-image-wrapper">
@@ -71,18 +73,25 @@ box.innerHTML = validItems.map(item => {
       </div>
 
       <div class="item-info-main">
-        <div class="title-row">
-          <h3>${product.name}</h3>
-          <span class="item-status">In Stock</span>
-        </div>
+       <div class="title-row">
+  <h3>${product.name}</h3>
+  <span class="item-status ${isOutOfStock ? 'out-stock' : 'in-stock'}">
+    ${isOutOfStock ? 'OUT OF STOCK' : 'IN STOCK'}
+  </span>
+</div>
+
 
         <p class="product-description">
           ${product.description || "No description available for this premium piece."}
         </p>
 
-        <p class="small text-muted">
-          Size: <strong>${size}</strong>
-        </p>
+       <p class="small text-muted">
+  Size: 
+  <strong>
+    ${size === "ALL" ? "Any (Out of Stock)" : size}
+  </strong>
+</p>
+
       </div>
 
       <div class="item-actions">
@@ -110,12 +119,26 @@ box.innerHTML = validItems.map(item => {
           <i class="fas fa-eye me-2"></i> View
         </a>
 
-        <button 
-          class="btn btn-dark btn-sm mb-2 w-100"
-          onclick="addWishlistItemToCart('${product._id}', '${size}')"
-        >
-          <i class="fas fa-cart-plus me-2"></i> Add to Cart
-        </button>
+       ${
+  size === "ALL"
+    ? `
+      <a 
+        href="singleProduct.html?id=${product._id}"
+        class="btn btn-outline-dark btn-sm mb-2 w-100"
+      >
+        <i class="fas fa-ruler-combined me-2"></i> Select Size
+      </a>
+    `
+    : `
+      <button 
+        class="btn btn-dark btn-sm mb-2 w-100"
+        onclick="addWishlistItemToCart('${product._id}', '${size}')"
+      >
+        <i class="fas fa-cart-plus me-2"></i> Add to Cart
+      </button>
+    `
+}
+
 
         <button 
   class="remove-btn w-100"
@@ -140,7 +163,7 @@ async function addWishlistItemToCart(productId, size) {
   }
 
   try {
-    const res = await apiFetch("http://localhost:5000/api/user/cart/add", {
+    const res = await apiFetch("https://envastore.online/api/user/cart/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -183,26 +206,57 @@ async function addWishlistItemToCart(productId, size) {
 }
 
 
-function removeWishlistItem(productId, size) {
-  apiFetch(
-    `http://localhost:5000/api/user/wishlist/remove/${productId}/${size}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("userToken")}`
+async function removeWishlistItem(productId, size) {
+  const token = localStorage.getItem("userToken");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const res = await apiFetch(
+      `https://envastore.online/api/user/wishlist/remove/${productId}/${size}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
+    );
+
+    // 🚫 BLOCKED USER
+    if (res.status === 403) {
+      const data = await res.json();
+      alert(data.message || "Your account has been blocked");
+
+      localStorage.removeItem("userToken");
+      window.location.href = "login.html";
+      return;
     }
-  )
-    .then(() => loadWishlist())
-    .then(() => showToast("Removed from wishlist", "success"))
-    .catch(() => showToast("Remove failed", "error"));
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showToast(data.message || "Remove failed", "error");
+      return;
+    }
+
+    showToast("Removed from wishlist", "success");
+    loadWishlist();
+
+  } catch (err) {
+    console.error(err);
+    showToast("Server error", "error");
+  }
 }
 
 
 
 
+
 // function moveToCart(productId) {
-//   fetch("http://localhost:5000/api/user/cart/add", {
+//   fetch("https://envastore.online/api/user/cart/add", {
 //     method: "POST",
 //     headers: {
 //       "Content-Type": "application/json",
