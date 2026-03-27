@@ -16,11 +16,12 @@ console.log(products);
    allProducts = products;
 filteredProducts = [...products];
 
-// 🔥 APPLY CATEGORY FILTER IF COMING FROM HOME
+// 🔥 APPLY CATEGORY OR SEARCH FROM URL
 applyCategoryFromURL();
+applySearchFromURL();
 
-// If NO category in URL → show all products
-if (!window.location.search.includes("category")) {
+// If NO category and NO search in URL → show all products
+if (!window.location.search.includes("category") && !window.location.search.includes("search")) {
   renderUserProducts(filteredProducts);
 }
   } catch (err) {
@@ -321,6 +322,26 @@ document.getElementById("clearProductFilters")
   renderUserProducts(filteredProducts);
 
   showToast(`Showing ${category} products`, "info");
+}
+
+function applySearchFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const searchQuery = params.get("search");
+
+  if (!searchQuery) return;
+
+  const query = searchQuery.toLowerCase();
+
+  filteredProducts = allProducts.filter(
+    product =>
+      (product.name && product.name.toLowerCase().includes(query)) ||
+      (product.description && product.description.toLowerCase().includes(query)) ||
+      (product.category && (typeof product.category === 'string' ? product.category : product.category.name).toLowerCase().includes(query))
+  );
+
+  renderUserProducts(filteredProducts);
+
+  showToast(`Showing results for "${searchQuery}"`, "info");
 }
 
 

@@ -2,6 +2,14 @@ require("dotenv").config();
 const app = require("./src/app");
 const connectDB = require("./src/config/db");
 
+app.get("/api", (req, res) => {
+  res.json({
+    status: "OK",
+    message: "Enva API running 🚀"
+  });
+});
+
+
 connectDB();
 
 const PORT = process.env.PORT || 5000;
