@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enva cloth & co - Title</title>
+    <link rel="icon" type="image/png" href="../Images/favicon.png">
+    
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="navBar.css">
+
+
+<style>
+
+
+
+/* =====================================================
+   PROFILE / ADDRESS PAGE SYSTEM (SCOPED)
+===================================================== */
+
+.profile-page {
+  background: #fcfcfc;
+}
+
+/* =========================
+   SIDEBAR (DESKTOP)
+========================= */
+.profile-page .profile-sidebar {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 6px 28px rgba(0,0,0,.06);
+  position: sticky;
+  top: 130px;
+}
+
+.profile-page .sidebar-menu-group {
+  margin-bottom: 22px;
+}
+
+.profile-page .sidebar-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #9ca3af;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+.profile-page .sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: .25s ease;
+}
+
+.profile-page .sidebar-link i {
+  font-size: 18px;
+  width: 22px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.profile-page .sidebar-link:hover {
+  background: #f3f4f6;
+  color: #000;
+}
+
+.profile-page .sidebar-link.active {
+  background: #000;
+  color: #fff;
+}
+.profile-page .sidebar-link.active i { color: #fff; }
+
+/* =========================
+   CONTENT CARD
+========================= */
+.profile-page .profile-card-ui {
+  background: #fff;
+  border-radius: 22px;
+  padding: 36px;
+  box-shadow: 0 8px 34px rgba(0,0,0,.05);
+  border: 1px solid #f2f2f2;
+}
+
+/* =========================
+   TABLET (≤ 991px)
+========================= */
+@media (max-width: 991px) {
+  .profile-page .profile-sidebar {
+    position: relative;
+    top: 0;
+    margin-bottom: 0px;
+  }
+
+  .profile-page .col-md-9.border-start {
+    border: none !important;
+  }
+}
+
+/* =========================
+   MOBILE – EXACT PROFILE MATCH (≤ 575px)
+========================= */
+@media (max-width: 575px) {
+
+  /* Sidebar becomes horizontal swipe tabs */
+  .profile-page .profile-sidebar {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .profile-page .sidebar-menu-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  .profile-page .sidebar-label {
+    display: none;
+  }
+
+  .profile-page .sidebar-link {
+    flex: 0 0 auto;
+    min-width: 140px;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 13px;
+    background: #f8f8f8;
+    border-radius: 14px;
+    white-space: nowrap;
+  }
+
+  .profile-page .sidebar-link.active {
+    background: #000;
+    color: #fff;
+  }
+
+  /* Card */
+  .profile-page .profile-card-ui {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .profile-page h3 { font-size: 1.3rem; }
+  .profile-page h5 { font-size: .95rem; }
+
+  .profile-page button {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+  }
+}.profile-sidebar {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 70px; /* space for logout */
+}
+
+.sidebar-logout {
+  /* position: absolute; */
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #eee;
+  font-weight: 600;
+  color: #c62828;
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: #c62828;
+  color: #fff;
+  border-color: #c62828;
+}
+.profile-sidebar {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 70px; /* space for logout */
+}
+
+
+
+.logout-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background:#f00000;
+  border: 1px solid #eee;
+  font-weight: 600;
+  color: #ffffff;
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: #c62828;
+  color: #fff;
+  border-color: #c62828;
+}
+
+</style>
+
+</head>
+
+<body class="bg-white text-dark">
+
+<!-- ========================= MAIN NAVBAR ========================= -->
+<nav class="navbar-main w-100 top-0 start-0 z-3 shadow-sm">
+
+  <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between">
+
+    <!-- BRAND -->
+    <a href="./home.html" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
+      <img src="/Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
+      <div class="brand-text">
+        <div class="brand-name fw-bold">Enva cloth & co</div>
+        <div class="brand-tagline">Wear Your Confidence</div>
+      </div>
+    </a>
+
+    <!-- DESKTOP LINKS -->
+    <ul class="nav gap-4 d-none d-lg-flex small fw-bold ms-5">
+      <li><a href="./home.html" class="nav-link text-dark p-0">Home</a></li>
+      <li><a href="./products.html" class="nav-link text-dark p-0">Products</a></li>
+      <li><a href="./blog.html" class="nav-link text-dark p-0">Blog</a></li>
+    </ul>
+
+    <!-- DESKTOP SEARCH -->
+    <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center px-4">
+      <div class="input-group srch-btn shadow-none" style="max-width:350px;">
+        <input type="text" class="form-control border-0 py-2 small fw-medium" placeholder="Search trends...">
+        <button class="btn border-0 text-dark">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ICONS -->
+    <div class="d-flex align-items-center gap-2 gap-md-3 small fw-medium text-secondary">
+
+      <!-- MOBILE SHORTCUTS -->
+      <a href="./home.html" class="nav-icon mobile-only">
+        <i class="fa-solid fa-house"></i>
+      </a>
+
+      <a href="./products.html" class="nav-icon mobile-only">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </a>
+
+      <!-- ACCOUNT -->
+      <a href="./profile.html" class="nav-icon">
+        <i class="fa-regular fa-user"></i>
+        <span class="nav-text d-none d-xl-inline">Account</span>
+      </a>
+
+      <!-- WISHLIST -->
+      <a href="./wishlist.html" class="nav-icon">
+        <i class="fa-regular fa-heart"></i>
+        <span class="nav-text d-none d-xl-inline">Wishlist</span>
+      </a>
+
+      <!-- CART -->
+      <a href="./cart.html" class="nav-icon">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="nav-text d-none d-xl-inline">Cart</span>
+      </a>
+
+      <!-- MOBILE HAMBURGER -->
+      <a class="nav-icon mobile-only" id="menuToggle">
+        <i class="fa-solid fa-bars"></i>
+      </a>
+
+    </div>
+
+  </div>
+</nav>
+
+<div class="navbar-sub w-100 bg-black text-white">
+  <div class="container-fluid px-4 custom-container-lg mx-auto">
+    <div class="d-flex align-items-center justify-content-between py-2" style="height:48px;font-size:.85rem;">
+      <span class="fw-semibold">Profile</span>
+    </div>
+  </div>
+</div>
+
+<div class="body-spacer"></div>
+
+
+
+<div class="container custom-container-lg mx-auto py-5 profile-page" style="background-color: #fcfcfc;">
+
+ 
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 small">
+                <li class="breadcrumb-item"><a href="#" class="text-secondary text-decoration-none"></a></li>
+                <li class="breadcrumb-item active fw-bold" aria-current="page">My Account</li>
+            </ol>
+        </nav>
+        <div class="small fw-semibold">
+            Welcome! <span class="text-danger" id="fullName"></span>
+        </div>
+    </div>
+
+    <div class="row">
+    <div class="col-md-3">
+        <div class="profile-sidebar">
+            
+            <div class="sidebar-menu-group">
+                <span class="sidebar-label">Manage Account</span>
+                <a href="profile.html" class="sidebar-link ">
+                    <i class="fa-solid fa-circle-user"></i> Profile
+                </a>
+                <a href="./address.html" class="sidebar-link active">
+                    <i class="fa-solid fa-location-dot"></i> Address Book
+                </a>
+                
+            </div>
+
+            <div class="sidebar-menu-group">
+                <span class="sidebar-label">My Assets</span>
+                <a href="./wallet.html" class="sidebar-link">
+                    <i class="fa-solid fa-wallet"></i> My Wallet
+                </a>
+                <a href="coupons.html" class="sidebar-link">
+                    <i class="fa-solid fa-ticket"></i> Voucher & Coupons
+                </a>
+            </div>
+
+            <div class="sidebar-menu-group">
+                <span class="sidebar-label">Orders & Lists</span>
+                <a href="orders.html" class="sidebar-link">
+                    <i class="fa-solid fa-box"></i> My Orders
+                </a>
+                <a href="profileWishlist.html" class="sidebar-link">
+                    <i class="fa-regular fa-heart"></i> Wishlist
+                </a>
+                <a href="profileCart.html" class="sidebar-link">
+                    <i class="fa-solid fa-cart-shopping"></i> Shopping Cart
+                </a>
+            </div>
+
+            <div class="sidebar-logout">
+  <button class="logout-btn" id="logoutBtn">
+    <i class="fa-solid fa-right-from-bracket me-2"></i>
+    Logout
+  </button>
+</div>
+        </div>
+    </div>
+
+
+    <div class="col-md-9 border-start ps-md-5">
+        <div class="profile-card-ui">
+            <h3 class="fw-bolder text-dark mb-5">Address Book</h3>
+
+            <div class="mb-5" style="max-width: 700px;">
+                <h5 class="fw-bold text-dark mb-2">Your Saved Addresses</h5>
+                <p class="small text-secondary mb-4">Manage and update your shipping & billing addresses.</p>
+                
+                <div id="savedAddresses"></div>
+            </div>
+
+            <hr class="my-5" style="max-width: 700px;">
+
+            <div style="max-width: 700px;">
+                <h5 class="fw-bold text-dark mb-4">Add New Address</h5>
+
+                <form id="addressForm" class="row g-4">
+                    <div class="col-12">
+                        <label class="form-label small text-secondary mb-2">Address Type</label>
+                        <div class="d-flex gap-5">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="addressType" value="Home" checked>
+                                <label class="form-check-label fw-medium"><i class="fa-solid fa-house me-1"></i> Home</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="addressType" value="Office">
+                                <label class="form-check-label fw-medium"><i class="fa-solid fa-building me-1"></i> Office</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small text-secondary mb-1">First Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-user"></i></span>
+                            <input type="text" id="firstName" class="form-control bg-light p-3 border-0 shadow-sm" placeholder="First name" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small text-secondary mb-1">Last Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-user-tag"></i></span>
+                            <input type="text" id="lastName" class="form-control bg-light p-3 border-0 shadow-sm" placeholder="Last name" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small text-secondary mb-1">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-envelope"></i></span>
+                            <input type="email" id="email" class="form-control bg-light p-3 border-0 shadow-sm" placeholder="Enter email" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small text-secondary mb-1">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-phone"></i></span>
+                            <input type="text" id="phone" class="form-control bg-light p-3 border-0 shadow-sm" placeholder="Enter phone" required>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label small text-secondary mb-1">Street Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0 align-items-start pt-3"><i class="fa-solid fa-location-dot"></i></span>
+                            <textarea id="street" class="form-control bg-light p-3 border-0 shadow-sm" placeholder="House No, Street, Area" rows="2" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small text-secondary mb-1">City</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-city"></i></span>
+                            <input type="text" id="city" class="form-control bg-light p-3 border-0 shadow-sm" placeholder="City" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small text-secondary mb-1">State</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-map"></i></span>
+                           <select id="state" class="form-select bg-light p-3 border-0 shadow-sm" required>
+  <option value="" selected disabled>Select State / UT</option>
+
+  <!-- States -->
+  <option>Andhra Pradesh</option>
+  <option>Arunachal Pradesh</option>
+  <option>Assam</option>
+  <option>Bihar</option>
+  <option>Chhattisgarh</option>
+  <option>Goa</option>
+  <option>Gujarat</option>
+  <option>Haryana</option>
+  <option>Himachal Pradesh</option>
+  <option>Jharkhand</option>
+  <option>Karnataka</option>
+  <option>Kerala</option>
+  <option>Madhya Pradesh</option>
+  <option>Maharashtra</option>
+  <option>Manipur</option>
+  <option>Meghalaya</option>
+  <option>Mizoram</option>
+  <option>Nagaland</option>
+  <option>Odisha</option>
+  <option>Punjab</option>
+  <option>Rajasthan</option>
+  <option>Sikkim</option>
+  <option>Tamil Nadu</option>
+  <option>Telangana</option>
+  <option>Tripura</option>
+  <option>Uttar Pradesh</option>
+  <option>Uttarakhand</option>
+  <option>West Bengal</option>
+
+  <!-- Union Territories -->
+  <option>Andaman and Nicobar Islands</option>
+  <option>Chandigarh</option>
+  <option>Dadra and Nagar Haveli and Daman and Diu</option>
+  <option>Delhi</option>
+  <option>Jammu and Kashmir</option>
+  <option>Ladakh</option>
+  <option>Lakshadweep</option>
+  <option>Puducherry</option>
+</select>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small text-secondary mb-1">Post Code</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-hashtag"></i></span>
+                            <input type="text" id="postalCode" class="form-control bg-light p-3 border-0 shadow-sm" placeholder="PIN Code" required>
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-grid mt-4">
+                        <button class="btn btn-dark fw-bold p-3 shadow-sm" style="border-radius: 12px;">
+                            Add Address
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+  
+  
+  
+<footer class="footer-bg py-5 mt-5">
+  <div class="container-fluid px-4 custom-container-lg mx-auto">
+    <div class="row g-5">
+
+      <div class="col-lg-4 col-md-6">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <img src="../Images/Envalogo.jpeg" class="rounded-circle shadow-sm" style="width: 50px; height: 50px;">
+          <div>
+            <div class="fw-bold fs-4 text-dark">Enva</div>
+            <div class="small text-muted" style="margin-top: -5px;">Designer for Every Woman</div>
+          </div>
+        </div>
+
+        <p class="text-secondary mb-4" style="font-size: 0.85rem; line-height: 1.6; max-width: 320px;">
+          Discover the latest trends in women's fashion. We curate stylish outfits, accessories, and essentials designed to empower every woman.
+        </p>
+
+        <div class="text-secondary" style="font-size: 0.85rem;">
+          <div class="mb-2 d-flex align-items-start gap-2">
+            <span>📍</span> <span>51 Green St, Huntington, NY 11746, USA</span>
+          </div>
+          <div class="mb-2 d-flex align-items-center gap-2">
+            <span>✉</span> <span>support@enva.com</span>
+          </div>
+          <div class="mb-0 d-flex align-items-center gap-2">
+            <span>📞</span> <span>+91 123 4567890</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-6">
+        <h3 class="footer-title">Company</h3>
+        <ul class="list-unstyled text-secondary" style="font-size: 0.85rem;">
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">About Us</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Delivery Info</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Privacy Policy</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Terms & Conditions</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Support Center</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-6">
+        <h3 class="footer-title">Shop</h3>
+        <ul class="list-unstyled text-secondary" style="font-size: 0.85rem;">
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">New Arrivals</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Dresses</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Ethnic Wear</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Kurtas</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Western Wear</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-4 col-md-12">
+        <h3 class="footer-title">Stay in Touch</h3>
+        <p class="text-secondary mb-3" style="font-size: 0.85rem;">Subscribe to get special offers and once-in-a-lifetime deals.</p>
+        
+        <div class="input-group mb-4">
+          <input type="email" class="form-control newsletter-input" placeholder="Your Email Address">
+          <button class="btn btn-dark newsletter-btn" type="button">Subscribe</button>
+        </div>
+
+        <div class="d-flex gap-2 mb-4">
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-pinterest-p"></i>
+          </a>
+        </div>
+
+        <div class="d-flex gap-2">
+          <img src="../Images/about1.jpg" class="rounded footer-gallery-img" alt="Gallery 1">
+          <img src="../Images/about2.jpg" class="rounded footer-gallery-img" alt="Gallery 2">
+          <img src="../Images/about3.jpg" class="rounded footer-gallery-img" alt="Gallery 3">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row mt-5 pt-4 border-top">
+      <div class="col-md-6 text-center text-md-start">
+        <p class="text-muted small">© 2026 Enva Fashion. All rights reserved.</p>
+      </div>
+      <div class="col-md-6 text-center text-md-end">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" height="20" class="me-3 opacity-50" alt="PayPal">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" height="15" class="me-3 opacity-50" alt="Visa">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" height="20" class="opacity-50" alt="Mastercard">
+      </div>
+    </div>
+  </div>
+</footer>
+  
+
+  <div class="modal fade" id="logoutModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold">Confirm Logout</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-secondary">
+        Are you sure you want to log out from your account?
+      </div>
+
+      <div class="modal-footer border-0">
+       <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+  Cancel
+</button>
+
+        <button id="confirmLogoutBtn" class="btn btn-danger">
+          Logout
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const logoutModalEl = document.getElementById("logoutModal");
+
+logoutModalEl?.addEventListener("hidden.bs.modal", () => {
+  document.activeElement?.blur();
+});
+</script>
+
+
+<script>
+    
+  const logoutBtn = document.getElementById("logoutBtn");
+const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+
+/* OPEN MODAL */
+logoutBtn?.addEventListener("click", () => {
+  const modal = new bootstrap.Modal(
+    document.getElementById("logoutModal")
+  );
+  modal.show();
+});
+
+/* CONFIRM LOGOUT */
+confirmLogoutBtn?.addEventListener("click", () => {
+  localStorage.removeItem("userToken");
+  localStorage.removeItem("user");
+
+  showToast("Logged out successfully", "success");
+
+  setTimeout(() => {
+    window.location.href = "login.html";
+  }, 800);
+});
+
+</script>
+  
+<style>
+    #toastBox {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Toast base */
+.custom-toast {
+  width: 320px;          /* ✅ Fixed width */
+  min-height: 64px;      /* ✅ Consistent height */
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.8s;
+}
+
+/* Icon */
+.custom-toast i {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Message */
+.custom-toast span {
+  line-height: 1.4;
+}
+
+/* Types */
+.custom-toast.success {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.custom-toast.error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.custom-toast.warning {
+  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+  color: #000;
+}
+
+.custom-toast.info {
+  background: linear-gradient(135deg, #3498db, #2c80b4);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+/* 📱 Mobile responsive */
+@media (max-width: 480px) {
+  #toastBox {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .custom-toast {
+    width: 92vw;        /* responsive on mobile */
+    min-height: 60px;
+  }
+}
+/* =========================
+   📱 Address Card Buttons – Mobile Pro UI
+========================= */
+@media (max-width: 575px) {
+
+  /* Address card container */
+  .address-card,
+  .saved-address-card {
+    padding: 14px !important;
+  }
+
+  /* Button wrapper */
+  .address-actions,
+  .saved-address-card .d-flex {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+  }
+
+  /* All buttons full width */
+  .address-actions button,
+  .saved-address-card button {
+    width: 100% !important;
+    font-size: 13px !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Delete button softer */
+  .saved-address-card .btn-danger,
+  .address-actions .btn-danger {
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+  }
+
+  /* Default / Edit buttons */
+  .saved-address-card .btn-outline-primary,
+  .saved-address-card .btn-outline-secondary {
+    border-radius: 10px !important;
+  }
+
+  /* Default badge spacing */
+  .default-badge {
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+}
+/* =========================
+
+
+/* 📱 Smaller action buttons on mobile */
+@media (max-width: 575px) {
+
+  /* Target all address action buttons */
+  #savedAddresses button {
+    padding: 6px 10px !important;   /* reduce height + width */
+    font-size: 11.5px !important;  /* smaller text */
+    border-radius: 8px !important;
+    min-height: unset !important;
+  }
+
+  /* Reduce icon size inside buttons (if any) */
+  #savedAddresses button i {
+    font-size: 12px !important;
+  }
+
+  /* Reduce spacing between buttons */
+  #savedAddresses > div {
+    gap: 6px !important;
+  }
+
+  /* Make badge smaller */
+  .default-badge {
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+  }
+}
+
+/* ============================
+   📱 Fix Address Cards Mobile
+============================ */
+@media (max-width: 575px) {
+
+  /* Stack header vertically */
+  #savedAddresses .address-top,
+  #savedAddresses .d-flex.justify-content-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  /* Buttons move below text */
+  #savedAddresses .btn-group,
+  #savedAddresses .address-actions,
+  #savedAddresses .d-flex.gap-2 {
+    width: 100%;
+    display: flex !important;
+    gap: 6px !important;
+  }
+
+  /* Smaller buttons */
+  #savedAddresses button {
+    flex: 1;
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+    border-radius: 8px !important;
+  }
+
+  /* Softer delete */
+  #savedAddresses .btn-danger {
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+  }
+
+  /* Default badge spacing */
+  .default-badge {
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  /* Prevent card overflow */
+  #savedAddresses > div {
+    overflow: hidden;
+  }
+}
+
+</style>
+
+
+<div id="toastBox"></div>
+ <script>
+document.addEventListener("DOMContentLoaded", loadAddresses);
+
+let editingAddressId = null;
+
+
+async function loadAddresses() {
+  const token = localStorage.getItem("userToken")
+
+  const res = await apiFetch("https://envastore.online/api/user/address", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (res.status === 403) {
+        const data = await res.json();
+        alert(data.message || "Your account has been blocked");
+
+        // clear ONLY user token
+        localStorage.removeItem("userToken");
+        window.location.href = "login.html";
+        return;
+      }
+
+  const addresses = await res.json();
+  renderAddresses(addresses);
+}
+
+document.addEventListener("DOMContentLoaded", loadUserName);
+
+async function loadUserName() {
+  const token =  localStorage.getItem("userToken")
+
+  if (!token) return;
+
+  const res = await apiFetch("https://envastore.online/api/user/profile", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  const user = await res.json();
+
+  // user.name already contains "First Last"
+  document.getElementById("fullName").textContent = user.name || "";
+} 
+
+function renderAddresses(addresses) {
+
+  const container = document.getElementById("savedAddresses");
+
+  if (!addresses || addresses.length === 0) {
+    container.innerHTML = `
+      <p class="small text-secondary">No saved addresses yet.</p>
+    `;
+    return;
+  }
+
+  container.innerHTML = addresses.map(address => {
+
+    const isHome = address.type === "Home";
+
+    const icon = isHome
+      ? `<i class="fa-solid fa-house me-2"></i>`
+      : `<i class="fa-solid fa-building me-2"></i>`;
+
+    const title = isHome ? "Home Address" : "Office Address";
+
+    const borderClass = address.isDefault
+      ? "border border-primary border-2"
+      : "border";
+
+    const defaultBadge = address.isDefault
+      ? `<span class="badge bg-primary-subtle text-primary fw-bold ms-2">DEFAULT</span>`
+      : "";
+
+  return `
+  <div class="${borderClass} rounded-3 p-3 mb-3 bg-light shadow-sm">
+    <div class="d-flex justify-content-between align-items-start">
+
+      <div class="me-3">
+        <h6 class="fw-bold mb-1 ${address.isDefault ? "text-primary" : ""}">
+          ${icon} ${title}
+          ${defaultBadge}
+        </h6>
+
+        <p class="small mb-2" style="line-height: 1.5;">
+          <!-- 1️⃣ Name -->
+          <span class="fw-semibold">
+            ${address.firstName} ${address.lastName}
+          </span><br>
+
+          <!-- 2️⃣ Email + Phone -->
+          ${address.email} | +91 ${address.phone}<br>
+
+          <!-- 3️⃣ Address -->
+          ${address.street}, ${address.city}, ${address.state}<br>
+
+          <!-- 4️⃣ PIN -->
+          PIN: ${address.postcode}
+        </p>
+      </div>
+
+      <!-- 🔘 ACTION BUTTONS -->
+      <div class="d-flex gap-2 flex-shrink-0 mt-1">
+
+        ${
+          !address.isDefault
+            ? `
+              <button
+                class="btn btn-outline-primary btn-sm fw-semibold"
+                onclick="setDefaultAddress('${address._id}')">
+                Set Default
+              </button>
+            `
+            : ""
+        }
+
+        <button
+          class="btn btn-outline-dark btn-sm fw-semibold"
+          onclick="editAddress('${address._id}')">
+          Edit
+        </button>
+
+        <button
+          class="btn btn-outline-danger btn-sm fw-semibold"
+          onclick="deleteAddress('${address._id}')">
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+`;
+
+  }).join("");
+}
+
+
+document.querySelector("#addressForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const data = {
+    type: document.querySelector('input[name="addressType"]:checked')?.value,
+    email: document.getElementById("email").value.trim(),
+    firstName: document.getElementById("firstName").value.trim(),
+    lastName: document.getElementById("lastName").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    street: document.getElementById("street").value.trim(),
+    city: document.getElementById("city").value.trim(),
+    state: document.getElementById("state").value,
+    postcode: document.getElementById("postalCode").value.trim()
+  };
+
+  /* =========================
+     VALIDATION REGEX
+  ========================= */
+  const nameRegex = /^[A-Za-z\s]{2,}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const phoneRegex = /^[6-9]\d{9}$/;      // 🇮🇳 Indian mobile
+  const pinRegex = /^\d{6}$/;             // 🇮🇳 PIN code
+
+  /* =========================
+     FIELD VALIDATION
+  ========================= */
+  if (!data.type) {
+    showToast("Select address type", "warning");
+    return;
+  }
+
+  if (!nameRegex.test(data.firstName)) {
+    showToast("Enter a valid first name", "warning");
+    return;
+  }
+
+  if (!nameRegex.test(data.lastName)) {
+    showToast("Enter a valid last name", "warning");
+    return;
+  }
+
+  if (!emailRegex.test(data.email)) {
+    showToast("Enter a valid email address", "warning");
+    return;
+  }
+
+  if (!phoneRegex.test(data.phone)) {
+    showToast("Enter a valid 10-digit mobile number", "warning");
+    return;
+  }
+
+  if (data.street.length < 5) {
+    showToast("Street address is too short", "warning");
+    return;
+  }
+
+  if (!nameRegex.test(data.city)) {
+    showToast("Enter a valid city name", "warning");
+    return;
+  }
+
+  if (!data.state) {
+    showToast("Please select a state", "warning");
+    return;
+  }
+
+  if (!pinRegex.test(data.postcode)) {
+    showToast("Enter a valid 6-digit PIN code", "warning");
+    return;
+  }
+
+  /* =========================
+     API CALL
+  ========================= */
+  try {
+    const url = editingAddressId
+  ? `https://envastore.online/api/user/address/${editingAddressId}`
+  : "https://envastore.online/api/user/address/add";
+
+const method = editingAddressId ? "PUT" : "POST";
+
+const res = await apiFetch(url, {
+  method,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("userToken")}`
+  },
+  body: JSON.stringify(data)
+});
+
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      showToast(result.message || "Failed to add address", "error");
+      return;
+    }
+
+  showToast(
+  editingAddressId ? "Address updated successfully" : "Address added successfully",
+  "success"
+);
+
+// ✅ RESET EDIT MODE HERE
+editingAddressId = null;
+loadAddresses();
+e.target.reset();
+
+const submitBtn = document.querySelector("#addressForm button");
+submitBtn.textContent = "Add Address";
+
+// 🔓 Re-enable address card buttons
+document
+  .querySelectorAll("#savedAddresses button")
+  .forEach(btn => btn.disabled = false);
+
+
+  } catch (err) {
+    console.error(err);
+    showToast("Server error. Please try again.", "error");
+  }
+});
+
+
+async function deleteAddress(id) {
+  await apiFetch(`https://envastore.online/api/user/address/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${ localStorage.getItem("userToken")}`
+    }
+  });
+
+  loadAddresses();
+}
+
+
+function setDefaultAddress(addressId) {
+  apiFetch(`https://envastore.online/api/user/address/default/${addressId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${ localStorage.getItem("userToken")}`
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      renderAddresses(data.addresses);
+      showToast("Default address updated", "success");
+    })
+    .catch(err => {
+      console.error(err);
+      showToast("Failed to update default address", "error");
+    });
+}
+
+
+
+function showToast(message, type = "success") {
+  const toastBox = document.getElementById("toastBox");
+
+  const toast = document.createElement("div");
+  toast.className = `custom-toast ${type}`;
+
+  let icon = "fa-circle-check";
+  if (type === "error") icon = "fa-circle-xmark";
+  if (type === "warning") icon = "fa-triangle-exclamation";
+  if (type === "info") icon = "fa-circle-info";
+
+  toast.innerHTML = `
+    <i class="fa-solid ${icon}"></i>
+    <span>${message}</span>
+  `;
+
+  toastBox.appendChild(toast);
+
+  setTimeout(() => toast.remove(), 3200);
+}
+
+
+function editAddress(id) {
+  editingAddressId = id;
+
+  // 🔒 Disable ONLY address card buttons
+  document
+    .querySelectorAll("#savedAddresses button")
+    .forEach(btn => btn.disabled = true);
+
+  // Keep form submit button enabled
+  const submitBtn = document.querySelector("#addressForm button");
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Update Address";
+
+  apiFetch("https://envastore.online/api/user/address", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("userToken")}`
+    }
+  })
+    .then(res => res.json())
+    .then(addresses => {
+      const address = addresses.find(a => a._id === id);
+      if (!address) {
+        showToast("Address not found", "error");
+        return;
+      }
+
+      // 📝 Fill form
+      document.querySelector(
+        `input[name="addressType"][value="${address.type}"]`
+      ).checked = true;
+
+      document.getElementById("firstName").value = address.firstName;
+      document.getElementById("lastName").value = address.lastName;
+      document.getElementById("email").value = address.email;
+      document.getElementById("phone").value = address.phone;
+      document.getElementById("street").value = address.street;
+      document.getElementById("city").value = address.city;
+      document.getElementById("state").value = address.state;
+      document.getElementById("postalCode").value = address.postcode;
+
+      // ⬆️ Scroll to form
+      document
+        .getElementById("addressForm")
+        .scrollIntoView({ behavior: "smooth", block: "start" });
+
+      showToast("Editing address. Update & save.", "info");
+    })
+    .catch(err => {
+      console.error(err);
+      showToast("Failed to load address", "error");
+    });
+}
+
+
+</script>
+ <script src="apiFetch.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- MOBILE SLIDE MENU -->
+<div id="mobileDrawer" class="mobile-drawer">
+
+  <div class="drawer-header">
+    <strong>Menu</strong>
+    <span id="closeDrawer">✕</span>
+  </div>
+
+  <a href="./home.html">Home</a>
+  <a href="./products.html">Products</a>
+  <a href="./wishlist.html">Wishlist</a>
+  <a href="./cart.html">Cart</a>
+  <a href="./profile.html">Account</a>
+
+</div>
+<script>
+const toggle = document.getElementById("menuToggle");
+const drawer = document.getElementById("mobileDrawer");
+const close = document.getElementById("closeDrawer");
+const backdrop = document.getElementById("drawerBackdrop");
+
+toggle.onclick = () => {
+  drawer.classList.add("open");
+  backdrop.classList.add("show");
+};
+
+close.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+
+backdrop.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const page = location.pathname.split("/").pop();
+
+  const drawerLinks = document.querySelectorAll("#mobileDrawer a");
+
+  drawerLinks.forEach(link => link.classList.remove("active-nav"));
+
+  // Pages that belong to Account
+  const accountPages = [
+    "profile.html",
+    "address.html",
+    "wallet.html",
+    "orders.html",
+    "profileWishlist.html",
+    "profileCart.html"
+  ];
+
+  drawerLinks.forEach(link => {
+    const href = link.getAttribute("href");
+
+    // Normal match
+    if (href && href.includes(page)) {
+      link.classList.add("active-nav");
+    }
+
+    // Account group match
+    if (accountPages.includes(page) && href.includes("profile.html")) {
+      link.classList.add("active-nav");
+    }
+  });
+});
+</script>
+
+<div id="drawerBackdrop"></div>
+<script src="search.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enva cloth & co - Wishlist</title>
+    <link rel="icon" type="image/png" href="../Images/favicon.png">
+    
+    
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="navBar.css">
+<style>
+  /* =====================================================
+   PROFILE / WISHLIST PAGE SYSTEM (SCOPED)
+===================================================== */
+
+.profile-page {
+  background: #fcfcfc;
+}
+
+/* =========================
+   SIDEBAR (DESKTOP)
+========================= */
+.profile-page .profile-sidebar {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 130px;
+}
+
+.profile-page .sidebar-menu-group {
+  margin-bottom: 22px;
+}
+
+.profile-page .sidebar-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #9ca3af;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+.profile-page .sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.25s ease;
+}
+
+.profile-page .sidebar-link i {
+  font-size: 18px;
+  width: 22px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.profile-page .sidebar-link:hover {
+  background: #f3f4f6;
+  color: #000;
+}
+
+.profile-page .sidebar-link.active {
+  background: #000;
+  color: #fff;
+}
+
+.profile-page .sidebar-link.active i {
+  color: #fff;
+}
+
+/* =========================
+   CONTENT CARD
+========================= */
+.profile-page .profile-card-ui {
+  background: #fff;
+  border-radius: 22px;
+  padding: 36px;
+  box-shadow: 0 8px 34px rgba(0,0,0,0.05);
+  border: 1px solid #f2f2f2;
+}
+
+/* =========================
+   WISHLIST ITEMS
+========================= */
+.profile-page .wishlist-item {
+  background: #fff;
+  border: 1px solid #f1f1f1;
+  border-radius: 16px;
+  padding: 15px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.profile-page .wishlist-item:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+  border-color: #eee;
+}
+
+.profile-page .wishlist-img {
+  width: 90px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.profile-page .item-details h6 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.profile-page .item-price {
+  font-weight: 700;
+  color: #000;
+}
+
+.profile-page .old-price {
+  text-decoration: line-through;
+  color: #9ca3af;
+  font-size: 13px;
+  margin-left: 8px;
+}
+
+.profile-page .remove-wish-btn {
+  background: #fef2f2;
+  color: #ef4444;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.profile-page .remove-wish-btn:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+.profile-page .add-cart-btn-sm {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profile-page .add-cart-btn-sm:hover {
+  opacity: 0.85;
+}
+
+/* =========================
+   VIEW PRODUCT BUTTON
+========================= */
+.profile-page .view-product-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 35px;
+  min-width: 180px;
+  background: #000;
+  color: #fff !important;
+  border: 1px solid #000;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.35s ease;
+}
+
+.profile-page .view-product-btn:hover {
+  background: transparent;
+  color: #000 !important;
+  transform: translateY(-3px);
+}
+
+/* =========================
+   TABLET (≤ 991px)
+========================= */
+@media (max-width: 991px) {
+  .profile-page .profile-sidebar {
+    position: relative;
+    top: 0;
+    margin-bottom: 0px;
+  }
+
+  .profile-page .col-md-9.border-start {
+    border: none !important;
+    border-top: 1px solid #eee;
+    padding-top: 30px;
+    padding-left: 12px !important;
+  }
+}
+
+/* =========================
+   MOBILE – PROFILE STYLE (≤ 575px)
+========================= */
+@media (max-width: 575px) {
+
+  .profile-page .profile-sidebar {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .profile-page .sidebar-menu-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  .profile-page .sidebar-label {
+    display: none;
+  }
+
+  .profile-page .sidebar-link {
+    flex: 0 0 auto;
+    min-width: 140px;
+    justify-content: center;
+    background: #f8f8f8;
+    padding: 10px 12px;
+    font-size: 13px;
+    border-radius: 14px;
+    white-space: nowrap;
+  }
+
+  .profile-page .sidebar-link.active {
+    background: #000;
+    color: #fff;
+  }
+
+  .profile-page .profile-card-ui {
+    padding: 20px;
+    border-radius: 18px;
+  }
+}/* =========================================
+   WISHLIST RESPONSIVE FIX
+========================================= */
+
+@media (max-width: 575px) {
+
+  .wishlist-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+
+  /* Image + details */
+  .wishlist-item > .d-flex {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .wishlist-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+
+  .item-details {
+    width: 100%;
+  }
+
+  .item-details h6 {
+    font-size: 16px;
+    margin-top: 8px;
+  }
+
+  /* Price row wrap */
+  .item-details .d-flex {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* Action buttons */
+  .item-actions {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  .item-actions button,
+  .item-actions a {
+    flex: 1;
+  }
+
+  .view-product-btn {
+    min-width: unset !important;
+    padding: 10px 0;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+  }
+
+  .remove-wish-btn {
+    min-width: 42px;
+  }
+}
+/* =====================================================
+   WISHLIST – ULTIMATE 2-COLUMN PREMIUM UI (MOBILE)
+===================================================== */
+@media (max-width: 576px) {
+
+  /* =========================
+     GRID CONTAINER
+  ========================= */
+  .wishlist-container {
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    background: #fcfcfc;
+  }
+
+  /* =========================
+     CARD
+  ========================= */
+  .wishlist-item {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid #f0f0f0;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform: translateZ(0);
+  }
+
+  /* =========================
+     IMAGE
+  ========================= */
+  .wishlist-img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    background: #f5f5f5;
+    display: block;
+  }
+
+  /* =========================
+     CONTENT
+  ========================= */
+  .item-details {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .item-details h6 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 4px;
+    line-height: 1.4;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    min-height: 36px;
+  }
+
+  .item-details p {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  /* =========================
+     PRICE
+  ========================= */
+  .price-row {
+    margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .current-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .old-price {
+    font-size: 11px;
+    color: #bbb;
+    text-decoration: line-through;
+  }
+
+  /* =========================
+     ACTION BUTTONS (🔥 KEY PART)
+  ========================= */
+  .item-actions {
+    padding: 0 12px 12px;
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  /* Force BOTH buttons equal */
+  .item-actions > * {
+    flex: 1;
+    height: 38px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 0;
+    border: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  /* Add to Cart */
+  .item-actions .btn,
+  .item-actions .btn-dark,
+  .item-actions .add-cart-btn-sm {
+    background: #111;
+    color: #fff !important;
+    width: 100%;
+    height: 80px;
+  }
+
+  /* View button */
+  .view-product-btn {
+    background: #111;
+    color: #fff !important;
+    width: 100%;
+    text-decoration: none;
+  }
+
+  /* =========================
+     REMOVE BUTTON
+  ========================= */
+  .remove-wish-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 50%;
+    border: none;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+
+  /* =========================
+     SALE BADGE
+  ========================= */
+  .sale-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #000;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    z-index: 5;
+  }
+   
+}
+
+@media (max-width: 576px) {
+
+  /* Increase ONLY action button height */
+  .item-actions > * {
+    height: 44px;        /* 🔥 Increased from 38px */
+  }
+
+  /* Ensure cart button follows same height */
+  .item-actions .btn,
+  .item-actions .btn-dark,
+  .item-actions .add-cart-btn-sm {
+    height: 44px;
+    font-size: 12px;
+  }
+
+  /* View button same height */
+  .view-product-btn {
+    height: 44px;
+    font-size: 12px;
+  }
+
+}
+
+
+.sidebar-logout {
+  /* position: absolute; */
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #eee;
+  font-weight: 600;
+  color: #c62828;
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: #c62828;
+  color: #fff;
+  border-color: #c62828;
+}
+.profile-sidebar {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 70px; /* space for logout */
+}
+
+
+
+.logout-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background:#f00000;
+  border: 1px solid #eee;
+  font-weight: 600;
+  color: #ffffff;
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: #c62828;
+  color: #fff;
+  border-color: #c62828;
+}
+
+
+</style> 
+</head>
+
+<body class="bg-white text-dark">
+
+<!-- ========================= MAIN NAVBAR ========================= -->
+<nav class="navbar-main w-100 top-0 start-0 z-3 shadow-sm">
+
+  <div class="container-fluid custom-container-lg mx-auto px-4 py-2 d-flex align-items-center justify-content-between">
+
+    <!-- BRAND -->
+    <a href="./home.html" class="d-flex align-items-center gap-2 text-dark text-decoration-none">
+      <img src="/Images/Envalogo.jpeg" class="rounded-circle" style="width:48px; height:48px;">
+      <div class="brand-text">
+        <div class="brand-name fw-bold">Enva cloth & co</div>
+        <div class="brand-tagline">Wear Your Confidence</div>
+      </div>
+    </a>
+
+    <!-- DESKTOP LINKS -->
+    <ul class="nav gap-4 d-none d-lg-flex small fw-bold ms-5">
+      <li><a href="./home.html" class="nav-link text-dark p-0">Home</a></li>
+      <li><a href="./products.html" class="nav-link text-dark p-0">Products</a></li>
+      <li><a href="./blog.html" class="nav-link text-dark p-0">Blog</a></li>
+    </ul>
+
+    <!-- DESKTOP SEARCH -->
+    <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center px-4">
+      <div class="input-group srch-btn shadow-none" style="max-width:350px;">
+        <input type="text" class="form-control border-0 py-2 small fw-medium" placeholder="Search trends...">
+        <button class="btn border-0 text-dark">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ICONS -->
+    <div class="d-flex align-items-center gap-2 gap-md-3 small fw-medium text-secondary">
+
+      <!-- MOBILE SHORTCUTS -->
+      <a href="./home.html" class="nav-icon mobile-only">
+        <i class="fa-solid fa-house"></i>
+      </a>
+
+      <a href="./products.html" class="nav-icon mobile-only">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </a>
+
+      <!-- ACCOUNT -->
+      <a href="./profile.html" class="nav-icon">
+        <i class="fa-regular fa-user"></i>
+        <span class="nav-text d-none d-xl-inline">Account</span>
+      </a>
+
+      <!-- WISHLIST -->
+      <a href="./wishlist.html" class="nav-icon">
+        <i class="fa-regular fa-heart"></i>
+        <span class="nav-text d-none d-xl-inline">Wishlist</span>
+      </a>
+
+      <!-- CART -->
+      <a href="./cart.html" class="nav-icon">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="nav-text d-none d-xl-inline">Cart</span>
+      </a>
+
+      <!-- MOBILE HAMBURGER -->
+      <a class="nav-icon mobile-only" id="menuToggle">
+        <i class="fa-solid fa-bars"></i>
+      </a>
+
+    </div>
+
+  </div>
+</nav>
+
+<div class="navbar-sub w-100 bg-black text-white">
+  <div class="container-fluid px-4 custom-container-lg mx-auto">
+    <div class="d-flex align-items-center justify-content-between py-2" style="height:48px;font-size:.85rem;">
+      <span class="fw-semibold">Wishlist</span>
+    </div>
+  </div>
+</div>
+
+<div class="body-spacer"></div>
+
+
+
+<div class="container custom-container-lg mx-auto py-5 profile-page" style="background-color: #fcfcfc;">
+
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 small">
+                <li class="breadcrumb-item"><a href="#" class="text-secondary text-decoration-none"></a></li>
+                <li class="breadcrumb-item active fw-bold" aria-current="page">My Account</li>
+            </ol>
+        </nav>
+        <div class="small fw-semibold">
+            Welcome! <span class="text-danger" id="fullName"></span>
+        </div>
+    </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div class="profile-sidebar">
+            
+            <div class="sidebar-menu-group">
+                <span class="sidebar-label">Manage Account</span>
+                <a href="./profile.html" class="sidebar-link">
+                    <i class="fa-solid fa-circle-user"></i> Profile
+                </a>
+                <a href="./address.html" class="sidebar-link">
+                    <i class="fa-solid fa-location-dot"></i> Address Book
+                </a>
+            </div>
+
+            <div class="sidebar-menu-group">
+                <span class="sidebar-label">My Assets</span>
+                <a href="" class="sidebar-link">
+                    <i class="fa-solid fa-wallet"></i> My Wallet
+                </a>
+                <a href="coupons.html" class="sidebar-link">
+                    <i class="fa-solid fa-ticket"></i> Voucher & Coupons
+                </a>
+            </div>
+
+            <div class="sidebar-menu-group">
+                <span class="sidebar-label">Orders & Lists</span>
+                <a href="./orders.html" class="sidebar-link">
+                    <i class="fa-solid fa-box"></i> My Orders
+                </a>
+                <a href="./profileWishlist.html" class="sidebar-link active">
+                    <i class="fa-regular fa-heart"></i> Wishlist
+                </a>
+                <a href="./profileCart.html" class="sidebar-link">
+                    <i class="fa-solid fa-cart-shopping"></i> Shopping Cart
+                </a>
+            </div>
+
+            <div class="sidebar-logout">
+  <button class="logout-btn" id="logoutBtn">
+    <i class="fa-solid fa-right-from-bracket me-2"></i>
+    Logout
+  </button>
+</div>
+        </div>
+    </div>
+
+   <div class="col-md-9 border-start ps-md-5">
+    <div class="profile-card-ui">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bolder text-dark mb-1">My Wishlist</h3>
+                <p class="text-secondary small mb-0">You have <span id="wishlistCount">3</span> items in your wishlist.</p>
+            </div>
+            <button class="btn btn-outline-dark btn-sm rounded-pill px-3">Add All to Cart</button>
+        </div>
+          <div id="wishlistContainer"></div>
+
+      
+        <div id="emptyWishlist" class="text-center py-5 d-none">
+            <i class="fa-regular fa-heart fa-3x text-light mb-3"></i>
+            <h5 class="fw-bold">Your wishlist is empty</h5>
+            <p class="small text-secondary mb-4">Save items that you like in your wishlist to review them later.</p>
+            <a href="./products.html" class="btn btn-dark px-4 py-2">Continue Shopping</a>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+
+  
+    
+<footer class="footer-bg py-5 mt-5">
+  <div class="container-fluid px-4 custom-container-lg mx-auto">
+    <div class="row g-5">
+
+      <div class="col-lg-4 col-md-6">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <img src="../Images/Envalogo.jpeg" class="rounded-circle shadow-sm" style="width: 50px; height: 50px;">
+          <div>
+            <div class="fw-bold fs-4 text-dark">Enva</div>
+            <div class="small text-muted" style="margin-top: -5px;">Designer for Every Woman</div>
+          </div>
+        </div>
+
+        <p class="text-secondary mb-4" style="font-size: 0.85rem; line-height: 1.6; max-width: 320px;">
+          Discover the latest trends in women's fashion. We curate stylish outfits, accessories, and essentials designed to empower every woman.
+        </p>
+
+        <div class="text-secondary" style="font-size: 0.85rem;">
+          <div class="mb-2 d-flex align-items-start gap-2">
+            <span>📍</span> <span>51 Green St, Huntington, NY 11746, USA</span>
+          </div>
+          <div class="mb-2 d-flex align-items-center gap-2">
+            <span>✉</span> <span>support@enva.com</span>
+          </div>
+          <div class="mb-0 d-flex align-items-center gap-2">
+            <span>📞</span> <span>+91 123 4567890</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-6">
+        <h3 class="footer-title">Company</h3>
+        <ul class="list-unstyled text-secondary" style="font-size: 0.85rem;">
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">About Us</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Delivery Info</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Privacy Policy</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Terms & Conditions</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Support Center</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-6">
+        <h3 class="footer-title">Shop</h3>
+        <ul class="list-unstyled text-secondary" style="font-size: 0.85rem;">
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">New Arrivals</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Dresses</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Ethnic Wear</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Kurtas</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none text-secondary footer-link">Western Wear</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-4 col-md-12">
+        <h3 class="footer-title">Stay in Touch</h3>
+        <p class="text-secondary mb-3" style="font-size: 0.85rem;">Subscribe to get special offers and once-in-a-lifetime deals.</p>
+        
+        <div class="input-group mb-4">
+          <input type="email" class="form-control newsletter-input" placeholder="Your Email Address">
+          <button class="btn btn-dark newsletter-btn" type="button">Subscribe</button>
+        </div>
+
+        <div class="d-flex gap-2 mb-4">
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+          <a href="#" class="social-icon-box d-flex align-items-center justify-content-center">
+            <i class="fa-brands fa-pinterest-p"></i>
+          </a>
+        </div>
+
+        <div class="d-flex gap-2">
+          <img src="../Images/about1.jpg" class="rounded footer-gallery-img" alt="Gallery 1">
+          <img src="../Images/about2.jpg" class="rounded footer-gallery-img" alt="Gallery 2">
+          <img src="../Images/about3.jpg" class="rounded footer-gallery-img" alt="Gallery 3">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row mt-5 pt-4 border-top">
+      <div class="col-md-6 text-center text-md-start">
+        <p class="text-muted small">© 2026 Enva Fashion. All rights reserved.</p>
+      </div>
+      <div class="col-md-6 text-center text-md-end">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" height="20" class="me-3 opacity-50" alt="PayPal">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" height="15" class="me-3 opacity-50" alt="Visa">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" height="20" class="opacity-50" alt="Mastercard">
+      </div>
+    </div>
+  </div>
+</footer>
+  
+
+    <div class="modal fade" id="logoutModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Logout</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        Are you sure you want to logout?
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+       <button class="btn btn-danger" id="confirmLogoutBtn">
+       Logout
+      </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="logoutModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold">Confirm Logout</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-secondary">
+        Are you sure you want to log out from your account?
+      </div>
+
+      <div class="modal-footer border-0">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button id="confirmLogoutBtn" class="btn btn-danger">
+          Logout
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+    const logoutBtn = document.getElementById("logoutBtn");
+const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+
+/* OPEN LOGOUT MODAL */
+logoutBtn?.addEventListener("click", () => {
+  const modal = new bootstrap.Modal(
+    document.getElementById("logoutModal")
+  );
+  modal.show();
+});
+
+/* CONFIRM LOGOUT */
+confirmLogoutBtn?.addEventListener("click", () => {
+  localStorage.removeItem("userToken");
+  localStorage.removeItem("user");
+
+  showToast("Logged out successfully", "success");
+
+  setTimeout(() => {
+    window.location.href = "login.html";
+  }, 800);
+});
+
+</script>
+  
+<style>
+    #toastBox {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Toast base */
+.custom-toast {
+  width: 320px;          /* ✅ Fixed width */
+  min-height: 64px;      /* ✅ Consistent height */
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.8s;
+}
+
+/* Icon */
+.custom-toast i {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Message */
+.custom-toast span {
+  line-height: 1.4;
+}
+
+/* Types */
+.custom-toast.success {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.custom-toast.error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.custom-toast.warning {
+  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+  color: #000;
+}
+
+.custom-toast.info {
+  background: linear-gradient(135deg, #3498db, #2c80b4);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+/* 📱 Mobile responsive */
+@media (max-width: 480px) {
+  #toastBox {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .custom-toast {
+    width: 92vw;        /* responsive on mobile */
+    min-height: 60px;
+  }
+}
+
+</style>
+
+<div id="toastBox"></div>
+ <script>
+document.addEventListener("DOMContentLoaded", loadWishlist);
+
+async function loadWishlist() {
+  const token = localStorage.getItem("userToken");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const res = await apiFetch("https://envastore.online/api/user/wishlist", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    // 🚫 BLOCKED USER
+    if (res.status === 403) {
+      const data = await res.json();
+      showToast(data.message || "Your account has been blocked", "error");
+
+      localStorage.removeItem("userToken");
+      window.location.href = "login.html";
+      return;
+    }
+
+    
+
+    // ✅ SUCCESS
+    const data = await res.json();
+    renderWishlist(data.items);
+
+  } catch (err) {
+    console.error(err);
+    showToast("Failed to load wishlist", "error");
+  }
+}
+
+function renderWishlist(items) {
+  const box = document.getElementById("wishlistContainer");
+  const countEl = document.getElementById("wishlistCount");
+  const emptyBox = document.getElementById("emptyWishlist");
+
+  if (!box || !countEl || !emptyBox) {
+    console.error("Wishlist DOM elements missing");
+    return;
+  }
+
+  // ✅ FILTER OUT NULL PRODUCTS
+  const validItems = (items || []).filter(item => item.product);
+
+  if (validItems.length === 0) {
+    countEl.textContent = "0";
+    box.innerHTML = "";
+    emptyBox.classList.remove("d-none");
+    return;
+  }
+
+  emptyBox.classList.add("d-none");
+  countEl.textContent = validItems.length;
+box.innerHTML = validItems.map(item => {
+  const { product, size, finalPrice, oldPrice, discountPercent } = item;
+
+  return `
+    <div class="wishlist-item wishlist-flex d-flex align-items-center justify-content-between gap-3">
+
+
+      <div class="d-flex align-items-center gap-3">
+        <img src="/uploads/${product.images?.[0] || "placeholder.png"}"
+             class="wishlist-img">
+
+        <div class="item-details">
+          <span class="sidebar-label p-0 mb-1" style="font-size:9px;">Saved</span>
+
+          <h6>${product.name}</h6>
+
+          <div class="d-flex align-items-center gap-2">
+            <span class="item-price">₹${finalPrice || product.price}</span>
+
+            ${
+              oldPrice
+                ? `<span class="text-muted text-decoration-line-through small">
+                     ₹${oldPrice}
+                   </span>`
+                : ""
+            }
+
+            ${
+              discountPercent
+                ? `<span class="badge bg-danger">
+                     ${discountPercent}% OFF
+                   </span>`
+                : ""
+            }
+          </div>
+
+          <p class="small text-muted mb-0">
+            Size: <strong>${size}</strong>
+          </p>
+
+          <p class="small text-success mt-1 mb-0">
+            <i class="fa-solid fa-check-circle me-1"></i> In Stock
+          </p>
+        </div>
+      </div>
+
+      <div class="item-actions d-flex align-items-center gap-2">
+        <button class="btn btn-dark btn-sm"
+          onclick="addWishlistItemToCart('${product._id}', '${size}')">
+          <i class="fa-solid fa-cart-plus"></i>
+        </button>
+
+        <a href="singleProduct.html?id=${product._id}" class="view-product-btn">
+          View
+        </a>
+
+        <button class="remove-wish-btn"
+ onclick="removeWishlistItem('${product._id}', '${size}')">
+          <i class="fa-regular fa-trash-can"></i>
+        </button>
+      </div>
+    </div>
+  `;
+}).join("");
+
+}
+
+async function addWishlistItemToCart(productId, size) {
+  const token = localStorage.getItem("userToken");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const res = await apiFetch("https://envastore.online/api/user/cart/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        productId,
+        size,
+        quantity: 1
+      })
+    });
+
+    // 🚫 BLOCKED USER
+    if (res.status === 403) {
+      const data = await res.json();
+      showToast(data.message || "Your account has been blocked", "error");
+      localStorage.removeItem("userToken");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const data = await res.json();
+
+    if (data.status === "exists") {
+      showToast(
+        "Already in cart. <a href='cart.html' style='color:#fff;text-decoration:underline'>View Cart</a>",
+        "info"
+      );
+    } else if (res.ok) {
+      showToast("Added to cart successfully", "success");
+    } else {
+      showToast(data.message || "Failed to add to cart", "error");
+    }
+
+  } catch (err) {
+    console.error(err);
+    showToast("Server error", "error");
+  }
+}
+
+
+/* ❌ REMOVE FROM WISHLIST */
+function removeWishlistItem(productId, size) {
+  apiFetch(
+    `https://envastore.online/api/user/wishlist/remove/${productId}/${size}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("userToken")}`
+      }
+    }
+  )
+    .then(() => loadWishlist())
+    .then(() => showToast("Removed from wishlist", "success"))
+    .catch(() => showToast("Remove failed", "error"));
+}
+
+
+/* 🛒 MOVE TO CART */
+// function moveToCart(productId) {
+//   fetch("https://envastore.online/api/user/cart/add", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${localStorage.getItem("userToken")}`
+//     },
+//     body: JSON.stringify({ productId, quantity: 1 })
+//   })
+//     .then(() => {
+//       showToast("Moved to cart", "success");
+//       removeWishlistItem(productId);
+//     })
+//     .catch(() => showToast("Failed to move to cart", "error"));
+// }
+
+/* 🔔 TOAST (UNCHANGED LOGIC) */
+function showToast(message, type = "success") {
+  const toastBox = document.getElementById("toastBox");
+  if (!toastBox) return;
+
+  const toast = document.createElement("div");
+  toast.className = `custom-toast ${type}`;
+
+  let icon = "fa-circle-check";
+  if (type === "error") icon = "fa-circle-xmark";
+  if (type === "warning") icon = "fa-triangle-exclamation";
+  if (type === "info") icon = "fa-circle-info";
+
+  toast.innerHTML = `
+    <i class="fa-solid ${icon}"></i>
+    <span>${message}</span>
+  `;
+
+  toastBox.appendChild(toast);
+  setTimeout(() => toast.remove(), 3200);
+}
+
+document.addEventListener("DOMContentLoaded", loadUserName);
+
+async function loadUserName() {
+  const token =  localStorage.getItem("userToken")
+
+  if (!token) return;
+
+  const res = await apiFetch("https://envastore.online/api/user/profile", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  const user = await res.json();
+
+  // user.name already contains "First Last"
+  document.getElementById("fullName").textContent = user.name || "";
+} 
+</script>
+<script src="apiFetch.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- MOBILE SLIDE MENU -->
+<div id="mobileDrawer" class="mobile-drawer">
+
+  <div class="drawer-header">
+    <strong>Menu</strong>
+    <span id="closeDrawer">✕</span>
+  </div>
+
+  <a href="./home.html">Home</a>
+  <a href="./products.html">Products</a>
+  <a href="./wishlist.html">Wishlist</a>
+  <a href="./cart.html">Cart</a>
+  <a href="./profile.html">Account</a>
+
+</div>
+<script>
+const toggle = document.getElementById("menuToggle");
+const drawer = document.getElementById("mobileDrawer");
+const close = document.getElementById("closeDrawer");
+const backdrop = document.getElementById("drawerBackdrop");
+
+toggle.onclick = () => {
+  drawer.classList.add("open");
+  backdrop.classList.add("show");
+};
+
+close.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+
+backdrop.onclick = () => {
+  drawer.classList.remove("open");
+  backdrop.classList.remove("show");
+};
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const page = location.pathname.split("/").pop();
+
+  const drawerLinks = document.querySelectorAll("#mobileDrawer a");
+
+  drawerLinks.forEach(link => link.classList.remove("active-nav"));
+
+  // Pages that belong to Account
+  const accountPages = [
+    "profile.html",
+    "address.html",
+    "wallet.html",
+    "orders.html",
+    "profileWishlist.html",
+    "profileCart.html"
+  ];
+
+  drawerLinks.forEach(link => {
+    const href = link.getAttribute("href");
+
+    // Normal match
+    if (href && href.includes(page)) {
+      link.classList.add("active-nav");
+    }
+
+    // Account group match
+    if (accountPages.includes(page) && href.includes("profile.html")) {
+      link.classList.add("active-nav");
+    }
+  });
+});
+</script>
+
+<div id="drawerBackdrop"></div>
+<script src="search.js" defer></script>
+
+</body>
+</html>
